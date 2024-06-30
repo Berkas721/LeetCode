@@ -6,16 +6,19 @@ public static partial class Startup
     {
         builder
             .AddSwagger()
-            .AddControllers();
+            .AddControllers()
+            .AddMapper()
+            .AddMediator();
 
         return Task.FromResult(builder);
     }
 
     public static async Task<WebApplication> Configure(this WebApplication app)
     {
-        app
-            .UseDevelopmentConfiguration()
-            .UseHttpsRedirection();
+        app.UseRouting();
+
+        app.UseDevelopmentConfiguration();
+        app.MapControllers();
 
         return app;
     }
