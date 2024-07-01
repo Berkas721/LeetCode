@@ -1,16 +1,11 @@
+using LeetCode.Startup;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+await builder.ConfigureServices();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+await app.Configure();
 
-app.UseHttpsRedirection();
-
-app.Run();
+await app.RunAsync();
