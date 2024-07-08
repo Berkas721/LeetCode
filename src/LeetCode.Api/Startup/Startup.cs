@@ -5,6 +5,9 @@ public static partial class Startup
     public static Task<WebApplicationBuilder> ConfigureServices(this WebApplicationBuilder builder)
     {
         builder
+            .AddAuth()
+            .AddApplicationDbContext()
+            .AddIdentity()
             .AddSwagger()
             .AddControllers()
             .AddMapper()
@@ -17,8 +20,13 @@ public static partial class Startup
     {
         app.UseRouting();
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.UseDevelopmentConfiguration();
         app.MapControllers();
+
+        await app.MigrateDatabaseAsync();
 
         return app;
     }
