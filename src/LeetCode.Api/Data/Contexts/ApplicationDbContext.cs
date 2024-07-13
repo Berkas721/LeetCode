@@ -7,6 +7,10 @@ namespace LeetCode.Data.Contexts;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationUserRole, Guid>
 {
+    public DbSet<Problem> Problems { get; set; } = default!;
+
+    public DbSet<ProblemTopic> ProblemTopics { get; set; } = default!;
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
