@@ -9,7 +9,7 @@ public class ProgrammingLanguageConfiguration : IEntityTypeConfiguration<Program
     {
         builder
             .HasAlternateKey(x => new { x.Name, x.Version });
-        
+
         builder
             .Property(x => x.Version)
             .HasMaxLength(32);
