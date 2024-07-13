@@ -17,6 +17,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<TestCase> TestCases { get; set; } = default!;
 
+    public DbSet<ProblemResolveSession> ProblemResolveSessions { get; set; } = default!;
+
+    public DbSet<ProblemSolution> ProblemSolutions { get; set; } = default!;
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
