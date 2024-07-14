@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using LeetCode.Data.Entities;
+using LeetCode.Data.Entities.SolutionTest;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProblemResolveSession> ProblemResolveSessions { get; set; } = default!;
 
     public DbSet<ProblemSolution> ProblemSolutions { get; set; } = default!;
+
+    public DbSet<SolutionTest> SolutionTests { get; set; } = default!;
+
+    public DbSet<PassedTest> PassedSolutionTests { get; set; } = default!;
+
+    public DbSet<FailedWithErrorTest> FailedWithErrorSolutionTests { get; set; } = default!;
+
+    public DbSet<FailedWithIncorrectAnswerTest> FailedWithIncorrectAnswersSolutionTests { get; set; } = default!;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
