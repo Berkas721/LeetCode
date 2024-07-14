@@ -161,7 +161,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("Problems");
+                    b.ToTable("Problems", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemRealizeDetails", b =>
@@ -196,7 +196,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("ProblemRealizeDetails");
+                    b.ToTable("ProblemRealizeDetails", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemResolveSession", b =>
@@ -222,7 +222,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasIndex("ProblemId");
 
-                    b.ToTable("ProblemResolveSessions");
+                    b.ToTable("ProblemResolveSessions", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemSolution", b =>
@@ -258,7 +258,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("ProblemSolutions");
+                    b.ToTable("ProblemSolutions", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemTopic", b =>
@@ -282,7 +282,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("ProblemTopics");
+                    b.ToTable("ProblemTopics", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProgrammingLanguage", b =>
@@ -311,7 +311,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasAlternateKey("Name", "Version");
 
-                    b.ToTable("Languages");
+                    b.ToTable("Languages", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionTest.SolutionTest", b =>
@@ -340,7 +340,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasIndex("TestCaseId");
 
-                    b.ToTable("SolutionTests");
+                    b.ToTable("SolutionTests", (string)null);
 
                     b.HasDiscriminator<int>("ResultStatus").HasValue(0);
 
@@ -372,7 +372,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasAlternateKey("ProblemId", "Input");
 
-                    b.ToTable("TestCases");
+                    b.ToTable("TestCases", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -490,7 +490,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasIndex("TopicsId");
 
-                    b.ToTable("ProblemProblemTopic");
+                    b.ToTable("ProblemProblemTopic", (string)null);
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionTest.FailedWithErrorTest", b =>
@@ -532,7 +532,7 @@ namespace LeetCode.Data.Migrations
 
             modelBuilder.Entity("LeetCode.Data.Entities.Problem", b =>
                 {
-                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.Problem.CreateInfo#LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
                         {
                             b1.Property<long>("ProblemId")
                                 .HasColumnType("bigint");
@@ -549,7 +549,7 @@ namespace LeetCode.Data.Migrations
 
                             b1.HasIndex("CreatorId");
 
-                            b1.ToTable("Problems");
+                            b1.ToTable("Problems", (string)null);
 
                             b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Creator")
                                 .WithMany()
@@ -563,7 +563,7 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Creator");
                         });
 
-                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.DeleteInfo", "DeleteInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.Problem.DeleteInfo#LeetCode.Data.Entities.OwnedEntities.DeleteInfo", "DeleteInfo", b1 =>
                         {
                             b1.Property<long>("ProblemId")
                                 .HasColumnType("bigint");
@@ -580,7 +580,7 @@ namespace LeetCode.Data.Migrations
 
                             b1.HasIndex("DeleterId");
 
-                            b1.ToTable("Problems", t =>
+                            b1.ToTable("Problems", null, t =>
                                 {
                                     t.HasCheckConstraint("DeleteInfoConflictCheck", "(\"DeletedAt\" IS NULL AND \"DeleterId\" IS NULL) OR (\"DeletedAt\" IS NOT NULL AND \"DeleterId\" IS NOT NULL)");
                                 });
@@ -617,7 +617,7 @@ namespace LeetCode.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.ProblemRealizeDetails.CreateInfo#LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
                         {
                             b1.Property<Guid>("ProblemRealizeDetailsId")
                                 .HasColumnType("uuid");
@@ -634,7 +634,7 @@ namespace LeetCode.Data.Migrations
 
                             b1.HasIndex("CreatorId");
 
-                            b1.ToTable("ProblemRealizeDetails");
+                            b1.ToTable("ProblemRealizeDetails", (string)null);
 
                             b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Creator")
                                 .WithMany()
@@ -648,7 +648,7 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Creator");
                         });
 
-                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.DeleteInfo", "DeleteInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.ProblemRealizeDetails.DeleteInfo#LeetCode.Data.Entities.OwnedEntities.DeleteInfo", "DeleteInfo", b1 =>
                         {
                             b1.Property<Guid>("ProblemRealizeDetailsId")
                                 .HasColumnType("uuid");
@@ -665,7 +665,7 @@ namespace LeetCode.Data.Migrations
 
                             b1.HasIndex("DeleterId");
 
-                            b1.ToTable("ProblemRealizeDetails", t =>
+                            b1.ToTable("ProblemRealizeDetails", null, t =>
                                 {
                                     t.HasCheckConstraint("DeleteInfoConflictCheck", "(\"DeletedAt\" IS NULL AND \"DeleterId\" IS NULL) OR (\"DeletedAt\" IS NOT NULL AND \"DeleterId\" IS NOT NULL)");
                                 });
@@ -757,7 +757,7 @@ namespace LeetCode.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.TestCase.CreateInfo#LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
                         {
                             b1.Property<long>("TestCaseId")
                                 .HasColumnType("bigint");
@@ -774,7 +774,7 @@ namespace LeetCode.Data.Migrations
 
                             b1.HasIndex("CreatorId");
 
-                            b1.ToTable("TestCases");
+                            b1.ToTable("TestCases", (string)null);
 
                             b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Creator")
                                 .WithMany()

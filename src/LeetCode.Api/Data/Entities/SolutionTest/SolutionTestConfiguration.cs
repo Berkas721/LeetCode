@@ -12,7 +12,7 @@ public class SolutionTestConfiguration : IEntityTypeConfiguration<SolutionTest>
             .HasAlternateKey(x => new { x.SolutionId, x.TestCaseId });
 
         builder
-            .HasDiscriminator<SolutionTestResultStatus>("ResultStatus")
+            .HasDiscriminator(x => x.ResultStatus)
             .HasValue<SolutionTest>(SolutionTestResultStatus.Unknown)
             .HasValue<PassedTest>(SolutionTestResultStatus.Passed)
             .HasValue<FailedWithErrorTest>(SolutionTestResultStatus.FailedWithError)

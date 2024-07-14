@@ -18,6 +18,7 @@ public class ProblemRealizeDetails
 
     public string WorkingSolution { get; set; } = string.Empty;
 
+    // TODO: set боязно оставлять, с init нельзя будет обновлять атрибут, нужно че то придумать
     public Dictionary<string, string> AdditionalDetails { get; set; } = [];
 
     public CreateInfo CreateInfo { get; set; } = default!;

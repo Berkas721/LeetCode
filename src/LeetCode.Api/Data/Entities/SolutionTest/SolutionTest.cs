@@ -1,10 +1,14 @@
-﻿namespace LeetCode.Data.Entities.SolutionTest;
+﻿using LeetCode.Data.Enums;
+
+namespace LeetCode.Data.Entities.SolutionTest;
 
 public class SolutionTest
 {
     public long Id { get; set; }
 
     public DateTime Date { get; set; }
+
+    public SolutionTestResultStatus ResultStatus { get; }
 
 
     public long SolutionId { get; set; }
