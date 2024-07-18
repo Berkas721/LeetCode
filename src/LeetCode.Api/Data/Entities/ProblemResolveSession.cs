@@ -13,9 +13,9 @@ public class ProblemResolveSession
 
 
     public long ProblemId { get; set; }
-    
+
     public Problem? Problem { get; set; }
 
 
-    public List<ProblemSolution> Solutions { get; set; } = [];
+    public List<ProblemSolution>? Solutions { get; set; }
 }

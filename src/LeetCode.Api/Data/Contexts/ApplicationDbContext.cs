@@ -11,7 +11,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ProblemTopic> ProblemTopics { get; set; } = default!;
 
-    public DbSet<ProblemRealizeDetails> ProblemRealizeDetails { get; set; } = default!;
+    public DbSet<SolutionRunningDetails> SolutionsRunningDetails { get; set; } = default!;
 
     public DbSet<ProgrammingLanguage> Languages { get; set; } = default!;
 
@@ -22,6 +22,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ProblemResolveSession> ProblemResolveSessions { get; set; } = default!;
 
     public DbSet<ProblemSolution> ProblemSolutions { get; set; } = default!;
+
+    public DbSet<AcceptedSolution> AcceptedProblemSolutions { get; set; } = default!;
+
+    public DbSet<UnAcceptedSolution> UnAcceptedProblemSolutions { get; set; } = default!;
+
+    public DbSet<DraftSolution> DraftProblemSolutions { get; set; } = default!;
 
     public DbSet<SolutionTest> SolutionTests { get; set; } = default!;
 
