@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LeetCode.Data.Entities.SolutionTest;
+namespace LeetCode.Data.Entities;
 
 public class FailedWithErrorTestConfiguration : IEntityTypeConfiguration<FailedWithErrorTest>
 {

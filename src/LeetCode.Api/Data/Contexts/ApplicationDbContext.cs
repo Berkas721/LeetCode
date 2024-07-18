@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using LeetCode.Data.Entities;
-using LeetCode.Data.Entities.SolutionTest;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

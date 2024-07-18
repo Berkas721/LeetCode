@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Data.Entities.SolutionTest;
+﻿namespace LeetCode.Data.Entities;
 
 public class FailedWithIncorrectAnswerTest : SolutionTest
 {
