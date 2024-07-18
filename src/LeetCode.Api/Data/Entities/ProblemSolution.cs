@@ -18,5 +18,5 @@ public class ProblemSolution
     
     public long LanguageId { get; set; }
     
-    public ProgrammingLanguage? Language { get; set; }
+    public ProgrammingLanguageWithVersion? Language { get; set; }
 }

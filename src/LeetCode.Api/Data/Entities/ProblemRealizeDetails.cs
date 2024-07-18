@@ -8,7 +8,7 @@ public class ProblemRealizeDetails
 
     public long LanguageId { get; set; }
 
-    public ProgrammingLanguage? Language { get; set; }
+    public ProgrammingLanguageWithVersion? Language { get; set; }
 
     public long ProblemId { get; set; }
 

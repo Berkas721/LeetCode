@@ -15,6 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ProgrammingLanguage> Languages { get; set; } = default!;
 
+    public DbSet<ProgrammingLanguageWithVersion> LanguagesWithVersion { get; set; } = default!;
+
     public DbSet<TestCase> TestCases { get; set; } = default!;
 
     public DbSet<ProblemResolveSession> ProblemResolveSessions { get; set; } = default!;
