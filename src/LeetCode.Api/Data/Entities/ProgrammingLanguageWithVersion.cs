@@ -14,4 +14,7 @@ public class ProgrammingLanguageWithVersion
     public string Name { get; set; } = string.Empty;
 
     public ProgrammingLanguage? Language { get; set; }
+
+
+    public List<SolutionRunningDetails>? SolutionRunningDetails { get; set; }
 }

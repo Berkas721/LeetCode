@@ -16,4 +16,7 @@ public class TestCase
     public long ProblemId { get; set; }
 
     public Problem? Problem { get; set; }
+
+
+    public List<SolutionTest>? SolutionTests { get; set; }
 }

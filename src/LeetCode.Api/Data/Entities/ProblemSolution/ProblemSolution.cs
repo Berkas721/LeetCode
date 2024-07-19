@@ -23,4 +23,7 @@ public class ProblemSolution
     public Guid RunningDetailsId { get; set; }
 
     public SolutionRunningDetails? RunningDetails { get; set; }
+
+
+    public List<SolutionTest>? Tests { get; set; }
 }

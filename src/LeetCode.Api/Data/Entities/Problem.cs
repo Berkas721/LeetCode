@@ -25,4 +25,10 @@ public class Problem
 
 
     public List<ProblemTopic> Topics { get; set; } = [];
+
+    public List<TestCase>? TestCases { get; set; }
+
+    public List<SolutionRunningDetails>? SolutionRunningDetails { get; set; }
+
+    public List<ProblemResolveSession>? ResolveSessions { get; set; }
 }
