@@ -1,5 +1,5 @@
-﻿using LeetCode.Data.Entities.OwnedEntities;
-using LeetCode.Data.Enums;
+﻿using LeetCode.Data.Enums;
+using LeetCode.Data.OwnedTypes;
 
 namespace LeetCode.Data.Entities;
 
@@ -11,13 +11,18 @@ public class Problem
 
     public string Description { get; set; } = string.Empty;
 
-    public Difficulty Difficulty { get; set; } = Difficulty.Easy;
+    public ProblemDifficulty Difficulty { get; set; } = ProblemDifficulty.Easy;
 
     public bool IsPremiumRequired { get; set; }
 
-    public List<ProblemTopic> Topics { get; set; } = [];
+    public DateTime? OpenAt { get; set; }
 
     public CreateInfo CreateInfo { get; set; } = default!;
 
+    public UpdateInfo? UpdateInfo { get; set; }
+
     public DeleteInfo? DeleteInfo { get; set; }
+
+
+    public List<ProblemTopic> Topics { get; set; } = [];
 }

@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LeetCode.Data.Entities.OwnedEntities;
+namespace LeetCode.Data.OwnedTypes;
 
 public static partial class OwnedEntitiesConfigurations
 {
@@ -9,14 +8,6 @@ public static partial class OwnedEntitiesConfigurations
     {
         return builder =>
         {
-            builder
-                .Property(x => x.Date)
-                .HasColumnName("CreatedAt");
-
-            builder
-                .Property(x => x.CreatorId)
-                .HasColumnName("CreatorId");
-
             builder
                 .HasOne(x => x.Creator)
                 .WithMany()

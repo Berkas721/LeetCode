@@ -1,4 +1,4 @@
-﻿using LeetCode.Data.Entities.OwnedEntities;
+﻿using LeetCode.Data.OwnedTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,5 +29,9 @@ public class ProblemConfiguration : IEntityTypeConfiguration<Problem>
             OwnedEntitiesConfigurations.ConfigureDeleteInfo<Problem>()
         );
 
+        builder.OwnsOne(
+            x => x.UpdateInfo, 
+            OwnedEntitiesConfigurations.ConfigureUpdateInfo<Problem>()
+        );
     }
 }

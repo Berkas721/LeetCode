@@ -1,4 +1,4 @@
-﻿using LeetCode.Data.Entities.OwnedEntities;
+﻿using LeetCode.Data.OwnedTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,11 +13,11 @@ public class TestCaseConfiguration : IEntityTypeConfiguration<TestCase>
 
         builder
             .Property(x => x.Input)
-            .HasMaxLength(1024);
+            .HasMaxLength(2048);
 
         builder
             .Property(x => x.Output)
-            .HasMaxLength(1024);
+            .HasMaxLength(2048);
 
         builder.OwnsOne(
             x => x.CreateInfo,

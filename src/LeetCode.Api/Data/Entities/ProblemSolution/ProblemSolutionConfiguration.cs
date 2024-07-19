@@ -10,7 +10,7 @@ public class ProblemSolutionConfiguration : IEntityTypeConfiguration<ProblemSolu
     {
         builder
             .Property(x => x.Code)
-            .HasMaxLength(1024);
+            .HasMaxLength(4096);
 
         builder
             .Property(x => x.Notes)

@@ -1,4 +1,4 @@
-﻿using LeetCode.Data.Entities.OwnedEntities;
+﻿using LeetCode.Data.OwnedTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +13,7 @@ public class SolutionRunningDetailsConfiguration : IEntityTypeConfiguration<Solu
 
         builder
             .Property(x => x.DefaultCode)
-            .HasMaxLength(1024);
+            .HasMaxLength(4096);
 
         builder
             .Property(x => x.WorkingSolution)

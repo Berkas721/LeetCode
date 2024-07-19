@@ -1,4 +1,4 @@
-﻿using LeetCode.Data.Entities.OwnedEntities;
+﻿using LeetCode.Data.OwnedTypes;
 
 namespace LeetCode.Data.Entities;
 

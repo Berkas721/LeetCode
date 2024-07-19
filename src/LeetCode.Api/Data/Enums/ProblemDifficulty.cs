@@ -1,6 +1,6 @@
 ﻿namespace LeetCode.Data.Enums;
 
-public enum Difficulty
+public enum ProblemDifficulty
 {
     Easy = 0,
     Medium = 1,

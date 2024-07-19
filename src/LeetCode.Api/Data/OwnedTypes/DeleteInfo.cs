@@ -1,4 +1,6 @@
-﻿namespace LeetCode.Data.Entities.OwnedEntities;
+﻿using LeetCode.Data.Entities;
+
+namespace LeetCode.Data.OwnedTypes;
 
 public class DeleteInfo
 {

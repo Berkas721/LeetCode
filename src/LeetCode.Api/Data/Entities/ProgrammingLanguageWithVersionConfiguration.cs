@@ -11,14 +11,14 @@ public class ProgrammingLanguageWithVersionConfiguration : IEntityTypeConfigurat
             .HasAlternateKey(x => new { x.Name, x.Version });
 
         builder
-            .HasOne<ProgrammingLanguage>()
+            .HasOne(x => x.Language)
             .WithMany()
             .HasForeignKey(x => x.Name)
             .HasPrincipalKey(x => x.Name);
 
         builder
-            .Property(x => x.Version)
-            .HasMaxLength(32);
+            .Property(x => x.Name)
+            .HasMaxLength(64);
 
         builder
             .Property(x => x.Version)

@@ -8,5 +8,6 @@ public class ProblemTopic
 
     public string? Description { get; set; } = string.Empty;
 
-    public List<Problem> Problems { get; set; } = [];
+
+    public List<Problem>? Problems { get; set; }
 }
