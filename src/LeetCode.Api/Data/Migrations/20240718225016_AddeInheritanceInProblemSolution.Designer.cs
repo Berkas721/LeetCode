@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using LeetCode.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LeetCode.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240718225016_AddeInheritanceInProblemSolution")]
+    partial class AddeInheritanceInProblemSolution
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,9 +160,6 @@ namespace LeetCode.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<DateTime?>("OpenAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Name");
@@ -203,8 +203,8 @@ namespace LeetCode.Data.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(512)
@@ -286,13 +286,12 @@ namespace LeetCode.Data.Migrations
                         .IsRequired()
                         .HasColumnType("hstore");
 
+                    b.Property<long?>("LanguageId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
-
-                    b.Property<long?>("ProgrammingLanguageId")
-                        .HasColumnType("bigint");
 
                     b.Property<DateOnly>("RealizedAt")
                         .HasColumnType("date");
@@ -306,7 +305,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasAlternateKey("Name", "Version");
 
-                    b.HasIndex("ProgrammingLanguageId");
+                    b.HasIndex("LanguageId");
 
                     b.ToTable("LanguagesWithVersion");
                 });
@@ -323,8 +322,8 @@ namespace LeetCode.Data.Migrations
 
                     b.Property<string>("DefaultCode")
                         .IsRequired()
-                        .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<long>("LanguageId")
                         .HasColumnType("bigint");
@@ -389,13 +388,13 @@ namespace LeetCode.Data.Migrations
 
                     b.Property<string>("Input")
                         .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<string>("Output")
                         .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
 
                     b.Property<long>("ProblemId")
                         .HasColumnType("bigint");
@@ -605,16 +604,18 @@ namespace LeetCode.Data.Migrations
 
             modelBuilder.Entity("LeetCode.Data.Entities.Problem", b =>
                 {
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.CreateInfo", "CreateInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
                         {
                             b1.Property<long>("ProblemId")
                                 .HasColumnType("bigint");
 
                             b1.Property<Guid>("CreatorId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uuid")
+                                .HasColumnName("CreatorId");
 
                             b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("CreatedAt");
 
                             b1.HasKey("ProblemId");
 
@@ -634,22 +635,27 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Creator");
                         });
 
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.DeleteInfo", "DeleteInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.DeleteInfo", "DeleteInfo", b1 =>
                         {
                             b1.Property<long>("ProblemId")
                                 .HasColumnType("bigint");
 
                             b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("DeletedAt");
 
                             b1.Property<Guid>("DeleterId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uuid")
+                                .HasColumnName("DeleterId");
 
                             b1.HasKey("ProblemId");
 
                             b1.HasIndex("DeleterId");
 
-                            b1.ToTable("Problems");
+                            b1.ToTable("Problems", t =>
+                                {
+                                    t.HasCheckConstraint("DeleteInfoConflictCheck", "(\"DeletedAt\" IS NULL AND \"DeleterId\" IS NULL) OR (\"DeletedAt\" IS NOT NULL AND \"DeleterId\" IS NOT NULL)");
+                                });
 
                             b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Deleter")
                                 .WithMany()
@@ -663,47 +669,16 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Deleter");
                         });
 
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.UpdateInfo", "UpdateInfo", b1 =>
-                        {
-                            b1.Property<long>("ProblemId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<Guid>("UpdaterId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("ProblemId");
-
-                            b1.HasIndex("UpdaterId");
-
-                            b1.ToTable("Problems");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProblemId");
-
-                            b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Updater")
-                                .WithMany()
-                                .HasForeignKey("UpdaterId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.Navigation("Updater");
-                        });
-
                     b.Navigation("CreateInfo")
                         .IsRequired();
 
                     b.Navigation("DeleteInfo");
-
-                    b.Navigation("UpdateInfo");
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemResolveSession", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.Problem", "Problem")
-                        .WithMany("ResolveSessions")
+                        .WithMany()
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -741,15 +716,15 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.ProgrammingLanguageWithVersion", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.ProgrammingLanguage", "Language")
+                        .WithMany("Versions")
+                        .HasForeignKey("LanguageId");
+
+                    b.HasOne("LeetCode.Data.Entities.ProgrammingLanguage", null)
                         .WithMany()
                         .HasForeignKey("Name")
                         .HasPrincipalKey("Name")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("LeetCode.Data.Entities.ProgrammingLanguage", null)
-                        .WithMany("Versions")
-                        .HasForeignKey("ProgrammingLanguageId");
 
                     b.Navigation("Language");
                 });
@@ -757,27 +732,29 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionRunningDetails", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.ProgrammingLanguageWithVersion", "Language")
-                        .WithMany("SolutionRunningDetails")
+                        .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LeetCode.Data.Entities.Problem", "Problem")
-                        .WithMany("SolutionRunningDetails")
+                        .WithMany()
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.CreateInfo", "CreateInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
                         {
                             b1.Property<Guid>("SolutionRunningDetailsId")
                                 .HasColumnType("uuid");
 
                             b1.Property<Guid>("CreatorId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uuid")
+                                .HasColumnName("CreatorId");
 
                             b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("CreatedAt");
 
                             b1.HasKey("SolutionRunningDetailsId");
 
@@ -797,22 +774,27 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Creator");
                         });
 
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.DeleteInfo", "DeleteInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.DeleteInfo", "DeleteInfo", b1 =>
                         {
                             b1.Property<Guid>("SolutionRunningDetailsId")
                                 .HasColumnType("uuid");
 
                             b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("DeletedAt");
 
                             b1.Property<Guid>("DeleterId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uuid")
+                                .HasColumnName("DeleterId");
 
                             b1.HasKey("SolutionRunningDetailsId");
 
                             b1.HasIndex("DeleterId");
 
-                            b1.ToTable("SolutionsRunningDetails");
+                            b1.ToTable("SolutionsRunningDetails", t =>
+                                {
+                                    t.HasCheckConstraint("DeleteInfoConflictCheck", "(\"DeletedAt\" IS NULL AND \"DeleterId\" IS NULL) OR (\"DeletedAt\" IS NOT NULL AND \"DeleterId\" IS NOT NULL)");
+                                });
 
                             b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Deleter")
                                 .WithMany()
@@ -839,13 +821,13 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionTest", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.ProblemSolution", "Solution")
-                        .WithMany("Tests")
+                        .WithMany()
                         .HasForeignKey("SolutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LeetCode.Data.Entities.TestCase", "TestCase")
-                        .WithMany("SolutionTests")
+                        .WithMany()
                         .HasForeignKey("TestCaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -858,21 +840,23 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.TestCase", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.Problem", "Problem")
-                        .WithMany("TestCases")
+                        .WithMany()
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.CreateInfo", "CreateInfo", b1 =>
+                    b.OwnsOne("LeetCode.Data.Entities.OwnedEntities.CreateInfo", "CreateInfo", b1 =>
                         {
                             b1.Property<long>("TestCaseId")
                                 .HasColumnType("bigint");
 
                             b1.Property<Guid>("CreatorId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uuid")
+                                .HasColumnName("CreatorId");
 
                             b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("CreatedAt");
 
                             b1.HasKey("TestCaseId");
 
@@ -964,23 +948,9 @@ namespace LeetCode.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LeetCode.Data.Entities.Problem", b =>
-                {
-                    b.Navigation("ResolveSessions");
-
-                    b.Navigation("SolutionRunningDetails");
-
-                    b.Navigation("TestCases");
-                });
-
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemResolveSession", b =>
                 {
                     b.Navigation("Solutions");
-                });
-
-            modelBuilder.Entity("LeetCode.Data.Entities.ProblemSolution", b =>
-                {
-                    b.Navigation("Tests");
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProgrammingLanguage", b =>
@@ -988,19 +958,9 @@ namespace LeetCode.Data.Migrations
                     b.Navigation("Versions");
                 });
 
-            modelBuilder.Entity("LeetCode.Data.Entities.ProgrammingLanguageWithVersion", b =>
-                {
-                    b.Navigation("SolutionRunningDetails");
-                });
-
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionRunningDetails", b =>
                 {
                     b.Navigation("Solutions");
-                });
-
-            modelBuilder.Entity("LeetCode.Data.Entities.TestCase", b =>
-                {
-                    b.Navigation("SolutionTests");
                 });
 #pragma warning restore 612, 618
         }

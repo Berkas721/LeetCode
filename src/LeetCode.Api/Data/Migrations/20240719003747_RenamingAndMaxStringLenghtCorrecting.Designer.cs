@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using LeetCode.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LeetCode.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240719003747_RenamingAndMaxStringLenghtCorrecting")]
+    partial class RenamingAndMaxStringLenghtCorrecting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -703,7 +706,7 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemResolveSession", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.Problem", "Problem")
-                        .WithMany("ResolveSessions")
+                        .WithMany()
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -757,13 +760,13 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionRunningDetails", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.ProgrammingLanguageWithVersion", "Language")
-                        .WithMany("SolutionRunningDetails")
+                        .WithMany()
                         .HasForeignKey("LanguageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LeetCode.Data.Entities.Problem", "Problem")
-                        .WithMany("SolutionRunningDetails")
+                        .WithMany()
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -839,13 +842,13 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionTest", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.ProblemSolution", "Solution")
-                        .WithMany("Tests")
+                        .WithMany()
                         .HasForeignKey("SolutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LeetCode.Data.Entities.TestCase", "TestCase")
-                        .WithMany("SolutionTests")
+                        .WithMany()
                         .HasForeignKey("TestCaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -858,7 +861,7 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.TestCase", b =>
                 {
                     b.HasOne("LeetCode.Data.Entities.Problem", "Problem")
-                        .WithMany("TestCases")
+                        .WithMany()
                         .HasForeignKey("ProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -964,23 +967,9 @@ namespace LeetCode.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LeetCode.Data.Entities.Problem", b =>
-                {
-                    b.Navigation("ResolveSessions");
-
-                    b.Navigation("SolutionRunningDetails");
-
-                    b.Navigation("TestCases");
-                });
-
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemResolveSession", b =>
                 {
                     b.Navigation("Solutions");
-                });
-
-            modelBuilder.Entity("LeetCode.Data.Entities.ProblemSolution", b =>
-                {
-                    b.Navigation("Tests");
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProgrammingLanguage", b =>
@@ -988,19 +977,9 @@ namespace LeetCode.Data.Migrations
                     b.Navigation("Versions");
                 });
 
-            modelBuilder.Entity("LeetCode.Data.Entities.ProgrammingLanguageWithVersion", b =>
-                {
-                    b.Navigation("SolutionRunningDetails");
-                });
-
             modelBuilder.Entity("LeetCode.Data.Entities.SolutionRunningDetails", b =>
                 {
                     b.Navigation("Solutions");
-                });
-
-            modelBuilder.Entity("LeetCode.Data.Entities.TestCase", b =>
-                {
-                    b.Navigation("SolutionTests");
                 });
 #pragma warning restore 612, 618
         }
