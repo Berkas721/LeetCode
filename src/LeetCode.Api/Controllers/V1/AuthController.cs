@@ -27,4 +27,12 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
         await Mediator.Send(command);
         return Ok();
     }
+
+    [HttpPost("signout")]
+    public async Task<IActionResult> SignOut()
+    {
+        var command = new SignOutCommand();
+        await Mediator.Send(command);
+        return Ok();
+    }
 }
