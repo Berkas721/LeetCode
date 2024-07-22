@@ -18,4 +18,13 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
         await Mediator.Send(command);
         return Ok();
     }
+
+    [HttpPost("signin")]
+    public async Task<IActionResult> SignIn(
+        [FromBody] SignInInput input)
+    {
+        var command = Mapper.Map<SignInCommand>(input);
+        await Mediator.Send(command);
+        return Ok();
+    }
 }
