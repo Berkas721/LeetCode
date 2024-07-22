@@ -8,7 +8,7 @@ public class ApplicationUser : IdentityUser<Guid>
 
     public string LastName { get; set; } = string.Empty;
 
-    public string? Patronymic { get; set; }
+    public DateOnly Birthday { get; set; }
 
-    public DateOnly BirthdayDate { get; set; } = DateOnly.MinValue;
+    public DateOnly Registration { get; set; }
 }
