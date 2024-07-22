@@ -25,4 +25,8 @@
       <Folder Include="Data\Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LeetCode.Dto\LeetCode.Dto.csproj" />
+    </ItemGroup>
+
 </Project>
