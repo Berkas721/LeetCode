@@ -1,6 +1,5 @@
 ﻿using LeetCode.Data.Entities;
 using LeetCode.Exceptions;
-using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ namespace LeetCode.Features.Auth;
 
 public sealed record SignInCommand : IRequest
 {
-    public required string Username { get; init; }
+    public required string UserName { get; init; }
 
     public required string Password { get; init; }
 }
@@ -30,9 +29,9 @@ public sealed record SignInCommandHandler : IRequestHandler<SignInCommand>
     {
         var result = await _signInManager
             .PasswordSignInAsync(
-                request.Username, 
-                request.Password, 
-                isPersistent: true, 
+                request.UserName,
+                request.Password,
+                isPersistent: true,
                 lockoutOnFailure: false);
 
         if (result.Succeeded)
@@ -42,11 +41,11 @@ public sealed record SignInCommandHandler : IRequestHandler<SignInCommand>
             .UserManager
             .Users
             .FirstOrDefaultAsync(
-                x => x.UserName == request.Username,
+                x => x.UserName == request.UserName,
                 cancellationToken: cancellationToken);
 
         if (user is null)
-            throw new AuthException($"не существует пользователя с ником {request.Username}");
+            throw new AuthException($"не существует пользователя с ником {request.UserName}");
 
         throw new AuthException("неправильный пароль");
     }

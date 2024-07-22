@@ -25,12 +25,16 @@ public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand>
 
     private readonly IMapper _mapper;
 
+    private readonly ISender _sender;
+
     public SignUpCommandHandler(
         UserManager<ApplicationUser> userManager, 
-        IMapper mapper)
+        IMapper mapper, 
+        ISender sender)
     {
         _userManager = userManager;
         _mapper = mapper;
+        _sender = sender;
     }
 
     public async Task Handle(
@@ -49,5 +53,9 @@ public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand>
                 result
                     .Errors
                     .Select(x => x.Description)));
+
+        var command = _mapper.Map<SignInCommand>(request);
+
+        await _sender.Send(command, cancellationToken);
     }
 }
