@@ -16,7 +16,8 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
             .HasMaxLength(32);
 
         builder
-            .Property(x => x.Patronymic)
-            .HasMaxLength(32);
+            .Property(x => x.UserName)
+            .IsRequired()
+            .HasMaxLength(256);
     }
 }
