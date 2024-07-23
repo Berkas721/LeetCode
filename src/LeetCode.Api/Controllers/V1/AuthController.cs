@@ -3,6 +3,7 @@ using LeetCode.Dto.Auth;
 using LeetCode.Features.Auth;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeetCode.Controllers.V1;
@@ -34,5 +35,20 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
         var command = new SignOutCommand();
         await Mediator.Send(command);
         return Ok();
+    }
+
+    [HttpGet("current-user")]
+    [Authorize]
+    public async Task<IActionResult> GetCurrentUserInfo()
+    {
+        // TODO: вынести куда нибудь
+        var userId = User
+            .Claims
+            .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+            .Value;
+
+        var command = new GetUserInfoCommand(new Guid(userId));
+        var user = await Mediator.Send(command);
+        return Ok(user);
     }
 }
