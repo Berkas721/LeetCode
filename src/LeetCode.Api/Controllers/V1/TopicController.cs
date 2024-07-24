@@ -1,5 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Topic;
+using LeetCode.Features.Topics.Create;
+using LeetCode.Features.Topics.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +14,16 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
     [HttpGet]
     public async Task<IActionResult> GetAllNames()
     {
-        var names = new List<string>();
+        var command = new GetTopicsNamesQuery();
+        var names = await Mediator.Send(command);
         return Ok(names);
     }
     
     [HttpGet("detailed")]
     public async Task<IActionResult> GetAllDetailed()
     {
-        var topics = new List<Topic>();
+        var command = new GetTopicsDetailedQuery();
+        var topics = await Mediator.Send(command);
         return Ok(topics);
     }
     
@@ -44,7 +48,9 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
     public async Task<IActionResult> Create(
         [FromBody] CreateTopicInput input)
     {
-        return Ok(input);
+        var command = Mapper.Map<CreateTopicCommand>(input);
+        var topicId = await Mediator.Send(command);
+        return Ok(topicId);
     }
     
     [HttpPost("{topicId}")]

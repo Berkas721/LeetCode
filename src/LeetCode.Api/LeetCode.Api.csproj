@@ -24,10 +24,9 @@
 
     <ItemGroup>
       <Folder Include="Data\Migrations\" />
-      <Folder Include="Features\Topics\Create\" />
       <Folder Include="Features\Topics\Delete\" />
       <Folder Include="Features\Topics\Edit\" />
-      <Folder Include="Features\Topics\Query\" />
+      <Folder Include="Features\Topics\Search\" />
     </ItemGroup>
 
     <ItemGroup>
