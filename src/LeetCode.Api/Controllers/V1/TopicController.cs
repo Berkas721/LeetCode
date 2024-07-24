@@ -4,6 +4,7 @@ using LeetCode.Features.Topics.Create;
 using LeetCode.Features.Topics.Delete;
 using LeetCode.Features.Topics.Edit;
 using LeetCode.Features.Topics.Query;
+using LeetCode.Features.Topics.Search;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,9 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
     public async Task<IActionResult> GetProblems(
         [FromQuery] List<long> topicIds)
     {
-        return Ok();
+        var command = new FindProblemsAssignedByTopicsCommand(topicIds);
+        var problemIds = await Mediator.Send(command);
+        return Ok(problemIds);
     }
 
     [HttpPut]
