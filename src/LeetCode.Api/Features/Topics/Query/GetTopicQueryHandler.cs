@@ -29,12 +29,10 @@ public sealed record GetTopicQueryHandler : IRequestHandler<GetTopicQuery, Topic
     {
         var topicEntity = await _dbContext
             .ProblemTopics
-            .FirstOrDefaultAsync(
-                x => x.Id == request.Id, 
-                cancellationToken: cancellationToken);
+            .FindAsync(request.Id);
         
         ResourceNotFoundException
-            .ThrowIfNull(topicEntity, $"не существует topic с id: {request.Id}");
+            .ThrowIfNull(topicEntity, $"не найден topic с id: {request.Id}");
 
         return _mapper.Map<Topic>(topicEntity);
     }

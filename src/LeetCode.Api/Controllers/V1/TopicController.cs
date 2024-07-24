@@ -1,6 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Topic;
 using LeetCode.Features.Topics.Create;
+using LeetCode.Features.Topics.Delete;
 using LeetCode.Features.Topics.Query;
 using MapsterMapper;
 using MediatR;
@@ -62,8 +63,11 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
 
     [HttpDelete("{topicId}")]
     public async Task<IActionResult> Delete(
-        [FromRoute] long topicId)
+        [FromRoute] long topicId,
+        [FromQuery] bool? hard = false)
     {
+        var command = new DeleteTopicCommand(topicId);
+        await Mediator.Send(command);
         return Ok();
     }
 }
