@@ -6,15 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Topics.Query;
 
-public sealed record GetTopicsDetailedQuery : IRequest<IReadOnlyList<Topic>>;
+public sealed record GetTopicsQuery : IRequest<IReadOnlyList<Topic>>;
 
-public sealed record GetTopicsDetailedQueryHandler : IRequestHandler<GetTopicsDetailedQuery, IReadOnlyList<Topic>>
+public sealed record GetTopicsQueryHandler : IRequestHandler<GetTopicsQuery, IReadOnlyList<Topic>>
 {
     private readonly ApplicationDbContext _dbContext;
 
     private readonly IMapper _mapper;
 
-    public GetTopicsDetailedQueryHandler(
+    public GetTopicsQueryHandler(
         ApplicationDbContext dbContext, 
         IMapper mapper)
     {
@@ -23,7 +23,7 @@ public sealed record GetTopicsDetailedQueryHandler : IRequestHandler<GetTopicsDe
     }
 
     public async Task<IReadOnlyList<Topic>> Handle(
-        GetTopicsDetailedQuery request, 
+        GetTopicsQuery request, 
         CancellationToken cancellationToken)
     {
         var topicsEntity = await _dbContext
