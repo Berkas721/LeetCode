@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LeetCode.Controllers.V1;
 
-[Microsoft.AspNetCore.Components.Route("api/v1/auth")]
+[Route("api/v1/auth")]
 public class AuthController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpPost("signup")]
