@@ -2,6 +2,7 @@
 using LeetCode.Dto.Topic;
 using LeetCode.Features.Topics.Create;
 using LeetCode.Features.Topics.Delete;
+using LeetCode.Features.Topics.Edit;
 using LeetCode.Features.Topics.Query;
 using MapsterMapper;
 using MediatR;
@@ -54,11 +55,13 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
     }
 
     [HttpPost("{topicId}")]
-    public async Task<IActionResult> Update(
+    public async Task<IActionResult> Edit(
         [FromRoute] long topicId,
         [FromBody] UpdateTopicInput input)
     {
-        return Ok(input);
+        var command = Mapper.Map<EditTopicCommand>(input) with { Id = topicId };
+        await Mediator.Send(command);
+        return Ok();
     }
 
     [HttpDelete("{topicId}")]

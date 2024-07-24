@@ -8,7 +8,8 @@ public class ProblemTopicConfiguration : IEntityTypeConfiguration<ProblemTopic>
     public void Configure(EntityTypeBuilder<ProblemTopic> builder)
     {
         builder
-            .HasAlternateKey(x => x.Name);
+            .HasIndex(x => x.Name)
+            .IsUnique();
 
         builder
             .Property(x => x.Name)
