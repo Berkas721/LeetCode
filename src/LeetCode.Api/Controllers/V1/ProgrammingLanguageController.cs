@@ -1,6 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.ProgrammingLanguage;
 using LeetCode.Features.ProgrammingLanguages.Create;
+using LeetCode.Features.ProgrammingLanguages.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,9 @@ public class ProgrammingLanguageController(IMediator mediator, IMapper mapper) :
     [SwaggerOperation("Get list of language names")]
     public async Task<IActionResult> Query()
     {
-        return Ok();
+        var query = new GetProgrammingLanguageNamesQuery();
+        var names = await Mediator.Send(query);
+        return Ok(names);
     }
 
     [HttpGet("{languageName}/versions")]
@@ -24,7 +27,9 @@ public class ProgrammingLanguageController(IMediator mediator, IMapper mapper) :
     public async Task<IActionResult> GetVersions(
         [FromRoute] string languageName)
     {
-        return Ok();
+        var query = new GetProgrammingLanguageVersionsQuery(languageName);
+        var versions = await Mediator.Send(query);
+        return Ok(versions);
     }
 
     [HttpGet("{languageName}/versions/last")]
@@ -32,7 +37,9 @@ public class ProgrammingLanguageController(IMediator mediator, IMapper mapper) :
     public async Task<IActionResult> GetActualVersion(
         [FromRoute] string languageName)
     {
-        return Ok();
+        var query = new GetProgrammingLanguageActualVersionQuery(languageName);
+        var version = await Mediator.Send(query);
+        return Ok(version);
     }
 
     [HttpPut]
