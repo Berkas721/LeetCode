@@ -1,6 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.ProgrammingLanguage;
 using LeetCode.Features.ProgrammingLanguageVersions.Create;
+using LeetCode.Features.ProgrammingLanguageVersions.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,9 @@ public class ProgrammingLanguageVersionController(IMediator mediator, IMapper ma
     public async Task<IActionResult> GetById(
         [FromRoute] long versionId)
     {
-        return Ok();
+        var query = new GetProgrammingLanguageVersionQuery(versionId);
+        var version = await Mediator.Send(query);
+        return Ok(version);
     }
 
     [HttpPut]
