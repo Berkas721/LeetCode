@@ -24,7 +24,7 @@ public class SolutionRunningDetails
 
     public long LanguageId { get; set; }
 
-    public ProgrammingLanguageWithVersion? Language { get; set; }
+    public ProgrammingLanguageVersion? Language { get; set; }
 
 
     public List<ProblemSolution>? Solutions { get; set; }
