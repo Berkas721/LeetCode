@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LeetCode.Features.Auth;
 
-public sealed record SignUpCommand : IRequest
+public sealed record SignUpCommand : IRequest<Guid>
 {
     public string UserName { get; init; } = string.Empty;
 
@@ -19,7 +19,7 @@ public sealed record SignUpCommand : IRequest
     public DateOnly Birthday { get; init; }
 }
 
-public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand>
+public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand, Guid>
 {
     private readonly UserManager<ApplicationUser> _userManager;
 
@@ -37,7 +37,7 @@ public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand>
         _sender = sender;
     }
 
-    public async Task Handle(
+    public async Task<Guid> Handle(
         SignUpCommand request, 
         CancellationToken cancellationToken)
     {
@@ -57,5 +57,7 @@ public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand>
         var command = _mapper.Map<SignInCommand>(request);
 
         await _sender.Send(command, cancellationToken);
+
+        return user.Id;
     }
 }
