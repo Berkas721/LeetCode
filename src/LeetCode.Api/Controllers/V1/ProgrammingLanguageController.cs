@@ -1,5 +1,6 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.ProgrammingLanguage;
+using LeetCode.Features.ProgrammingLanguages.Create;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,8 @@ public class ProgrammingLanguageController(IMediator mediator, IMapper mapper) :
     public async Task<IActionResult> Create(
         [FromBody] CreateProgrammingLanguageVersionInput input)
     {
-        return Ok();
+        var command = Mapper.Map<CreateProgrammingLanguageCommand>(input);
+        var versionId = await Mediator.Send(command);
+        return Ok(versionId);
     }
 }

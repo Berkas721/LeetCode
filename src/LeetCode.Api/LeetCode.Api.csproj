@@ -24,6 +24,8 @@
 
     <ItemGroup>
       <Folder Include="Data\Migrations\" />
+      <Folder Include="Features\ProgrammingLanguages\Query\" />
+      <Folder Include="Features\ProgrammingLanguageVersions\Query\" />
     </ItemGroup>
 
     <ItemGroup>
