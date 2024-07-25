@@ -1,14 +1,15 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Topics.Search;
 
-public sealed record FindProblemsAssignedByTopicsCommand(List<long> TopicIds) : IRequest<List<long>>;
-
+public sealed record FindProblemsAssignedByTopicsCommand(IReadOnlyList<long> TopicIds) : 
+    IRequest<IReadOnlyList<long>>;
 
 public sealed record FindProblemsAssignedByTopicsCommandHandler : 
-    IRequestHandler<FindProblemsAssignedByTopicsCommand, List<long>>
+    IRequestHandler<FindProblemsAssignedByTopicsCommand, IReadOnlyList<long>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -17,7 +18,7 @@ public sealed record FindProblemsAssignedByTopicsCommandHandler :
         _dbContext = dbContext;
     }
 
-    public async Task<List<long>> Handle(
+    public async Task<IReadOnlyList<long>> Handle(
         FindProblemsAssignedByTopicsCommand request, 
         CancellationToken cancellationToken)
     {
@@ -40,6 +41,9 @@ public sealed record FindProblemsAssignedByTopicsCommandHandler :
             .Select(x => x.Problems
                 .Select(x => x.Id))
             .ToListAsync(cancellationToken);
+
+        if (problemsSets.Count != topicIds.Count)
+            throw new ResourceNotFoundException("некоторые topic не существуют");
 
         // находим среди всех множеств общие problemIds
         var problems = problemsSets.First();

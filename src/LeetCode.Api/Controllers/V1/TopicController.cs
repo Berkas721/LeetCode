@@ -41,7 +41,7 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
 
     [HttpGet("problems")]
     public async Task<IActionResult> GetProblems(
-        [FromQuery] List<long> topicIds)
+        [FromQuery(Name = "topicId")] List<long> topicIds)
     {
         var command = new FindProblemsAssignedByTopicsCommand(topicIds);
         var problemIds = await Mediator.Send(command);
@@ -69,8 +69,7 @@ public class TopicController(IMediator mediator, IMapper mapper) : ApplicationCo
 
     [HttpDelete("{topicId}")]
     public async Task<IActionResult> Delete(
-        [FromRoute] long topicId,
-        [FromQuery] bool? hard = false)
+        [FromRoute] long topicId)
     {
         var command = new DeleteTopicCommand(topicId);
         await Mediator.Send(command);
