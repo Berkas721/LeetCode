@@ -16,8 +16,8 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
         [FromBody] SignUpInput input)
     {
         var command = Mapper.Map<SignUpCommand>(input);
-        await Mediator.Send(command);
-        return Ok();
+        var userId = await Mediator.Send(command);
+        return Ok(userId);
     }
 
     [HttpPost("signin")]
