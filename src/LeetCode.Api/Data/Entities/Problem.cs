@@ -15,11 +15,13 @@ public class Problem
 
     public bool IsPremiumRequired { get; set; }
 
-    public DateTime? OpenAt { get; set; }
+    public ProblemStatus Status { get; set; } = ProblemStatus.Unknown;
 
     public ActionInfo CreateInfo { get; set; } = default!;
 
     public ActionInfo? UpdateInfo { get; set; }
+
+    public ActionInfo? OpenInfo { get; set; }
 
     public ActionInfo? DeleteInfo { get; set; }
 
