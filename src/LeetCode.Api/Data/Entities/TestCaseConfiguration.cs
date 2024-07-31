@@ -21,7 +21,7 @@ public class TestCaseConfiguration : IEntityTypeConfiguration<TestCase>
 
         builder.OwnsOne(
             x => x.CreateInfo,
-            OwnedEntitiesConfigurations.ConfigureCreateInfo<TestCase>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<TestCase>()
         );
     }
 }

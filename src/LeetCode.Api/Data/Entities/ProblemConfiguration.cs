@@ -21,17 +21,17 @@ public class ProblemConfiguration : IEntityTypeConfiguration<Problem>
 
         builder.OwnsOne(
             x => x.CreateInfo, 
-            OwnedEntitiesConfigurations.ConfigureCreateInfo<Problem>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<Problem>()
         );
 
         builder.OwnsOne(
             x => x.DeleteInfo, 
-            OwnedEntitiesConfigurations.ConfigureDeleteInfo<Problem>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<Problem>()
         );
 
         builder.OwnsOne(
             x => x.UpdateInfo, 
-            OwnedEntitiesConfigurations.ConfigureUpdateInfo<Problem>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<Problem>()
         );
     }
 }

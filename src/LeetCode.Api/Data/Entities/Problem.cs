@@ -17,11 +17,11 @@ public class Problem
 
     public DateTime? OpenAt { get; set; }
 
-    public CreateInfo CreateInfo { get; set; } = default!;
+    public ActionInfo CreateInfo { get; set; } = default!;
 
-    public UpdateInfo? UpdateInfo { get; set; }
+    public ActionInfo? UpdateInfo { get; set; }
 
-    public DeleteInfo? DeleteInfo { get; set; }
+    public ActionInfo? DeleteInfo { get; set; }
 
 
     public List<ProblemTopic> Topics { get; set; } = [];

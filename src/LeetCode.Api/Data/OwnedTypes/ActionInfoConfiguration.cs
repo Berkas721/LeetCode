@@ -4,14 +4,14 @@ namespace LeetCode.Data.OwnedTypes;
 
 public static partial class OwnedEntitiesConfigurations
 {
-    public static Action<OwnedNavigationBuilder<TEntity, DeleteInfo>> ConfigureDeleteInfo<TEntity>() where TEntity : class
+    public static Action<OwnedNavigationBuilder<TEntity, ActionInfo>> ConfigureActionInfo<TEntity>() where TEntity : class
     {
         return builder =>
         {
             builder
-                .HasOne(x => x.Deleter)
+                .HasOne(x => x.Agent)
                 .WithMany()
-                .HasForeignKey(x => x.DeleterId);
+                .HasForeignKey(x => x.AgentId);
         };
     }
 }

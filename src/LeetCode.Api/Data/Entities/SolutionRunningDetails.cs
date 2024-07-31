@@ -12,9 +12,9 @@ public class SolutionRunningDetails
 
     public Dictionary<string, string> AdditionalDetails { get; set; } = [];
 
-    public CreateInfo CreateInfo { get; set; } = default!;
+    public ActionInfo CreateInfo { get; set; } = default!;
 
-    public DeleteInfo? DeleteInfo { get; set; }
+    public ActionInfo? DeleteInfo { get; set; }
 
 
     public long ProblemId { get; set; }
