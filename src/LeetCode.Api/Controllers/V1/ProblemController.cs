@@ -1,6 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Problem;
 using LeetCode.Features.Problem.Create;
+using LeetCode.Features.Problem.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -25,5 +26,14 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         var command = Mapper.Map<CreateProblemCommand>(input) with { CreatorId = new Guid(userId) };
         var problemId = await Mediator.Send(command);
         return Ok(problemId);
+    }
+
+    [HttpGet("{problemId}")]
+    public async Task<IActionResult> GetById(
+        [FromRoute] long problemId)
+    {
+        var query = new GetProblemQuery(problemId);
+        var problem = await Mediator.Send(query);
+        return Ok(problem);
     }
 }
