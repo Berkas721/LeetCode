@@ -8,7 +8,7 @@ public sealed record VersionOfProgrammingLanguage
 
     public required string Name { get; init; }
 
-    public DateOnly RealizedAt { get; init; }
+    public required DateOnly RealizedAt { get; init; }
 
     public required Dictionary<string, string> AdditionalDetails { get; init; }
 }
