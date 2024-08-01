@@ -10,7 +10,7 @@ public class TestCase
 
     public string Output { get; set; } = string.Empty;
 
-    public CreateInfo CreateInfo { get; set; } = default!;
+    public ActionInfo CreateInfo { get; set; } = default!;
 
 
     public long ProblemId { get; set; }

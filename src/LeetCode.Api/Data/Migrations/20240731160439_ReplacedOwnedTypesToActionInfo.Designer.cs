@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using LeetCode.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LeetCode.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240731160439_ReplacedOwnedTypesToActionInfo")]
+    partial class ReplacedOwnedTypesToActionInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,18 +160,14 @@ namespace LeetCode.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<DateTime?>("OpenAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasAlternateKey("Name");
 
-                    b.ToTable("Problems", null, t =>
-                        {
-                            t.HasCheckConstraint("Status_constraint", "(\"Status\" = 3 AND \"DeleteInfo_Date\" IS NOT NULL) OR (\"Status\" = 2 AND \"OpenInfo_Date\" IS NOT NULL) OR (\"Status\" = 1 AND \"DeleteInfo_Date\" IS NULL AND \"OpenInfo_Date\" IS NULL) OR + \"Status\" = 0");
-                        });
+                    b.ToTable("Problems");
                 });
 
             modelBuilder.Entity("LeetCode.Data.Entities.ProblemResolveSession", b =>
@@ -306,10 +305,9 @@ namespace LeetCode.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LanguageName");
+                    b.HasAlternateKey("Name", "LanguageName");
 
-                    b.HasIndex("Name", "LanguageName")
-                        .IsUnique();
+                    b.HasIndex("LanguageName");
 
                     b.ToTable("LanguageVersions");
                 });
@@ -405,8 +403,7 @@ namespace LeetCode.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProblemId", "Input")
-                        .IsUnique();
+                    b.HasAlternateKey("ProblemId", "Input");
 
                     b.ToTable("TestCases");
                 });
@@ -667,35 +664,6 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Agent");
                         });
 
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.ActionInfo", "OpenInfo", b1 =>
-                        {
-                            b1.Property<long>("ProblemId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<Guid>("AgentId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.HasKey("ProblemId");
-
-                            b1.HasIndex("AgentId");
-
-                            b1.ToTable("Problems");
-
-                            b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Agent")
-                                .WithMany()
-                                .HasForeignKey("AgentId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProblemId");
-
-                            b1.Navigation("Agent");
-                        });
-
                     b.OwnsOne("LeetCode.Data.OwnedTypes.ActionInfo", "UpdateInfo", b1 =>
                         {
                             b1.Property<long>("ProblemId")
@@ -729,8 +697,6 @@ namespace LeetCode.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("DeleteInfo");
-
-                    b.Navigation("OpenInfo");
 
                     b.Navigation("UpdateInfo");
                 });

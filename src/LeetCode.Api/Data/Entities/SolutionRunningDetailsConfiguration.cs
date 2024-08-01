@@ -21,12 +21,12 @@ public class SolutionRunningDetailsConfiguration : IEntityTypeConfiguration<Solu
 
         builder.OwnsOne(
             x => x.CreateInfo, 
-            OwnedEntitiesConfigurations.ConfigureCreateInfo<SolutionRunningDetails>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<SolutionRunningDetails>()
         );
 
         builder.OwnsOne(
             x => x.DeleteInfo, 
-            OwnedEntitiesConfigurations.ConfigureDeleteInfo<SolutionRunningDetails>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<SolutionRunningDetails>()
         );
     }
 }

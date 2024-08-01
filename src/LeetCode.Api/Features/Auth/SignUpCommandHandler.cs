@@ -8,15 +8,15 @@ namespace LeetCode.Features.Auth;
 
 public sealed record SignUpCommand : IRequest<Guid>
 {
-    public string UserName { get; init; } = string.Empty;
+    public required string UserName { get; init; }
 
-    public string Password { get; init; } = string.Empty;
+    public required string Password { get; init; }
 
-    public string FirstName { get; init; } = string.Empty;
+    public required string FirstName { get; init; }
 
-    public string LastName { get; init; } = string.Empty;
+    public required string LastName { get; init; }
 
-    public DateOnly Birthday { get; init; }
+    public required DateOnly Birthday { get; init; }
 }
 
 public sealed class SignUpCommandHandler : IRequestHandler<SignUpCommand, Guid>

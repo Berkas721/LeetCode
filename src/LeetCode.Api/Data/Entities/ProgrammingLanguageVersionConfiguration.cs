@@ -8,10 +8,11 @@ public class ProgrammingLanguageVersionConfiguration : IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<ProgrammingLanguageVersion> builder)
     {
         builder
-            .HasAlternateKey(x => new { x.Name, x.LanguageName });
+            .HasIndex(x => new { x.Name, x.LanguageName })
+            .IsUnique();
 
         builder
-            .HasOne<ProgrammingLanguage>(x => x.Language)
+            .HasOne(x => x.Language)
             .WithMany(x => x.Versions)
             .HasForeignKey(x => x.LanguageName)
             .HasPrincipalKey(x => x.Name);

@@ -2,11 +2,11 @@
 
 namespace LeetCode.Data.OwnedTypes;
 
-public class DeleteInfo
+public class ActionInfo
 {
     public DateTime Date { get; set; }
 
-    public Guid DeleterId { get; set; }
+    public Guid AgentId { get; set; }
 
-    public ApplicationUser? Deleter { get; set; }
+    public ApplicationUser? Agent { get; set; }
 }
