@@ -54,7 +54,7 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
             .ThrowIfNull(problem, $"не найдена задача с id: {request.Id}");
 
         if (problem.Status != ProblemStatus.Draft)
-            throw new Exception($"задача с id {request.Id} не находится в состоянии черновика");
+            throw new InvalidStateException($"задача с id {request.Id} не находится в состоянии черновика");
 
         if (request.NewName is not null)
             problem.Name = request.NewName;
