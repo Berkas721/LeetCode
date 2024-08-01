@@ -9,7 +9,8 @@ public class TestCaseConfiguration : IEntityTypeConfiguration<TestCase>
     public void Configure(EntityTypeBuilder<TestCase> builder)
     {
         builder
-            .HasAlternateKey(x => new { x.ProblemId, x.Input });
+            .HasIndex(x => new { x.ProblemId, x.Input })
+            .IsUnique();
 
         builder
             .Property(x => x.Input)
