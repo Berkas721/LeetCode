@@ -1,6 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Problem;
 using LeetCode.Features.Problem.Create;
+using LeetCode.Features.Problem.Edit;
 using LeetCode.Features.Problem.Query;
 using MapsterMapper;
 using MediatR;
@@ -35,5 +36,21 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         var query = new GetProblemQuery(problemId);
         var problem = await Mediator.Send(query);
         return Ok(problem);
+    }
+    
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Update(
+        [FromBody] UpdateProblemInput input)
+    {
+        // TODO: вынести куда нибудь
+        var userId = User
+            .Claims
+            .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+            .Value;
+
+        var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = new Guid(userId) };
+        await Mediator.Send(command);
+        return Ok();
     }
 }

@@ -51,6 +51,7 @@ public sealed record CreateProblemCommandHandler : IRequestHandler<CreateProblem
 
         problem.Status = ProblemStatus.Draft;
 
+        // TODO: подумать как убрать дубляж кода
         var topics = await _dbContext
             .ProblemTopics
             .Where(x => request.TopicIds.Contains(x.Id))
