@@ -1,5 +1,6 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Problem;
+using LeetCode.Extensions;
 using LeetCode.Features.Problem.Create;
 using LeetCode.Features.Problem.Delete;
 using LeetCode.Features.Problem.Edit;
@@ -30,7 +31,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         return Ok(problem);
     }
 
-    /* Муторно, долго и должно замениться GQL в будущем
+    /* Должно замениться GQL в будущем
     [HttpGet("{problemId}/topics")]
     public async Task<IActionResult> GetProblemTopics(
         [FromRoute] long problemId)
@@ -66,13 +67,8 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     public async Task<IActionResult> Create(
         [FromBody] CreateProblemInput input)
     {
-        // TODO: вынести куда нибудь
-        var userId = User
-            .Claims
-            .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
-            .Value;
-
-        var command = Mapper.Map<CreateProblemCommand>(input) with { CreatorId = new Guid(userId) };
+        var userId = User.GetUserId();
+        var command = Mapper.Map<CreateProblemCommand>(input) with { CreatorId = userId };
         var problemId = await Mediator.Send(command);
         return Ok(problemId);
     }
@@ -82,13 +78,8 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     public async Task<IActionResult> Update(
         [FromBody] UpdateProblemInput input)
     {
-        // TODO: вынести куда нибудь
-        var userId = User
-            .Claims
-            .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
-            .Value;
-
-        var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = new Guid(userId) };
+        var userId = User.GetUserId();
+        var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = userId };
         await Mediator.Send(command);
         return Ok();
     }

@@ -1,5 +1,6 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Auth;
+using LeetCode.Extensions;
 using LeetCode.Features.Auth;
 using MapsterMapper;
 using MediatR;
@@ -41,13 +42,8 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
     [Authorize]
     public async Task<IActionResult> GetCurrentUserInfo()
     {
-        // TODO: вынести куда нибудь
-        var userId = User
-            .Claims
-            .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
-            .Value;
-
-        var command = new GetUserInfoCommand(new Guid(userId));
+        var userId = User.GetUserId();
+        var command = new GetUserInfoCommand(userId);
         var user = await Mediator.Send(command);
         return Ok(user);
     }
