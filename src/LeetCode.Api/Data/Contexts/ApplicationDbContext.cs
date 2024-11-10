@@ -19,12 +19,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ProblemSolution> ProblemSolutions { get; set; } = default!;
 
-    public DbSet<AcceptedSolution> AcceptedProblemSolutions { get; set; } = default!;
-
-    public DbSet<UnAcceptedSolution> UnAcceptedProblemSolutions { get; set; } = default!;
-
-    public DbSet<DraftSolution> DraftProblemSolutions { get; set; } = default!;
-
     public DbSet<SolutionTest> SolutionTests { get; set; } = default!;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }

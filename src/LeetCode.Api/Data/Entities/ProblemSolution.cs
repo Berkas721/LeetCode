@@ -8,9 +8,18 @@ public class ProblemSolution
 
     public string Code { get; set; } = string.Empty;
 
-    public ProblemSolutionStatus Status { get; }
+    public ProblemSolutionStatus Status { get; set; }
 
-    public DateTime? SubmittedAt { get; set; }
+    public DateTime? UpdatedAt { get; init; }
+
+    public DateTime? SubmittedAt { get; init; }
+
+    public long? TotalUsedTime { get; init; }
+
+    public long? TotalUsedMemory { get; init; }
+
+    public long[]? FailedTestIds { get; init; }
+
 
     public Guid ImplementedProblemId { get; set; }
 
