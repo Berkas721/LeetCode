@@ -29,6 +29,4 @@ public class Problem
     public List<TestCase>? TestCases { get; set; }
 
     public List<ImplementedProblem>? ImplementedProblems { get; set; }
-
-    public List<ProblemResolveSession>? ResolveSessions { get; set; }
 }
