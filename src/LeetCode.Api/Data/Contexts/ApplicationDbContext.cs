@@ -27,12 +27,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<SolutionTest> SolutionTests { get; set; } = default!;
 
-    public DbSet<PassedTest> PassedSolutionTests { get; set; } = default!;
-
-    public DbSet<FailedWithErrorTest> FailedWithErrorSolutionTests { get; set; } = default!;
-
-    public DbSet<FailedWithIncorrectAnswerTest> FailedWithIncorrectAnswersSolutionTests { get; set; } = default!;
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

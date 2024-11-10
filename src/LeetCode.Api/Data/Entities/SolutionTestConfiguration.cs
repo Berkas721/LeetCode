@@ -12,10 +12,11 @@ public class SolutionTestConfiguration : IEntityTypeConfiguration<SolutionTest>
             .HasAlternateKey(x => new { x.SolutionId, x.TestCaseId });
 
         builder
-            .HasDiscriminator(x => x.ResultStatus)
-            .HasValue<SolutionTest>(SolutionTestResultStatus.Unknown)
-            .HasValue<PassedTest>(SolutionTestResultStatus.Passed)
-            .HasValue<FailedWithErrorTest>(SolutionTestResultStatus.FailedWithError)
-            .HasValue<FailedWithIncorrectAnswerTest>(SolutionTestResultStatus.FailedWithIncorrectAnswer);
+            .Property(x => x.IncorrectAnswer)
+            .HasMaxLength(1024);
+
+        builder
+            .Property(x => x.ErrorMessage)
+            .HasMaxLength(1024);
     }
 }
