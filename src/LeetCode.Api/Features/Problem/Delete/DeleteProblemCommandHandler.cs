@@ -1,6 +1,9 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Data.Enums;
+using LeetCode.Data.OwnedTypes;
+using LeetCode.Exceptions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Delete;
 
@@ -21,9 +24,20 @@ public sealed record DeleteProblemCommandHandler : IRequestHandler<DeleteProblem
     { 
         var problem = await _dbContext
             .Problems
-            .FindAsync(request.ProblemId);
+            .Where(x => x.Id == request.ProblemId)
+            .FirstOrDefaultAsync(cancellationToken);
 
-        problem.Status = ProblemStatus.Deleted;
+        ResourceNotFoundException.ThrowIfNull(problem, "blablabla");
+
+        if (problem.DeleteInfo is not null)
+            throw new InvalidOperationException($"Задача с id: {problem.Id} уже удалена");
+
+        problem.DeleteInfo = new ActionInfo
+        {
+            Date = DateTime.UtcNow,
+            // TODO: дсотать из авторизированного пользователя
+            AgentId = Guid.NewGuid()
+        };
 
         await _dbContext
             .SaveChangesAsync(cancellationToken);

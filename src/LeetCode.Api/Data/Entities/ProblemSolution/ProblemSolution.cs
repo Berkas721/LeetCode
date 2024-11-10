@@ -8,22 +8,13 @@ public class ProblemSolution
 
     public string Code { get; set; } = string.Empty;
 
-    public string? Notes { get; set; }
-
     public ProblemSolutionStatus Status { get; }
 
-    public DateTime? SubmittedAt { get; }
+    public DateTime? SubmittedAt { get; set; }
 
+    public Guid ImplementedProblemId { get; set; }
 
-    public long SessionId { get; set; }
-
-    public ProblemResolveSession? Session { get; set; }
-
-
-    public Guid RunningDetailsId { get; set; }
-
-    public SolutionRunningDetails? RunningDetails { get; set; }
-
+    public ImplementedProblem? ImplementedProblem { get; set; }
 
     public List<SolutionTest>? Tests { get; set; }
 }

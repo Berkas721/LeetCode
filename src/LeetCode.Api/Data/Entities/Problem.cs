@@ -13,8 +13,6 @@ public class Problem
 
     public ProblemDifficulty Difficulty { get; set; } = ProblemDifficulty.Easy;
 
-    public bool IsPremiumRequired { get; set; }
-
     public ProblemStatus Status { get; set; } = ProblemStatus.Unknown;
 
     public ActionInfo CreateInfo { get; set; } = default!;
@@ -30,7 +28,7 @@ public class Problem
 
     public List<TestCase>? TestCases { get; set; }
 
-    public List<SolutionRunningDetails>? SolutionRunningDetails { get; set; }
+    public List<ImplementedProblem>? ImplementedProblems { get; set; }
 
     public List<ProblemResolveSession>? ResolveSessions { get; set; }
 }

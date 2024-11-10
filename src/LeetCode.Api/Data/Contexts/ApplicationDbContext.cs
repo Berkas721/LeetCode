@@ -11,11 +11,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ProblemTopic> ProblemTopics { get; set; } = default!;
 
-    public DbSet<SolutionRunningDetails> SolutionsRunningDetails { get; set; } = default!;
+    public DbSet<ImplementedProblem> SolutionsRunningDetails { get; set; } = default!;
 
     public DbSet<ProgrammingLanguage> Languages { get; set; } = default!;
-
-    public DbSet<ProgrammingLanguageVersion> LanguageVersions { get; set; } = default!;
 
     public DbSet<TestCase> TestCases { get; set; } = default!;
 

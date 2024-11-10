@@ -13,10 +13,6 @@ public class ProblemSolutionConfiguration : IEntityTypeConfiguration<ProblemSolu
             .HasMaxLength(4096);
 
         builder
-            .Property(x => x.Notes)
-            .HasMaxLength(512);
-
-        builder
             .HasDiscriminator(x => x.Status)
             .HasValue<ProblemSolution>(ProblemSolutionStatus.Unknown)
             .HasValue<DraftSolution>(ProblemSolutionStatus.Draft)

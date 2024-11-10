@@ -8,10 +8,15 @@ public class ProgrammingLanguageConfiguration : IEntityTypeConfiguration<Program
     public void Configure(EntityTypeBuilder<ProgrammingLanguage> builder)
     {
         builder
-            .HasAlternateKey(x => x.Name);
+            .HasIndex(x => new { x.LanguageName, x.VersionName })
+            .IsUnique();
 
         builder
-            .Property(x => x.Name)
+            .Property(x => x.LanguageName)
+            .HasMaxLength(64);
+
+        builder
+            .Property(x => x.VersionName)
             .HasMaxLength(64);
     }
 }

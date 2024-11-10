@@ -2,13 +2,13 @@
 
 namespace LeetCode.Data.Entities;
 
-public class SolutionRunningDetails
+public class ImplementedProblem
 {
     public Guid Id { get; set; }
 
     public string DefaultCode { get; set; } = string.Empty;
 
-    public string WorkingSolution { get; set; } = string.Empty;
+    public string WorkingSolutionCode { get; set; } = string.Empty;
 
     public Dictionary<string, string> AdditionalDetails { get; set; } = [];
 
@@ -24,7 +24,7 @@ public class SolutionRunningDetails
 
     public long LanguageId { get; set; }
 
-    public ProgrammingLanguageVersion? Language { get; set; }
+    public ProgrammingLanguage? Language { get; set; }
 
 
     public List<ProblemSolution>? Solutions { get; set; }
