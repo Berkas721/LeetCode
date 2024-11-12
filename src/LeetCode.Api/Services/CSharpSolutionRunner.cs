@@ -1,5 +1,4 @@
 ﻿using LeetCode.Abstractions;
-using LeetCode.Data.Entities;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
@@ -11,7 +10,7 @@ public class CSharpSolutionRunner : ISolutionRunner
 {
     private const string NecessaryUsing = 
         "using System.Text.Json;\n";
-    
+
     private const string RunSolutionCode = 
         """
         var input = JsonSerializer.Deserialize<Problem.InputData>(InputJson); 

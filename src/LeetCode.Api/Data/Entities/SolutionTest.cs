@@ -1,4 +1,4 @@
-﻿using LeetCode.Data.Enums;
+﻿using LeetCode.Dto.SolutionTest;
 
 namespace LeetCode.Data.Entities;
 

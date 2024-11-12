@@ -14,13 +14,4 @@ public static partial class Startup
 
         return builder;
     }
-
-    private static WebApplicationBuilder AddSolutionTest(this WebApplicationBuilder builder)
-    {
-        var services = builder.Services;
-
-        services.AddSingleton<ITestSolution, TestSolution>();
-
-        return builder;
-    }
 }
