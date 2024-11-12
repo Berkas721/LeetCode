@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using LeetCode.Abstractions;
+using LeetCode.Dto.Enums;
 using LeetCode.Dto.SolutionTest;
 using LeetCode.Exceptions;
 using LeetCode.Utils;

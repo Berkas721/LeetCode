@@ -1,4 +1,6 @@
-﻿namespace LeetCode.Dto.SolutionTest;
+﻿using LeetCode.Dto.Enums;
+
+namespace LeetCode.Dto.SolutionTest;
 
 public sealed record SolutionTestResult
 {

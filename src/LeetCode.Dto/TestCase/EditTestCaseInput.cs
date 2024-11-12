@@ -1,8 +1,8 @@
 ﻿namespace LeetCode.Dto.TestCase;
 
-public class EditTestCaseInput
+public sealed record EditTestCaseInput
 {
-    public required string? NewInput { get; init; }
+    public string? NewInput { get; init; }
 
-    public required string? NewOutput { get; init; }
+    public string? NewOutput { get; init; }
 }

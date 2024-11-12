@@ -41,6 +41,8 @@ public class CreateTestCaseCommandHandler : IRequestHandler<CreateTestCaseComman
             ProblemId = request.ProblemId
         };
 
+        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(request.ProblemId);
+
         var duplicate = await _dbContext
             .TestCases
             .Where(x => x.ProblemId == testCase.ProblemId && x.Input == testCase.Input)

@@ -14,5 +14,5 @@ public sealed record SignUpInput
     public required string LastName { get; init; }
 
     [SwaggerSchema("Birthday of the person in \"YYYY-MM-DD\" format.")]
-    public required string Birthday { get; init; }
+    public required DateOnly Birthday { get; init; }
 }

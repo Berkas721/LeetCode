@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using LeetCode.Data.Entities;
+using LeetCode.Data.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,5 +32,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         modelBuilder
             .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    public async Task ThrowExceptionIfProblemHasOpenStatus(long problemId)
+    {
+        var status = await Problems
+            .Where(x => x.Id == problemId)
+            .Select(x => x.Status)
+            .FirstOrDefaultAsync();
+
+        if (status == ProblemStatus.Open)
+            throw new Exception("еппси кола");
     }
 }
