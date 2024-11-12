@@ -2,5 +2,5 @@
 
 public interface ISolutionRunner
 {
-    public Func<string, Task<string>> Create(string problemDefinitionCode, string solutionCode);
+    public Func<string, Task<string>> Create(string problemCode, string solutionCode);
 }

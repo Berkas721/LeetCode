@@ -3,12 +3,23 @@ using LeetCode.Abstractions;
 using LeetCode.Data.Enums;
 using LeetCode.Exceptions;
 using LeetCode.Utils;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace LeetCode.Services;
 
 public class TestSolution : ITestSolution
 {
     private readonly IServiceProvider _provider;
+    
+    private const string RunSolutionCode = 
+        """
+        using System.Text.Json;
+
+        var input = JsonSerializer.Deserialize<Problem.InputData>(InputJson);
+        var output = Problem.RunUserSolution(input);
+        JsonSerializer.Serialize(output);
+        """;
 
     public TestSolution(IServiceProvider provider)
     {
@@ -16,8 +27,8 @@ public class TestSolution : ITestSolution
     }
 
     public async Task<IReadOnlyList<SolutionTestResult>> TestAsync(
-        string solutionCode, 
-        string problemDefinitionsCode,
+        string problemCode,
+        string solutionCode,
         string languageName,
         IReadOnlyList<TestCaseData> testCases)
     {
@@ -27,7 +38,7 @@ public class TestSolution : ITestSolution
             throw new ResourceNotFoundException($"Встречен неизвестный системе язык {languageName}");
 
         var solutionRunnerCreator = _provider.GetKeyedService<ISolutionRunner>(ProgrammingLanguages.CSharpKey);
-        var solutionRunner = solutionRunnerCreator.Create(problemDefinitionsCode, solutionCode);
+        var solutionRunner = solutionRunnerCreator.Create(problemCode, solutionCode);
 
         var timer = new Stopwatch();
 

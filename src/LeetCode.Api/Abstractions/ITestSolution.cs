@@ -6,7 +6,7 @@ public interface ITestSolution
 {
     public Task<IReadOnlyList<SolutionTestResult>> TestAsync(
         string solutionCode,
-        string problemDefinitionsCode,
+        string problemCode,
         string languageName,
         IReadOnlyList<TestCaseData> testCases);
 }
