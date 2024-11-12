@@ -27,80 +27,17 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         return Ok();
     }
 
+    /*
     [HttpGet("{problemId}")]
     public async Task<IActionResult> GetById(
-        [FromRoute] long problemId, 
+        [FromRoute] long problemId,
         [FromServices] ApplicationDbContext dbContext,
         [FromServices] ITestSolution testSolution)
     {
-        var defsCode = @"
-        using System.Text.Json;
-
-        public class Problem
-        {
-            public class InputData 
-            {
-                // поля проставляет создатель задачи
-                public int UnnamedArgument1 { get; init; }
-                public int UnnamedArgument2 { get; init; }
-            }
-
-            public class OutputData 
-            {
-                // поля проставляет создатель задачи
-                public int UnnamedResult1 { get; init; }
-            }
-
-            public static OutputData RunUserSolution(InputData input) 
-            {
-                // some admin actions
-
-                return new OutputData 
-                {
-                    UnnamedResult1 = Solution.SomeMethod(
-                        input.UnnamedArgument1, 
-                        input.UnnamedArgument2)
-                };
-            }
-        }";
-        
-        var solutionCode = @"
-        public class Solution
-        {
-            public static int SomeMethod(int a, int b)
-            {
-                return a+b;
-            }
-        }";
-        
-        List<TestCaseData> testcases = [
-            new()
-            {
-                InputJson = "{\"UnnamedArgument1\":1,\"UnnamedArgument2\":2}",
-                OutputJson = "{\"UnnamedResult1\":5}"
-            },
-            new()
-            {
-                InputJson = "{\"UnnamedArgument1:5,\"UnnamedArgument2\":9}",
-                OutputJson = "{\"UnnamedResult1\":14}"
-            },
-            new()
-            {
-                InputJson = "{\"UnnamedArgument1\":450,\"UnnamedArgument2\":550}",
-                OutputJson = "{\"UnnamedResult1\":1000}"
-            }
-        ];
-        
-        var result = testSolution.TestAsync(
-            solutionCode, 
-            defsCode, 
-            ProgrammingLanguages.CSharpKey, 
-            testcases);
-
-        return Ok(result);
+        return Ok();
     }
 
-    /* Должно замениться GQL в будущем
+    // Должно замениться GQL в будущем
     [HttpGet("{problemId}/topics")]
     public async Task<IActionResult> GetProblemTopics(
         [FromRoute] long problemId)
