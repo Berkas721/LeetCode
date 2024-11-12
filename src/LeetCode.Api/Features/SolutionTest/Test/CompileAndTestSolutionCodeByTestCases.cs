@@ -14,7 +14,7 @@ public sealed record CompileAndTestSolutionCodeByTestCasesRequest
     public required string ProblemCode { get; init; }
     public required string SolutionCode { get; init; }
     public required string LanguageCode { get; init; }
-    public required IReadOnlyList<TestCase> TestCases { get; init; }
+    public required IReadOnlyList<Dto.SolutionTest.TestCase> TestCases { get; init; }
 } 
 
 public class CompileAndTestSolutionCodeByTestCases
