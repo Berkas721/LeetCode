@@ -3,6 +3,7 @@ using LeetCode.Dto.Problem;
 using LeetCode.Exceptions;
 using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Query;
 
@@ -28,10 +29,11 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
     {
         var problem = await _dbContext
             .Problems
-            .FindAsync(request.ProblemId);
+            .Where(x => x.Id == request.ProblemId)
+            .FirstOrDefaultAsync(cancellationToken);
 
         ResourceNotFoundException
-            .ThrowIfNull(problem, $"не найдена задача с id: {request.ProblemId}");
+            .ThrowIfNull(problem, $"Не найдена задача с id: {request.ProblemId}");
 
         return _mapper.Map<ProblemOutput>(problem) with
         {

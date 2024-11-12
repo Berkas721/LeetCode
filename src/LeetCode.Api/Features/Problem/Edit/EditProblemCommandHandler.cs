@@ -20,8 +20,6 @@ public sealed record EditProblemCommand : IRequest
 
     public required ProblemDifficulty? NewDifficulty { get; init; } 
 
-    public required bool? IsPremiumRequired { get; init; }
-
     public required List<long>? NewTopicIds { get; init; }
 }
 
@@ -46,10 +44,9 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
         var problem = await _dbContext
             .Problems
             .Include(x => x.Topics)
-            .FirstAsync(
-                x => x.Id == request.Id, 
-                cancellationToken);
-        
+            .Where(x => x.Id == request.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
         ResourceNotFoundException
             .ThrowIfNull(problem, $"не найдена задача с id: {request.Id}");
 
@@ -64,9 +61,6 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
 
         if (request.NewDifficulty is not null)
             problem.Difficulty = (ProblemDifficulty)request.NewDifficulty;
-
-        if (request.IsPremiumRequired is not null)
-            problem.IsPremiumRequired = (bool)request.IsPremiumRequired;
 
         if (request.NewTopicIds is not null)
         {

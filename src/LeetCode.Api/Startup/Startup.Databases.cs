@@ -1,5 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql;
 
 namespace LeetCode.Startup;
 
@@ -14,7 +16,19 @@ public partial class Startup
         builder
             .Services
             .AddDbContextPool<ApplicationDbContext>(options =>
-                options.UseNpgsql(connectionString));
+            {
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+                var searchPaths = connectionStringBuilder.SearchPath?.Split(',');
+
+                options.UseNpgsql(connectionString, o =>
+                {
+                    if (searchPaths is { Length: > 0 })
+                    {
+                        var mainSchema = searchPaths[0];
+                        o.MigrationsHistoryTable(HistoryRepository.DefaultTableName, mainSchema);
+                    }
+                });
+            });
 
         return builder;
     }

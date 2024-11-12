@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LeetCode.Data.Entities;
 
-public class SolutionRunningDetailsConfiguration : IEntityTypeConfiguration<SolutionRunningDetails>
+public class ImplementedProblemConfiguration : IEntityTypeConfiguration<ImplementedProblem>
 {
-    public void Configure(EntityTypeBuilder<SolutionRunningDetails> builder)
+    public void Configure(EntityTypeBuilder<ImplementedProblem> builder)
     {
         builder
             .HasAlternateKey(x => new { x.ProblemId, x.LanguageId });
@@ -16,17 +16,17 @@ public class SolutionRunningDetailsConfiguration : IEntityTypeConfiguration<Solu
             .HasMaxLength(4096);
 
         builder
-            .Property(x => x.WorkingSolution)
+            .Property(x => x.WorkingSolutionCode)
             .HasMaxLength(1024);
 
         builder.OwnsOne(
             x => x.CreateInfo, 
-            OwnedEntitiesConfigurations.ConfigureActionInfo<SolutionRunningDetails>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<ImplementedProblem>()
         );
 
         builder.OwnsOne(
             x => x.DeleteInfo, 
-            OwnedEntitiesConfigurations.ConfigureActionInfo<SolutionRunningDetails>()
+            OwnedEntitiesConfigurations.ConfigureActionInfo<ImplementedProblem>()
         );
     }
 }
