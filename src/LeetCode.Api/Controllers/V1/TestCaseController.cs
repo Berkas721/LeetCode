@@ -33,6 +33,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
         throw new NotImplementedException();
     }
 
+    // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
     [HttpPut("{testcaseId}/check")]
     public async Task<IActionResult> Check(
         [FromRoute] long testcaseId)

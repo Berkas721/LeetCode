@@ -14,18 +14,18 @@ public sealed record CompileAndTestSolutionCodeByTestCasesRequest
 {
     public required string ProblemCode { get; init; }
     public required string SolutionCode { get; init; }
-    public required string LanguageCode { get; init; }
+    public required long LanguageId { get; init; }
     public required IReadOnlyList<Dto.SolutionTest.TestCase> TestCases { get; init; }
 } 
 
 public class CompileAndTestSolutionCodeByTestCases
     : IRequestHandler<CompileAndTestSolutionCodeByTestCasesRequest, IReadOnlyList<SolutionTestResult>>
 {
-    private readonly IServiceProvider _provider;
+    private readonly ISolutionRunnerFactory _solutionRunnerFactor;
 
-    public CompileAndTestSolutionCodeByTestCases(IServiceProvider serviceProvider)
+    public CompileAndTestSolutionCodeByTestCases(ISolutionRunnerFactory solutionRunnerFactor)
     {
-        _provider = serviceProvider;
+        _solutionRunnerFactor = solutionRunnerFactor;
     }
 
     public async Task<IReadOnlyList<SolutionTestResult>> Handle(
@@ -34,11 +34,7 @@ public class CompileAndTestSolutionCodeByTestCases
     {
         List<SolutionTestResult> testResults = [];
 
-        if (!ProgrammingLanguages.All.Contains(request.LanguageCode))
-            throw new ResourceNotFoundException($"Встречен неизвестный системе язык {request.LanguageCode}");
-
-        var solutionRunnerCreator = _provider.GetKeyedService<ISolutionRunner>(ProgrammingLanguages.CSharpKey);
-        var solutionRunner = solutionRunnerCreator.Create(request.ProblemCode, request.SolutionCode);
+        var solutionRunner = _solutionRunnerFactor.CreateRunner(request.ProblemCode, request.SolutionCode, request.LanguageId);
 
         var timer = new Stopwatch();
 
@@ -48,7 +44,7 @@ public class CompileAndTestSolutionCodeByTestCases
             {
                 timer.Restart();
 
-                var solutionOutput = await solutionRunner(testcase.InputJson);
+                var solutionOutput = await solutionRunner.RunAsync(testcase.InputJson);
 
                 timer.Stop();
 
