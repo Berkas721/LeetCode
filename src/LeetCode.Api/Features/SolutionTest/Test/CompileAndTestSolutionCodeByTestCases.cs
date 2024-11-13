@@ -2,8 +2,6 @@
 using LeetCode.Abstractions;
 using LeetCode.Dto.Enums;
 using LeetCode.Dto.SolutionTest;
-using LeetCode.Exceptions;
-using LeetCode.Utils;
 using MediatR;
 
 namespace LeetCode.Features.SolutionTest.Test;

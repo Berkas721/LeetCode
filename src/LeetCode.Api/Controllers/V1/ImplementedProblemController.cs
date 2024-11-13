@@ -6,6 +6,7 @@ using LeetCode.Features.ImplementedProblem.Create;
 using LeetCode.Features.ImplementedProblem.Delete;
 using LeetCode.Features.ImplementedProblem.Edit;
 using LeetCode.Features.ImplementedProblem.Query;
+using LeetCode.Features.ImplementedProblem.Test;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,9 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
     public async Task<IActionResult> TestOfficialTestcases(
         [FromRoute] Guid implementedProblemId)
     {
-        throw new NotImplementedException();
+        var command = new TestImplementedProblemSolutionWithOfficialTestCasesCommand(implementedProblemId);
+        var testResults = await Mediator.Send(command);
+        return Ok(testResults);
     }
 
     [HttpPut("{implementedProblemId}/test-solution-with-draft-testcases")]
@@ -55,7 +58,13 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
         [FromRoute] Guid implementedProblemId,
         [FromBody] IReadOnlyList<TestCase> testCases)
     {
-        throw new NotImplementedException();
+        var command = new TestImplementedProblemSolutionWithDraftTestCasesCommand
+        {
+            ImplementedProblemId = implementedProblemId,
+            TestCases = testCases
+        };
+        var testResults = await Mediator.Send(command);
+        return Ok(testResults);
     }
 
     [HttpPut("{implementedProblemId}/run-solution")]
@@ -63,7 +72,9 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
         [FromRoute] Guid implementedProblemId,
         [FromBody] string testCaseInput)
     {
-        throw new NotImplementedException();
+        var command = new RunImplementedProblemSolutionCommand(implementedProblemId, testCaseInput);
+        var testcaseOutput = await Mediator.Send(command);
+        return Ok(testcaseOutput);
     }
 
     [HttpPut("{implementedProblemId}/delete")]
