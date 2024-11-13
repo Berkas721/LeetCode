@@ -1,5 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
-using LeetCode.Dto.SolutionTest;
+using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Exceptions;
 using LeetCode.Features.SolutionTest.Test;
 using MediatR;
@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 namespace LeetCode.Features.ImplementedProblem.Test;
 
 public sealed record TestImplementedProblemSolutionWithOfficialTestCasesCommand(Guid Id)
-    : IRequest<IReadOnlyList<SolutionTestResult>>;
+    : IRequest<TestImplementationProblemResult>;
 
 public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
-    : IRequestHandler<TestImplementedProblemSolutionWithOfficialTestCasesCommand, IReadOnlyList<SolutionTestResult>>
+    : IRequestHandler<TestImplementedProblemSolutionWithOfficialTestCasesCommand, TestImplementationProblemResult>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -25,7 +25,7 @@ public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
         _sender = sender;
     }
 
-    public async Task<IReadOnlyList<SolutionTestResult>> Handle(
+    public async Task<TestImplementationProblemResult> Handle(
         TestImplementedProblemSolutionWithOfficialTestCasesCommand request, 
         CancellationToken cancellationToken)
     {
@@ -58,8 +58,12 @@ public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
             TestCases = testcases
         };
 
-        var testResults = await _sender.Send(testCommand, cancellationToken);
+        var runTestCaseResults = await _sender.Send(testCommand, cancellationToken);
 
-        return testResults;
+        return new TestImplementationProblemResult
+        {
+            ImplementationProblemId = implementedProblem.Id,
+            RunTestCaseResults = runTestCaseResults
+        };
     }
 }

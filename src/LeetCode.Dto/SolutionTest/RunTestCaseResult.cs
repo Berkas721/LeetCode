@@ -2,7 +2,7 @@
 
 namespace LeetCode.Dto.SolutionTest;
 
-public sealed record SolutionTestResult
+public sealed record RunTestCaseResult
 {
     public TestCase TestCase { get; init; }
 

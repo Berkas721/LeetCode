@@ -8,7 +8,7 @@ namespace LeetCode.Features.SolutionTest.Test;
 
 
 public sealed record CompileAndTestSolutionCodeByTestCasesRequest 
-    : IRequest<IReadOnlyList<SolutionTestResult>>
+    : IRequest<IReadOnlyList<RunTestCaseResult>>
 {
     public required string ProblemCode { get; init; }
     public required string SolutionCode { get; init; }
@@ -17,7 +17,7 @@ public sealed record CompileAndTestSolutionCodeByTestCasesRequest
 } 
 
 public class CompileAndTestSolutionCodeByTestCases
-    : IRequestHandler<CompileAndTestSolutionCodeByTestCasesRequest, IReadOnlyList<SolutionTestResult>>
+    : IRequestHandler<CompileAndTestSolutionCodeByTestCasesRequest, IReadOnlyList<RunTestCaseResult>>
 {
     private readonly ISolutionRunnerFactory _solutionRunnerFactor;
 
@@ -26,11 +26,11 @@ public class CompileAndTestSolutionCodeByTestCases
         _solutionRunnerFactor = solutionRunnerFactor;
     }
 
-    public async Task<IReadOnlyList<SolutionTestResult>> Handle(
+    public async Task<IReadOnlyList<RunTestCaseResult>> Handle(
         CompileAndTestSolutionCodeByTestCasesRequest request, 
         CancellationToken cancellationToken)
     {
-        List<SolutionTestResult> testResults = [];
+        List<RunTestCaseResult> testResults = [];
 
         var solutionRunner = _solutionRunnerFactor.CreateRunner(request.ProblemCode, request.SolutionCode, request.LanguageId);
 
@@ -47,14 +47,14 @@ public class CompileAndTestSolutionCodeByTestCases
                 timer.Stop();
 
                 var testResult = solutionOutput != testcase.OutputJson
-                    ? new SolutionTestResult
+                    ? new RunTestCaseResult
                     {
                         TestCase = testcase,
                         Date = DateTime.UtcNow,
                         ResultStatus = SolutionTestResultStatus.FailedWithIncorrectAnswer,
                         IncorrectAnswer = solutionOutput
                     }
-                    : new SolutionTestResult
+                    : new RunTestCaseResult
                     {
                         TestCase = testcase,
                         Date = DateTime.UtcNow,
@@ -68,7 +68,7 @@ public class CompileAndTestSolutionCodeByTestCases
             }
             catch (Exception ex)
             {
-                testResults.Add(new SolutionTestResult
+                testResults.Add(new RunTestCaseResult
                 {
                     TestCase = testcase,
                     Date = DateTime.UtcNow,

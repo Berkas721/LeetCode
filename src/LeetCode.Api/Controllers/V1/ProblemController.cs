@@ -4,6 +4,7 @@ using LeetCode.Extensions;
 using LeetCode.Features.Problem.Create;
 using LeetCode.Features.Problem.Delete;
 using LeetCode.Features.Problem.Edit;
+using LeetCode.Features.Problem.Test;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -55,7 +56,9 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     public async Task<IActionResult> Check(
         [FromRoute] long problemId)
     {
-        return Ok();
+        var command = new TestProblemCommand(problemId);
+        var testResult = await Mediator.Send(command);
+        return Ok(testResult);
     }
 
     [HttpPost]
@@ -67,12 +70,10 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         return Ok(problemId);
     }
 
-    // Только неоткрытые можно изменять!
     [HttpPut("{problemId}/update")]
     public async Task<IActionResult> Update(
         [FromBody] UpdateProblemInput input)
     {
-        var userId = User.GetUserId();
         var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = User.GetUserId() };
         await Mediator.Send(command);
         return Ok();
@@ -82,7 +83,10 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     public async Task<IActionResult> Open(
         [FromRoute] long problemId)
     {
-        return Ok();
+        var userId = User.GetUserId();
+        var command = new OpenProblemForPublicCommand(problemId, userId);
+        var problem = await Mediator.Send(command);
+        return Ok(problem);
     }
 
     [HttpDelete("{problemId}/delete")]

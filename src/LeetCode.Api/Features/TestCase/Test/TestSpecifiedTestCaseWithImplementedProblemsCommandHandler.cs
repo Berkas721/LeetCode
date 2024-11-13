@@ -9,14 +9,14 @@ namespace LeetCode.Features.TestCase.Test;
 public sealed record TestDraftTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.SolutionTest.TestCase TestCase) 
     : IRequest<IReadOnlyList<TestTestCaseResult>>;
 
-public class TestDraftTestCaseWithImplementedProblemsCommandHandler 
+public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler 
     : IRequestHandler<TestDraftTestCaseWithImplementedProblemsCommand, IReadOnlyList<TestTestCaseResult>>
 {
     private readonly ApplicationDbContext _dbContext;
 
     private readonly ISender _sender;
 
-    public TestDraftTestCaseWithImplementedProblemsCommandHandler(
+    public TestSpecifiedTestCaseWithImplementedProblemsCommandHandler(
         ApplicationDbContext dbContext, 
         ISender sender)
     {
@@ -59,18 +59,12 @@ public class TestDraftTestCaseWithImplementedProblemsCommandHandler
             };
 
             var testResults = await _sender.Send(testCommand, cancellationToken);
-            var testResult = testResults.First();
+            var testResult = testResults.RunTestCaseResults.First();
 
             testReport.Add(new TestTestCaseResult
             {
                 ImplementedProblemId = implementedProblemId,
-                TestCase = testCase,
-                ResultStatus = testResult.ResultStatus,
-                Date = testResult.Date,
-                UsedTime = testResult.UsedTime,
-                UsedMemory = testResult.UsedMemory,
-                ErrorMessage = testResult.ErrorMessage,
-                IncorrectAnswer = testResult.IncorrectAnswer
+                RunTestCaseResult = testResult
             });
         }
 

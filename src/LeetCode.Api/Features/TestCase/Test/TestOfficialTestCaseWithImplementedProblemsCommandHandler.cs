@@ -63,18 +63,12 @@ public class TestOfficialTestCaseWithImplementedProblemsCommandHandler
             };
 
             var testResults = await _sender.Send(testCommand, cancellationToken);
-            var testResult = testResults.First();
+            var testResult = testResults.RunTestCaseResults.First();
 
             testReport.Add(new TestTestCaseResult
             {
                 ImplementedProblemId = implementedProblemId,
-                TestCase = testcaseDto,
-                ResultStatus = testResult.ResultStatus,
-                Date = testResult.Date,
-                UsedTime = testResult.UsedTime,
-                UsedMemory = testResult.UsedMemory,
-                ErrorMessage = testResult.ErrorMessage,
-                IncorrectAnswer = testResult.IncorrectAnswer
+                RunTestCaseResult = testResult
             });
         }
 

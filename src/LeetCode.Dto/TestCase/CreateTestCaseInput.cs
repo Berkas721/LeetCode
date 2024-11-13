@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Dto;
+﻿namespace LeetCode.Dto.TestCase;
 
 public sealed record CreateTestCaseInput
 {
