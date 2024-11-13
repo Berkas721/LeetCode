@@ -12,7 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ProblemTopic> ProblemTopics { get; set; } = default!;
 
-    public DbSet<ImplementedProblem> SolutionsRunningDetails { get; set; } = default!;
+    public DbSet<ImplementedProblem> ImplementedProblems { get; set; } = default!;
 
     public DbSet<ProgrammingLanguage> Languages { get; set; } = default!;
 

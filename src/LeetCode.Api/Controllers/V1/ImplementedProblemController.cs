@@ -1,5 +1,11 @@
 ﻿using LeetCode.Controllers.Abstraction;
+using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Dto.SolutionTest;
+using LeetCode.Extensions;
+using LeetCode.Features.ImplementedProblem.Create;
+using LeetCode.Features.ImplementedProblem.Delete;
+using LeetCode.Features.ImplementedProblem.Edit;
+using LeetCode.Features.ImplementedProblem.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,51 +17,61 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
 {
     [HttpGet("{implementedProblemId}")]
     public async Task<IActionResult> GetById(
-        [FromRoute] long implementedProblemId)
+        [FromRoute] Guid implementedProblemId)
     {
-        return Ok();
+        var command = new GetByIdImplementedProblemCommand(implementedProblemId);
+        var testcase = await Mediator.Send(command);
+        return Ok(testcase);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(
+        [FromBody] CreateImplementedProblemInput input)
     {
-        return Ok();
+        var command = Mapper.Map<CreateImplementedProblemCommand>(input) with { CreatorId = User.GetUserId() };
+        var testcase = await Mediator.Send(command);
+        return Ok(testcase);
     }
 
-    [HttpPost("{testcaseId}/update")]
+    [HttpPut("{implementedProblemId}/update")]
     public async Task<IActionResult> Update(
-        [FromRoute] long implementedProblemId)
+        [FromRoute] Guid implementedProblemId,
+        [FromBody] UpdateImplementedProblemInput input)
     {
-        return Ok();
+        var command = Mapper.Map<EditImplementedProblemCommand>(input) with { Id = implementedProblemId };
+        var testcase = await Mediator.Send(command);
+        return Ok(testcase);
     }
 
-    [HttpPost("{testcaseId}/test-solution-with-official-testcases")]
+    [HttpPut("{implementedProblemId}/test-solution-with-official-testcases")]
     public async Task<IActionResult> TestOfficialTestcases(
-        [FromRoute] long implementedProblemId)
+        [FromRoute] Guid implementedProblemId)
     {
-        return Ok();
+        throw new NotImplementedException();
     }
 
-    [HttpPost("{testcaseId}/test-solution-with-draft-testcases")]
+    [HttpPut("{implementedProblemId}/test-solution-with-draft-testcases")]
     public async Task<IActionResult> TestDraftTestcases(
-        [FromRoute] long implementedProblemId,
+        [FromRoute] Guid implementedProblemId,
         [FromBody] IReadOnlyList<TestCase> testCases)
     {
-        return Ok();
+        throw new NotImplementedException();
     }
 
-    [HttpPost("{testcaseId}/run-solution")]
+    [HttpPut("{implementedProblemId}/run-solution")]
     public async Task<IActionResult> CreateOutput(
-        [FromRoute] long implementedProblemId,
+        [FromRoute] Guid implementedProblemId,
         [FromBody] string testCaseInput)
     {
-        return Ok();
+        throw new NotImplementedException();
     }
 
-    [HttpPost("{testcaseId}/delete")]
+    [HttpPut("{implementedProblemId}/delete")]
     public async Task<IActionResult> Delete(
-        [FromRoute] long testcaseId)
+        [FromRoute] Guid implementedProblemId)
     {
+        var command = new DeleteImplementedProblemCommand(implementedProblemId);
+        await Mediator.Send(command);
         return Ok();
     }
 }

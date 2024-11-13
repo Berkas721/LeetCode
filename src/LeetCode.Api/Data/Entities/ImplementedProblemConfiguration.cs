@@ -12,7 +12,7 @@ public class ImplementedProblemConfiguration : IEntityTypeConfiguration<Implemen
             .HasAlternateKey(x => new { x.ProblemId, x.LanguageId });
 
         builder
-            .Property(x => x.DefaultCode)
+            .Property(x => x.ProblemCode)
             .HasMaxLength(4096);
 
         builder
