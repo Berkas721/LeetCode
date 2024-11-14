@@ -15,64 +15,71 @@ namespace LeetCode.Controllers.V1;
 public class TopicController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpGet]
-    public async Task<IActionResult> Query()
+    public async Task<IActionResult> Query(
+        CancellationToken cancellationToken)
     {
         var query = new GetTopicsQuery();
-        var topics = await Mediator.Send(query);
+        var topics = await Mediator.Send(query, cancellationToken);
         return Ok(topics);
     }
 
     [HttpGet("{topicId}")]
     public async Task<IActionResult> GetById(
-        [FromRoute] long topicId)
+        [FromRoute] long topicId, 
+        CancellationToken cancellationToken)
     {
         var query = new GetTopicQuery(topicId);
-        var topic = await Mediator.Send(query);
+        var topic = await Mediator.Send(query, cancellationToken);
         return Ok(topic);
     }
 
     [HttpGet("names")]
-    public async Task<IActionResult> GetAllNames()
+    public async Task<IActionResult> GetAllNames( 
+        CancellationToken cancellationToken)
     {
         var query = new GetTopicsNamesQuery();
-        var names = await Mediator.Send(query);
+        var names = await Mediator.Send(query, cancellationToken);
         return Ok(names);
     }
 
     [HttpGet("problems")]
     public async Task<IActionResult> GetProblems(
-        [FromQuery(Name = "topicId")] List<long> topicIds)
+        [FromQuery(Name = "topicId")] List<long> topicIds, 
+        CancellationToken cancellationToken)
     {
         var command = new FindProblemsAssignedByTopicsCommand(topicIds);
-        var problemIds = await Mediator.Send(command);
+        var problemIds = await Mediator.Send(command, cancellationToken);
         return Ok(problemIds);
     }
 
     [HttpPut]
     public async Task<IActionResult> Create(
-        [FromBody] CreateTopicInput input)
+        [FromBody] CreateTopicInput input, 
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<CreateTopicCommand>(input);
-        var topicId = await Mediator.Send(command);
+        var topicId = await Mediator.Send(command, cancellationToken);
         return Ok(topicId);
     }
 
     [HttpPost("{topicId}")]
     public async Task<IActionResult> Edit(
         [FromRoute] long topicId,
-        [FromBody] UpdateTopicInput input)
+        [FromBody] UpdateTopicInput input, 
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<EditTopicCommand>(input) with { Id = topicId };
-        await Mediator.Send(command);
+        await Mediator.Send(command, cancellationToken);
         return Ok();
     }
 
     [HttpDelete("{topicId}")]
     public async Task<IActionResult> Delete(
-        [FromRoute] long topicId)
+        [FromRoute] long topicId, 
+        CancellationToken cancellationToken)
     {
         var command = new DeleteTopicCommand(topicId);
-        await Mediator.Send(command);
+        await Mediator.Send(command, cancellationToken);
         return Ok();
     }
 }

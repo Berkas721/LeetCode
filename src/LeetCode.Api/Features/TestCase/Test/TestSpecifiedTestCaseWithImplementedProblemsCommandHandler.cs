@@ -1,16 +1,17 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
-using LeetCode.Features.ImplementedProblem.Test;
+using LeetCode.Exceptions;
+using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.TestCase.Test;
 
-public sealed record TestDraftTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.SolutionTest.TestCase TestCase) 
+public sealed record TestSpecifiedTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.SolutionTest.TestCase TestCase) 
     : IRequest<IReadOnlyList<TestTestCaseResult>>;
 
 public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler 
-    : IRequestHandler<TestDraftTestCaseWithImplementedProblemsCommand, IReadOnlyList<TestTestCaseResult>>
+    : IRequestHandler<TestSpecifiedTestCaseWithImplementedProblemsCommand, IReadOnlyList<TestTestCaseResult>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -25,46 +26,46 @@ public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler
     }
 
     public async Task<IReadOnlyList<TestTestCaseResult>> Handle(
-        TestDraftTestCaseWithImplementedProblemsCommand request, 
+        TestSpecifiedTestCaseWithImplementedProblemsCommand request, 
         CancellationToken cancellationToken)
     {
         var testCase = request.TestCase;
+        var problemId = request.ProblemId;
 
         var problemExist = await _dbContext
             .Problems
-            .Where(x => x.Id == request.ProblemId)
+            .Where(x => x.Id == problemId)
             .AnyAsync(cancellationToken);
 
         if (!problemExist)
-            throw new Exception("blablabla");
+            throw new ResourceNotFoundException($"задача с id {problemId} не существует");
 
-        var implementedProblemIds = await _dbContext
+        var implementedProblems = await _dbContext
             .ImplementedProblems
-            .Where(x => x.ProblemId == request.ProblemId)
-            .Select(x => x.Id)
+            .Where(x => x.ProblemId == problemId)
             .ToListAsync(cancellationToken);
 
-        if (implementedProblemIds.Count == 0)
-            throw new Exception("blablabla");
+        if (implementedProblems.Count == 0)
+            throw new Exception($"невозможно провести тест, так как не сущестует реализаций задачи с id {problemId}");
 
         List<TestTestCaseResult> testReport = [];
 
-        // TODO: лучше наверно все это явно прописать без ISender
-        foreach (var implementedProblemId in implementedProblemIds)
+        foreach (var implementedProblem in implementedProblems)
         {
-            var testCommand = new TestImplementedProblemSolutionWithDraftTestCasesCommand
+            var testCommand = new CompileAndTestSolutionCodeByTestCasesRequest
             {
-                ImplementedProblemId = implementedProblemId,
+                ProblemCode = implementedProblem.ProblemCode,
+                SolutionCode = implementedProblem.WorkingSolutionCode,
+                LanguageId = implementedProblem.LanguageId,
                 TestCases = [testCase]
             };
 
             var testResults = await _sender.Send(testCommand, cancellationToken);
-            var testResult = testResults.RunTestCaseResults.First();
 
             testReport.Add(new TestTestCaseResult
             {
-                ImplementedProblemId = implementedProblemId,
-                RunTestCaseResult = testResult
+                ImplementedProblemId = implementedProblem.Id,
+                RunTestCaseResult = testResults.First()
             });
         }
 

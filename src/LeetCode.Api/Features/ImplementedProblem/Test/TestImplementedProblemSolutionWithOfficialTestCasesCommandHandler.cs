@@ -1,6 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +32,7 @@ public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        ResourceNotFoundException.ThrowIfNull(implementedProblem, "blabla");
+            .FirstAsync(request.Id, cancellationToken);
 
         var testcases = await _dbContext
             .TestCases
@@ -48,7 +46,7 @@ public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
             .ToListAsync(cancellationToken);
 
         if (testcases.Count == 0)
-            throw new Exception("blablabla");
+            throw new Exception("Для тестирования кода нужен минимум 1 testcase");
 
         var testCommand = new CompileAndTestSolutionCodeByTestCasesRequest
         {

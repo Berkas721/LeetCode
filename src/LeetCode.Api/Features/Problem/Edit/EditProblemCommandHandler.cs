@@ -3,7 +3,7 @@ using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
 using LeetCode.Dto.Enums;
 using LeetCode.Exceptions;
-using MapsterMapper;
+using LeetCode.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +11,9 @@ namespace LeetCode.Features.Problem.Edit;
 
 public sealed record EditProblemCommand : IRequest
 {
-    public required long Id { get; init; }
+    public required long ProblemId { get; init; }
 
-    public required Guid UpdaterId { get; init; }
+    public required Guid UserId { get; init; }
 
     public required string? NewName { get; init; }
 
@@ -28,31 +28,27 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
 {
     private readonly ApplicationDbContext _dbContext;
 
-    private readonly IMapper _mapper;
-
-    public EditProblemCommandHandler(
-        ApplicationDbContext dbContext, 
-        IMapper mapper)
+    public EditProblemCommandHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
     }
 
     public async Task Handle(
         EditProblemCommand request, 
         CancellationToken cancellationToken)
     {
+        var problemId = request.ProblemId;
+        var userId = request.UserId;
+        
         var problem = await _dbContext
             .Problems
             .Include(x => x.Topics)
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(problemId, cancellationToken);
 
-        ResourceNotFoundException
-            .ThrowIfNull(problem, $"не найдена задача с id: {request.Id}");
+        problem.EnsureAuthor(userId);
 
         if (problem.Status != ProblemStatus.Draft)
-            throw new InvalidStateException($"задачу с id {request.Id} нельзя изменять, так как она находится не в состоянии черновика");
+            throw new ForbiddenException($"задачу с id {problemId} нельзя изменять, так как она находится не в состоянии черновика");
 
         if (request.NewName is not null)
             problem.Name = request.NewName;
@@ -77,11 +73,7 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
             problem.Topics = topics;
         }
 
-        problem.UpdateInfo = new ActionInfo
-        {
-            Date = DateTime.UtcNow,
-            AgentId = request.UpdaterId
-        };
+        problem.UpdateInfo = new ActionInfo(request.UserId);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
     }

@@ -1,6 +1,7 @@
 ﻿using LeetCode.Abstractions;
 using LeetCode.Data.Contexts;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,10 +31,7 @@ public class RunImplementedProblemSolutionCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        ResourceNotFoundException.ThrowIfNull(implementedProblem, "blabla");
+            .FirstAsync(request.Id, cancellationToken);
 
         var solutionRunner = _solutionRunnerFactory.CreateRunner(
             implementedProblem.ProblemCode,

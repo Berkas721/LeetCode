@@ -14,37 +14,42 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
 {
     [HttpPost("signup")]
     public async Task<IActionResult> SignUp(
-        [FromBody] SignUpInput input)
+        [FromBody] SignUpInput input, 
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<SignUpCommand>(input);
-        var userId = await Mediator.Send(command);
+        var userId = await Mediator.Send(command, cancellationToken);
         return Ok(userId);
     }
 
     [HttpPut("signin")]
     public async Task<IActionResult> SignIn(
-        [FromBody] SignInInput input)
+        [FromBody] SignInInput input, 
+        CancellationToken cancellationToken)
     {
         var command = Mapper.Map<SignInCommand>(input);
-        await Mediator.Send(command);
+        await Mediator.Send(command, cancellationToken);
         return Ok();
     }
 
     [HttpPut("signout")]
-    public async Task<IActionResult> SignOut()
+    [Authorize]
+    public async Task<IActionResult> SignOut(
+        CancellationToken cancellationToken)
     {
         var command = new SignOutCommand();
-        await Mediator.Send(command);
+        await Mediator.Send(command, cancellationToken);
         return Ok();
     }
 
     [HttpGet("current-user")]
     [Authorize]
-    public async Task<IActionResult> GetCurrentUserInfo()
+    public async Task<IActionResult> GetCurrentUserInfo( 
+        CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
         var command = new GetUserInfoCommand(userId);
-        var user = await Mediator.Send(command);
+        var user = await Mediator.Send(command, cancellationToken);
         return Ok(user);
     }
 }

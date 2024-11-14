@@ -2,6 +2,7 @@
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Dto.SolutionTest;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -36,8 +37,7 @@ public class TestImplementedProblemSolutionWithSpecifiedTestCasesCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .Where(x => x.Id == request.ImplementedProblemId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(request.ImplementedProblemId, cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(implementedProblem, "blabla");
 

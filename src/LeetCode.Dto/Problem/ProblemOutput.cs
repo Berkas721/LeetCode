@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using LeetCode.Dto.Enums;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LeetCode.Dto.Problem;
 
@@ -10,7 +11,7 @@ public sealed record ProblemOutput
 
     // TODO: зависимость от enum ProblemDifficulty, хз как ее обойти
     [SwaggerSchema("0 - Easy, 1 - Medium, 2 - Hard")]
-    public required int Difficulty { get; init; } 
+    public required ProblemDifficulty Difficulty { get; init; } 
 
     // TODO: зависимость от enum ProblemStatus, хз как ее обойти
     [SwaggerSchema("0 - Unknown, 1 - Draft, 2 - Open, 3 - Deleted")]

@@ -1,9 +1,9 @@
-﻿using LeetCode.Dto.Enums;
-using LeetCode.Dto.SolutionTest;
+﻿using LeetCode.Abstractions;
+using LeetCode.Dto.Enums;
 
 namespace LeetCode.Data.Entities;
 
-public class SolutionTest
+public class SolutionTest : IHasId<long>
 {
     public long Id { get; init; }
 

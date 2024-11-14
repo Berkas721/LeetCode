@@ -1,6 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +10,12 @@ namespace LeetCode.Features.ImplementedProblem.Edit;
 
 public sealed record EditImplementedProblemCommand : IRequest<ImplementedProblemOutput>
 {
-    public required Guid Id { get; init; }
+    public required Guid ImplementedProblemId { get; init; }
+    public required Guid UserId { get; init; }
     public string? ProblemCode { get; init; }
-
+    public string? DefaultSolutionCode { get; init; }
     public string? WorkingSolutionCode { get; init; }
-};
+}
 
 public class EditImplementedProblemCommandHandler 
     : IRequestHandler<EditImplementedProblemCommand, ImplementedProblemOutput>
@@ -36,14 +38,16 @@ public class EditImplementedProblemCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(request.ImplementedProblemId, cancellationToken);
 
-        ResourceNotFoundException.ThrowIfNull(implementedProblem, "blablabal");
-        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(implementedProblem.ProblemId);
+        implementedProblem.EnsureAuthor(request.UserId);
+        await _dbContext.EnsureProblemInDraftStatusAsync(implementedProblem.ProblemId);
 
         if (request.ProblemCode is not null)
             implementedProblem.ProblemCode = request.ProblemCode;
+
+        if (request.DefaultSolutionCode is not null)
+            implementedProblem.DefaultSolutionCode = request.DefaultSolutionCode;
 
         if (request.WorkingSolutionCode is not null)
             implementedProblem.WorkingSolutionCode = request.WorkingSolutionCode;

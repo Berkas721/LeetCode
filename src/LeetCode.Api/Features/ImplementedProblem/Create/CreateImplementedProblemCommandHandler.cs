@@ -1,6 +1,6 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
-using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,62 +8,57 @@ using ActionInfo = LeetCode.Data.OwnedTypes.ActionInfo;
 
 namespace LeetCode.Features.ImplementedProblem.Create;
 
-public sealed record CreateImplementedProblemCommand : IRequest<ImplementedProblemOutput>
+public sealed record CreateImplementedProblemCommand : IRequest<Guid>
 {
-    public required Guid CreatorId { get; init; }
+    public required Guid UserId { get; init; }
     public required long ProblemId { get; init; }
     public required long LanguageId { get; init; }
 };
 
 public class CreateImplementedProblemCommandHandler 
-    : IRequestHandler<CreateImplementedProblemCommand, ImplementedProblemOutput>
+    : IRequestHandler<CreateImplementedProblemCommand, Guid>
 {
     private readonly ApplicationDbContext _dbContext;
 
-    private readonly IMapper _mapper;
-
-    public CreateImplementedProblemCommandHandler(
-        ApplicationDbContext dbContext, 
-        IMapper mapper)
+    public CreateImplementedProblemCommandHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
     }
 
-    public async Task<ImplementedProblemOutput> Handle(
+    public async Task<Guid> Handle(
         CreateImplementedProblemCommand request, 
         CancellationToken cancellationToken)
     {
-        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(request.ProblemId);
+        var problemId = request.ProblemId;
+        var languageId = request.LanguageId;
+        
+        await _dbContext.EnsureProblemInDraftStatusAsync(problemId);
 
-        var duplicate = await _dbContext
+        var duplicateExists = await _dbContext
             .ImplementedProblems
-            .Where(x => x.ProblemId == request.ProblemId && x.LanguageId == request.LanguageId)
+            .Where(x => x.ProblemId == problemId && x.LanguageId == languageId)
             .AnyAsync(cancellationToken);
 
-        if (duplicate)
-            throw new Exception("dfssdfsd");
+        if (duplicateExists)
+            throw new Exception($"Для задачи с id {problemId} уже существует реализация на языке с id {languageId}");
 
         var language = await _dbContext
             .Languages
-            .Where(x => x.Id == request.LanguageId)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        ResourceNotFoundException.ThrowIfNull(language, "мдадмамдама");
+            .FirstAsync(languageId, cancellationToken);
 
         var implementedProblem = new Data.Entities.ImplementedProblem
         {
             ProblemCode = language.DefaultProblemCode,
             DefaultSolutionCode = language.DefaultSolutionCode,
             WorkingSolutionCode = language.DefaultSolutionCode,
-            CreateInfo = new ActionInfo(request.CreatorId),
-            ProblemId = request.ProblemId,
-            LanguageId = request.LanguageId,
+            CreateInfo = new ActionInfo(request.UserId),
+            ProblemId = problemId,
+            LanguageId = languageId,
         };
 
         _dbContext.ImplementedProblems.Add(implementedProblem);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ImplementedProblemOutput>(implementedProblem);
+        return implementedProblem.Id;
     }
 }

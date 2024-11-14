@@ -1,8 +1,10 @@
-﻿using LeetCode.Data.OwnedTypes;
+﻿using LeetCode.Abstractions;
+using LeetCode.Data.OwnedTypes;
 
 namespace LeetCode.Data.Entities;
 
-public class TestCase
+public class TestCase 
+    : IHasCreateInfo, IHasId<long>
 {
     public long Id { get; set; }
 

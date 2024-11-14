@@ -1,7 +1,8 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
-using LeetCode.Features.ImplementedProblem.Test;
+using LeetCode.Extensions;
+using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,46 +30,45 @@ public class TestOfficialTestCaseWithImplementedProblemsCommandHandler
         TestOfficialTestCaseWithImplementedProblemsCommand request, 
         CancellationToken cancellationToken)
     {
+        var testCaseId = request.Id;
+        
         var testcase = await _dbContext
             .TestCases
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        ResourceNotFoundException.ThrowIfNull(testcase, "blablabla");
-        
+            .FirstAsync(testCaseId, cancellationToken);
+
         var testcaseDto = new Dto.SolutionTest.TestCase
         {
             InputJson = testcase.Input,
             OutputJson = testcase.Output
         };
-        
-        var implementedProblemIds = await _dbContext
+
+        var implementedProblems = await _dbContext
             .ImplementedProblems
             .Where(x => x.ProblemId == testcase.ProblemId)
-            .Select(x => x.Id)
             .ToListAsync(cancellationToken);
 
-        if (implementedProblemIds.Count == 0)
-            throw new Exception("blablabla");
+        if (implementedProblems.Count == 0)
+            throw new Exception($"Невозможно провести тест для testcase, так как нет ни одной реализации задачи с id {testcase.ProblemId}");
 
         List<TestTestCaseResult> testReport = [];
 
         // TODO: лучше наверно все это явно прописать без ISender
-        foreach (var implementedProblemId in implementedProblemIds)
+        foreach (var implementedProblem in implementedProblems)
         {
-            var testCommand = new TestImplementedProblemSolutionWithDraftTestCasesCommand
+            var testCommand = new CompileAndTestSolutionCodeByTestCasesRequest
             {
-                ImplementedProblemId = implementedProblemId,
+                ProblemCode = implementedProblem.ProblemCode,
+                SolutionCode = implementedProblem.WorkingSolutionCode,
+                LanguageId = implementedProblem.LanguageId,
                 TestCases = [testcaseDto]
             };
 
             var testResults = await _sender.Send(testCommand, cancellationToken);
-            var testResult = testResults.RunTestCaseResults.First();
 
             testReport.Add(new TestTestCaseResult
             {
-                ImplementedProblemId = implementedProblemId,
-                RunTestCaseResult = testResult
+                ImplementedProblemId = implementedProblem.Id,
+                RunTestCaseResult = testResults.First()
             });
         }
 

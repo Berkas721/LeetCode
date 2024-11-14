@@ -19,10 +19,11 @@ public sealed record CreateProblemCommand : IRequest<long>
 
     public List<long>? TopicIds { get; init; }
 
-    public required Guid CreatorId { get; init; }
+    public required Guid UserId { get; init; }
 }
 
-public sealed record CreateProblemCommandHandler : IRequestHandler<CreateProblemCommand, long>
+public sealed record CreateProblemCommandHandler 
+    : IRequestHandler<CreateProblemCommand, long>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -42,12 +43,7 @@ public sealed record CreateProblemCommandHandler : IRequestHandler<CreateProblem
     {
         var problem = _mapper.Map<Data.Entities.Problem>(request);
 
-        problem.CreateInfo = new ActionInfo
-        {
-            Date = DateTime.UtcNow,
-            AgentId = request.CreatorId
-        };
-
+        problem.CreateInfo = new ActionInfo(request.UserId);
         problem.Status = ProblemStatus.Draft;
 
         // TODO: подумать как убрать дубляж кода
@@ -63,7 +59,6 @@ public sealed record CreateProblemCommandHandler : IRequestHandler<CreateProblem
 
             problem.Topics = topics;
         }
-        
 
         await _dbContext
             .Problems
