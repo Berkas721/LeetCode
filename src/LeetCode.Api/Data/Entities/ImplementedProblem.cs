@@ -8,6 +8,8 @@ public class ImplementedProblem
 
     public string ProblemCode { get; set; } = string.Empty;
 
+    public string DefaultSolutionCode { get; set; } = string.Empty;
+
     public string WorkingSolutionCode { get; set; } = string.Empty;
 
     public ActionInfo CreateInfo { get; set; } = default!;

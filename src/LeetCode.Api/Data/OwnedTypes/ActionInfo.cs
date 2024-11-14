@@ -9,4 +9,12 @@ public class ActionInfo
     public Guid AgentId { get; set; }
 
     public ApplicationUser? Agent { get; set; }
+
+    public ActionInfo() { }
+
+    public ActionInfo(Guid agentId)
+    {
+        Date = DateTime.UtcNow;
+        AgentId = agentId;
+    }
 }

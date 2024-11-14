@@ -16,6 +16,10 @@ public class ImplementedProblemConfiguration : IEntityTypeConfiguration<Implemen
             .HasMaxLength(4096);
 
         builder
+            .Property(x => x.DefaultSolutionCode)
+            .HasMaxLength(4096);
+
+        builder
             .Property(x => x.WorkingSolutionCode)
             .HasMaxLength(1024);
 

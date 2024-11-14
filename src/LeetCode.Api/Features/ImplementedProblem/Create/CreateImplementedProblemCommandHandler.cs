@@ -1,5 +1,6 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
+using LeetCode.Exceptions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,6 @@ public sealed record CreateImplementedProblemCommand : IRequest<ImplementedProbl
     public required Guid CreatorId { get; init; }
     public required long ProblemId { get; init; }
     public required long LanguageId { get; init; }
-    public required string ProblemCode { get; init; }
-    public required string WorkingSolutionCode { get; init; }
 };
 
 public class CreateImplementedProblemCommandHandler 
@@ -45,12 +44,21 @@ public class CreateImplementedProblemCommandHandler
         if (duplicate)
             throw new Exception("dfssdfsd");
 
-        var implementedProblem = _mapper.Map<Data.Entities.ImplementedProblem>(request);
+        var language = await _dbContext
+            .Languages
+            .Where(x => x.Id == request.LanguageId)
+            .FirstOrDefaultAsync(cancellationToken);
 
-        implementedProblem.CreateInfo = new ActionInfo
+        ResourceNotFoundException.ThrowIfNull(language, "мдадмамдама");
+
+        var implementedProblem = new Data.Entities.ImplementedProblem
         {
-            Date = DateTime.UtcNow,
-            AgentId = request.CreatorId
+            ProblemCode = language.DefaultProblemCode,
+            DefaultSolutionCode = language.DefaultSolutionCode,
+            WorkingSolutionCode = language.DefaultSolutionCode,
+            CreateInfo = new ActionInfo(request.CreatorId),
+            ProblemId = request.ProblemId,
+            LanguageId = request.LanguageId,
         };
 
         _dbContext.ImplementedProblems.Add(implementedProblem);

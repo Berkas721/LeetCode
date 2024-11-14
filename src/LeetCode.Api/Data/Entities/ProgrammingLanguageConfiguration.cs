@@ -14,5 +14,13 @@ public class ProgrammingLanguageConfiguration : IEntityTypeConfiguration<Program
         builder
             .Property(x => x.LanguageName)
             .HasMaxLength(64);
+
+        builder
+            .Property(x => x.DefaultProblemCode)
+            .HasMaxLength(4096);
+
+        builder
+            .Property(x => x.DefaultSolutionCode)
+            .HasMaxLength(4096);
     }
 }
