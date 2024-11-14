@@ -1,6 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
+using LeetCode.Dto.Enums;
 using LeetCode.Exceptions;
 using MapsterMapper;
 using MediatR;
@@ -51,7 +52,7 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
             .ThrowIfNull(problem, $"не найдена задача с id: {request.Id}");
 
         if (problem.Status != ProblemStatus.Draft)
-            throw new InvalidStateException($"задача с id {request.Id} не находится в состоянии черновика");
+            throw new InvalidStateException($"задачу с id {request.Id} нельзя изменять, так как она находится не в состоянии черновика");
 
         if (request.NewName is not null)
             problem.Name = request.NewName;

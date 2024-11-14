@@ -1,6 +1,8 @@
-﻿namespace LeetCode.Dto.SolutionTest;
+﻿using LeetCode.Dto.Enums;
 
-public sealed record SolutionTestResult
+namespace LeetCode.Dto.SolutionTest;
+
+public sealed record RunTestCaseResult
 {
     public TestCase TestCase { get; init; }
 

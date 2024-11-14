@@ -1,6 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
+using LeetCode.Dto.Enums;
 using LeetCode.Exceptions;
 using MapsterMapper;
 using MediatR;
@@ -12,13 +13,11 @@ public sealed record CreateProblemCommand : IRequest<long>
 {
     public required string Name { get; init; }
 
-    public required string Description { get; init; }
+    public required string? Description { get; init; }
 
-    public required ProblemDifficulty Difficulty { get; init; } 
+    public required ProblemDifficulty Difficulty { get; init; }
 
-    public required bool IsPremiumRequired { get; init; }
-
-    public required List<long> TopicIds { get; init; }
+    public List<long>? TopicIds { get; init; }
 
     public required Guid CreatorId { get; init; }
 }
@@ -52,15 +51,19 @@ public sealed record CreateProblemCommandHandler : IRequestHandler<CreateProblem
         problem.Status = ProblemStatus.Draft;
 
         // TODO: подумать как убрать дубляж кода
-        var topics = await _dbContext
-            .ProblemTopics
-            .Where(x => request.TopicIds.Contains(x.Id))
-            .ToListAsync(cancellationToken);
+        if (request.TopicIds is not null)
+        {
+            var topics = await _dbContext
+                .ProblemTopics
+                .Where(x => request.TopicIds.Contains(x.Id))
+                .ToListAsync(cancellationToken);
 
-        if (topics.Count != request.TopicIds.Count)
-            throw new ResourceNotFoundException("некоторые topic не найдены");
+            if (topics.Count != request.TopicIds.Count)
+                throw new ResourceNotFoundException("некоторые topic не найдены");
 
-        problem.Topics = topics;
+            problem.Topics = topics;
+        }
+        
 
         await _dbContext
             .Problems

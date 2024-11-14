@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Dto.SolutionTest;
+﻿namespace LeetCode.Dto.Enums;
 
 public enum SolutionTestResultStatus
 {

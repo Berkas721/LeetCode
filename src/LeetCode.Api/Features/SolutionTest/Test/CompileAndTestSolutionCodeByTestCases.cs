@@ -1,43 +1,38 @@
 ﻿using System.Diagnostics;
 using LeetCode.Abstractions;
+using LeetCode.Dto.Enums;
 using LeetCode.Dto.SolutionTest;
-using LeetCode.Exceptions;
-using LeetCode.Utils;
 using MediatR;
 
 namespace LeetCode.Features.SolutionTest.Test;
 
 
 public sealed record CompileAndTestSolutionCodeByTestCasesRequest 
-    : IRequest<IReadOnlyList<SolutionTestResult>>
+    : IRequest<IReadOnlyList<RunTestCaseResult>>
 {
     public required string ProblemCode { get; init; }
     public required string SolutionCode { get; init; }
-    public required string LanguageCode { get; init; }
-    public required IReadOnlyList<TestCase> TestCases { get; init; }
+    public required long LanguageId { get; init; }
+    public required IReadOnlyList<Dto.SolutionTest.TestCase> TestCases { get; init; }
 } 
 
 public class CompileAndTestSolutionCodeByTestCases
-    : IRequestHandler<CompileAndTestSolutionCodeByTestCasesRequest, IReadOnlyList<SolutionTestResult>>
+    : IRequestHandler<CompileAndTestSolutionCodeByTestCasesRequest, IReadOnlyList<RunTestCaseResult>>
 {
-    private readonly IServiceProvider _provider;
+    private readonly ISolutionRunnerFactory _solutionRunnerFactor;
 
-    public CompileAndTestSolutionCodeByTestCases(IServiceProvider serviceProvider)
+    public CompileAndTestSolutionCodeByTestCases(ISolutionRunnerFactory solutionRunnerFactor)
     {
-        _provider = serviceProvider;
+        _solutionRunnerFactor = solutionRunnerFactor;
     }
 
-    public async Task<IReadOnlyList<SolutionTestResult>> Handle(
+    public async Task<IReadOnlyList<RunTestCaseResult>> Handle(
         CompileAndTestSolutionCodeByTestCasesRequest request, 
         CancellationToken cancellationToken)
     {
-        List<SolutionTestResult> testResults = [];
+        List<RunTestCaseResult> testResults = [];
 
-        if (!ProgrammingLanguages.All.Contains(request.LanguageCode))
-            throw new ResourceNotFoundException($"Встречен неизвестный системе язык {request.LanguageCode}");
-
-        var solutionRunnerCreator = _provider.GetKeyedService<ISolutionRunner>(ProgrammingLanguages.CSharpKey);
-        var solutionRunner = solutionRunnerCreator.Create(request.ProblemCode, request.SolutionCode);
+        var solutionRunner = _solutionRunnerFactor.CreateRunner(request.ProblemCode, request.SolutionCode, request.LanguageId);
 
         var timer = new Stopwatch();
 
@@ -47,19 +42,19 @@ public class CompileAndTestSolutionCodeByTestCases
             {
                 timer.Restart();
 
-                var solutionOutput = await solutionRunner(testcase.InputJson);
+                var solutionOutput = await solutionRunner.RunAsync(testcase.InputJson);
 
                 timer.Stop();
 
                 var testResult = solutionOutput != testcase.OutputJson
-                    ? new SolutionTestResult
+                    ? new RunTestCaseResult
                     {
                         TestCase = testcase,
                         Date = DateTime.UtcNow,
                         ResultStatus = SolutionTestResultStatus.FailedWithIncorrectAnswer,
                         IncorrectAnswer = solutionOutput
                     }
-                    : new SolutionTestResult
+                    : new RunTestCaseResult
                     {
                         TestCase = testcase,
                         Date = DateTime.UtcNow,
@@ -73,7 +68,7 @@ public class CompileAndTestSolutionCodeByTestCases
             }
             catch (Exception ex)
             {
-                testResults.Add(new SolutionTestResult
+                testResults.Add(new RunTestCaseResult
                 {
                     TestCase = testcase,
                     Date = DateTime.UtcNow,

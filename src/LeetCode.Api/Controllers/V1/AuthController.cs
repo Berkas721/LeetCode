@@ -21,7 +21,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
         return Ok(userId);
     }
 
-    [HttpPost("signin")]
+    [HttpPut("signin")]
     public async Task<IActionResult> SignIn(
         [FromBody] SignInInput input)
     {
@@ -30,7 +30,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
         return Ok();
     }
 
-    [HttpPost("signout")]
+    [HttpPut("signout")]
     public async Task<IActionResult> SignOut()
     {
         var command = new SignOutCommand();

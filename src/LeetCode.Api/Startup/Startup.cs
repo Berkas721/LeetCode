@@ -7,7 +7,7 @@ public static partial class Startup
         builder
             .AddAuth()
             .AddApplicationDbContext()
-            .AddSolutionRunners()
+            .AddSolutionRunnerFactory()
             .AddIdentity()
             .AddSwagger()
             .AddControllers()

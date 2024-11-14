@@ -1,4 +1,4 @@
-﻿namespace LeetCode.Data.Enums;
+﻿namespace LeetCode.Dto.Enums;
 
 public enum ProblemDifficulty
 {

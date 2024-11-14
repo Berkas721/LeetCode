@@ -6,11 +6,11 @@ public class ImplementedProblem
 {
     public Guid Id { get; set; }
 
-    public string DefaultCode { get; set; } = string.Empty;
+    public string ProblemCode { get; set; } = string.Empty;
+
+    public string DefaultSolutionCode { get; set; } = string.Empty;
 
     public string WorkingSolutionCode { get; set; } = string.Empty;
-
-    public Dictionary<string, string> AdditionalDetails { get; set; } = [];
 
     public ActionInfo CreateInfo { get; set; } = default!;
 

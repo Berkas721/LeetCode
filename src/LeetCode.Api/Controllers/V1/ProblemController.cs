@@ -1,105 +1,95 @@
-﻿using LeetCode.Abstractions;
-using LeetCode.Controllers.Abstraction;
-using LeetCode.Data.Contexts;
+﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Problem;
 using LeetCode.Extensions;
 using LeetCode.Features.Problem.Create;
 using LeetCode.Features.Problem.Delete;
 using LeetCode.Features.Problem.Edit;
-using LeetCode.Features.Problem.Query;
-using LeetCode.Services;
-using LeetCode.Utils;
+using LeetCode.Features.Problem.Test;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 
 namespace LeetCode.Controllers.V1;
 
 [Route("api/v1/problem")]
 public class ProblemController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
-    [HttpGet]
-    public async Task<IActionResult> Query()
-    {
-        // хз как много инфы возвращать
-        return Ok();
-    }
-
-    /*
     [HttpGet("{problemId}")]
     public async Task<IActionResult> GetById(
-        [FromRoute] long problemId,
-        [FromServices] ApplicationDbContext dbContext,
-        [FromServices] ITestSolution testSolution)
+        [FromRoute] long problemId)
     {
         return Ok();
     }
 
     // Должно замениться GQL в будущем
     [HttpGet("{problemId}/topics")]
-    public async Task<IActionResult> GetProblemTopics(
+    public async Task<IActionResult> GetTopics(
         [FromRoute] long problemId)
     {
         return Ok();
     }
 
     [HttpGet("{problemId}/testcases")]
-    public async Task<IActionResult> GetProblemTestcases(
+    public async Task<IActionResult> GetTestcases(
         [FromRoute] long problemId)
     {
         return Ok();
     }
 
-    [HttpGet("{problemId}/solution-running-details")]
-    public async Task<IActionResult> GetProblemSolutionRunningDetails(
+    [HttpGet("{problemId}/implemented-problems")]
+    public async Task<IActionResult> GetImplementedProblems(
         [FromRoute] long problemId)
     {
         return Ok();
     }
 
     [HttpGet("{problemId}/solutions")]
-    public async Task<IActionResult> GetProblemSolutions(
+    public async Task<IActionResult> GetSolutions(
         [FromRoute] long problemId)
     {
-        // их может быть дохера
         return Ok();
     }
-    */
 
-    [HttpPut]
-    [Authorize]
+    // Проверка хватает ли всех данных для открытия задачи
+    [HttpGet("{problemId}/check")]
+    public async Task<IActionResult> Check(
+        [FromRoute] long problemId)
+    {
+        var command = new TestProblemCommand(problemId);
+        var testResult = await Mediator.Send(command);
+        return Ok(testResult);
+    }
+
+    [HttpPost]
     public async Task<IActionResult> Create(
         [FromBody] CreateProblemInput input)
     {
-        var userId = User.GetUserId();
-        var command = Mapper.Map<CreateProblemCommand>(input) with { CreatorId = userId };
+        var command = Mapper.Map<CreateProblemCommand>(input) with { CreatorId = User.GetUserId() };
         var problemId = await Mediator.Send(command);
         return Ok(problemId);
     }
 
-    [HttpPost]
-    [Authorize]
+    [HttpPut("{problemId}/update")]
     public async Task<IActionResult> Update(
         [FromBody] UpdateProblemInput input)
     {
-        var userId = User.GetUserId();
-        var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = userId };
+        var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = User.GetUserId() };
         await Mediator.Send(command);
         return Ok();
     }
 
-    [HttpPost("{problemId}")]
-    [Authorize]
+    [HttpPut("{problemId}/open")]
     public async Task<IActionResult> Open(
         [FromRoute] long problemId)
     {
-        // если ее статус - Draft, есть один рабочий Solution running details, есть testcase-s
-        return Ok();
+        var userId = User.GetUserId();
+        var command = new OpenProblemForPublicCommand(problemId, userId);
+        var problem = await Mediator.Send(command);
+        return Ok(problem);
     }
 
-    [HttpDelete("{problemId}")]
+    [HttpDelete("{problemId}/delete")]
     [Authorize]
     public async Task<IActionResult> Delete(
         [FromRoute] long problemId)

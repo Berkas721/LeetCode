@@ -2,10 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
-namespace LeetCode.Services;
+namespace LeetCode.Utils.SolutionRunners;
 
-// куча сервисов с ключами, ключи - мб константы названий языков.
-// По бд узнаем какойй язык - достаем по ключу соотвествующий сервис
 public class CSharpSolutionRunner : ISolutionRunner
 {
     private const string NecessaryUsing = 
@@ -18,7 +16,9 @@ public class CSharpSolutionRunner : ISolutionRunner
         JsonSerializer.Serialize(output)
         """;
 
-    public Func<string, Task<string>> Create(string problemCode, string solutionCode)
+    private readonly ScriptRunner<string> _scriptRunner;
+
+    public CSharpSolutionRunner(string problemCode, string solutionCode)
     {
         var script = CSharpScript.Create<string>(
             NecessaryUsing + problemCode + solutionCode + RunSolutionCode,
@@ -26,20 +26,19 @@ public class CSharpSolutionRunner : ISolutionRunner
             globalsType: typeof(ScriptGlobalType));
 
         // выдаст ошибку если не скомпилируется
-        var scriptRunner = script.CreateDelegate();
-
-        return ScriptRunner;
-
-        async Task<string> ScriptRunner(string input) => await scriptRunner(new ScriptGlobalType(input));
+        _scriptRunner = script.CreateDelegate();
     }
 
-    public class ScriptGlobalType
-    {
-        public string InputJson { get; init; }
+    public async Task<string> RunAsync(string inputJson) => 
+        await _scriptRunner(new ScriptGlobalType(inputJson));
+}
 
-        public ScriptGlobalType(string inputJson)
-        {
-            InputJson = inputJson;
-        }
+public class ScriptGlobalType
+{
+    public string InputJson { get; init; }
+
+    public ScriptGlobalType(string inputJson)
+    {
+        InputJson = inputJson;
     }
 }

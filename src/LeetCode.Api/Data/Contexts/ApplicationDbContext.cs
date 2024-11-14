@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using LeetCode.Data.Entities;
+using LeetCode.Data.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<ProblemTopic> ProblemTopics { get; set; } = default!;
 
-    public DbSet<ImplementedProblem> SolutionsRunningDetails { get; set; } = default!;
+    public DbSet<ImplementedProblem> ImplementedProblems { get; set; } = default!;
 
     public DbSet<ProgrammingLanguage> Languages { get; set; } = default!;
 
@@ -31,5 +32,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         modelBuilder
             .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    public async Task ThrowExceptionIfProblemHasOpenStatus(long problemId)
+    {
+        var status = await Problems
+            .Where(x => x.Id == problemId)
+            .Select(x => x.Status)
+            .FirstOrDefaultAsync();
+
+        if (status == ProblemStatus.Open)
+            throw new Exception("еппси кола");
     }
 }

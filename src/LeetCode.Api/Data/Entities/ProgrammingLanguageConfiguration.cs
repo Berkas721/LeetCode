@@ -8,7 +8,7 @@ public class ProgrammingLanguageConfiguration : IEntityTypeConfiguration<Program
     public void Configure(EntityTypeBuilder<ProgrammingLanguage> builder)
     {
         builder
-            .HasIndex(x => new { x.LanguageName, x.VersionName })
+            .HasIndex(x => x.LanguageName)
             .IsUnique();
 
         builder
@@ -16,7 +16,11 @@ public class ProgrammingLanguageConfiguration : IEntityTypeConfiguration<Program
             .HasMaxLength(64);
 
         builder
-            .Property(x => x.VersionName)
-            .HasMaxLength(64);
+            .Property(x => x.DefaultProblemCode)
+            .HasMaxLength(4096);
+
+        builder
+            .Property(x => x.DefaultSolutionCode)
+            .HasMaxLength(4096);
     }
 }
