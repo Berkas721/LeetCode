@@ -1,16 +1,17 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
+using LeetCode.Exceptions;
 using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.TestCase.Test;
 
-public sealed record TestDraftTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.SolutionTest.TestCase TestCase) 
+public sealed record TestSpecifiedTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.SolutionTest.TestCase TestCase) 
     : IRequest<IReadOnlyList<TestTestCaseResult>>;
 
 public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler 
-    : IRequestHandler<TestDraftTestCaseWithImplementedProblemsCommand, IReadOnlyList<TestTestCaseResult>>
+    : IRequestHandler<TestSpecifiedTestCaseWithImplementedProblemsCommand, IReadOnlyList<TestTestCaseResult>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -25,26 +26,27 @@ public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler
     }
 
     public async Task<IReadOnlyList<TestTestCaseResult>> Handle(
-        TestDraftTestCaseWithImplementedProblemsCommand request, 
+        TestSpecifiedTestCaseWithImplementedProblemsCommand request, 
         CancellationToken cancellationToken)
     {
         var testCase = request.TestCase;
+        var problemId = request.ProblemId;
 
         var problemExist = await _dbContext
             .Problems
-            .Where(x => x.Id == request.ProblemId)
+            .Where(x => x.Id == problemId)
             .AnyAsync(cancellationToken);
 
         if (!problemExist)
-            throw new Exception("blablabla");
+            throw new ResourceNotFoundException($"задача с id {problemId} не существует");
 
         var implementedProblems = await _dbContext
             .ImplementedProblems
-            .Where(x => x.ProblemId == request.ProblemId)
+            .Where(x => x.ProblemId == problemId)
             .ToListAsync(cancellationToken);
 
         if (implementedProblems.Count == 0)
-            throw new Exception("blablabla");
+            throw new Exception($"невозможно провести тест, так как не сущестует реализаций задачи с id {problemId}");
 
         List<TestTestCaseResult> testReport = [];
 

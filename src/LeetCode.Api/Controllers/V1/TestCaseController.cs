@@ -7,8 +7,10 @@ using LeetCode.Features.TestCase.Create;
 using LeetCode.Features.TestCase.Delete;
 using LeetCode.Features.TestCase.Edit;
 using LeetCode.Features.TestCase.Query;
+using LeetCode.Features.TestCase.Test;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeetCode.Controllers.V1;
@@ -20,7 +22,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     public async Task<IActionResult> GetById(
         [FromRoute] long testcaseId)
     {
-        var command = new GetTestCaseByIdCommand(testcaseId);
+        var command = new GetTestCaseQuery(testcaseId);
         var testcase = await Mediator.Send(command);
         return Ok(testcase);
     }
@@ -28,9 +30,12 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
     [HttpPut("check")]
     public async Task<IActionResult> Check(
+        [FromQuery] long problemId,
         [FromBody] TestCase testCase)
     {
-        throw new NotImplementedException();
+        var command = new TestSpecifiedTestCaseWithImplementedProblemsCommand(problemId, testCase);
+        var testResults = await Mediator.Send(command);
+        return Ok(testResults);
     }
 
     // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
@@ -38,10 +43,13 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     public async Task<IActionResult> Check(
         [FromRoute] long testcaseId)
     {
-        throw new NotImplementedException();
+        var command = new TestOfficialTestCaseWithImplementedProblemsCommand(testcaseId);
+        var testResults = await Mediator.Send(command);
+        return Ok(testResults);
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(
         [FromBody] CreateTestCaseInput input)
     {
@@ -51,20 +59,26 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPut("{testcaseId}/update")]
+    [Authorize]
     public async Task<IActionResult> Update(
         [FromRoute] long testcaseId,
         [FromBody] EditTestCaseInput input)
     {
-        var command = Mapper.Map<EditTestCaseCommand>(input) with { Id = testcaseId };
+        var command = Mapper.Map<EditTestCaseCommand>(input) with
+        {
+            TestCaseId = testcaseId, 
+            UserId = User.GetUserId()
+        };
         var testcase = await Mediator.Send(command);
         return Ok(testcase);
     }
 
     [HttpPut("{testcaseId}/delete")]
+    [Authorize]
     public async Task<IActionResult> Delete(
         [FromRoute] long testcaseId)
     {
-        var command = new DeleteTestCaseCommand(testcaseId);
+        var command = new DeleteTestCaseCommand(testcaseId, User.GetUserId());
         await Mediator.Send(command);
         return Ok();
     }

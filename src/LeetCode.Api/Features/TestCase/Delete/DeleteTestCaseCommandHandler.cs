@@ -1,11 +1,12 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.TestCase.Delete;
 
-public sealed record DeleteTestCaseCommand(long Id) : IRequest;
+public sealed record DeleteTestCaseCommand(long TestCaseId, Guid UserId) : IRequest;
 
 public class DeleteTestCaseCommandHandler : IRequestHandler<DeleteTestCaseCommand>
 {
@@ -20,12 +21,13 @@ public class DeleteTestCaseCommandHandler : IRequestHandler<DeleteTestCaseComman
         DeleteTestCaseCommand request, 
         CancellationToken cancellationToken)
     {
+        var testcaseId = request.TestCaseId;
+        
         var testCase = await _dbContext
             .TestCases
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(testcaseId, cancellationToken);
 
-        ResourceNotFoundException.ThrowIfNull(testCase, "blablbalba");
+        testCase.EnsureAuthor(request.UserId);
         await _dbContext.EnsureProblemInDraftStatusAsync(testCase.ProblemId);
 
         _dbContext.TestCases.Remove(testCase);

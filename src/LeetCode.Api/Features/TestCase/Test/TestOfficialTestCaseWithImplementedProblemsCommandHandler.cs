@@ -1,6 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,26 +30,25 @@ public class TestOfficialTestCaseWithImplementedProblemsCommandHandler
         TestOfficialTestCaseWithImplementedProblemsCommand request, 
         CancellationToken cancellationToken)
     {
+        var testCaseId = request.Id;
+        
         var testcase = await _dbContext
             .TestCases
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        ResourceNotFoundException.ThrowIfNull(testcase, "blablabla");
-        
+            .FirstAsync(testCaseId, cancellationToken);
+
         var testcaseDto = new Dto.SolutionTest.TestCase
         {
             InputJson = testcase.Input,
             OutputJson = testcase.Output
         };
-        
+
         var implementedProblems = await _dbContext
             .ImplementedProblems
             .Where(x => x.ProblemId == testcase.ProblemId)
             .ToListAsync(cancellationToken);
 
         if (implementedProblems.Count == 0)
-            throw new Exception("blablabla");
+            throw new Exception($"Невозможно провести тест для testcase, так как нет ни одной реализации задачи с id {testcase.ProblemId}");
 
         List<TestTestCaseResult> testReport = [];
 

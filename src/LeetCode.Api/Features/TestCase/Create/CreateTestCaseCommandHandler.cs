@@ -29,29 +29,28 @@ public class CreateTestCaseCommandHandler : IRequestHandler<CreateTestCaseComman
         CreateTestCaseCommand request, 
         CancellationToken cancellationToken)
     {
+        var problemId = request.ProblemId;
+
         var testCase = new Data.Entities.TestCase
         {
             Input = request.Input,
             Output = request.Output,
-            CreateInfo = new ActionInfo
-            {
-                Date = DateTime.UtcNow,
-                AgentId = request.CreatorId
-            },
-            ProblemId = request.ProblemId
+            CreateInfo = new ActionInfo(request.CreatorId),
+            ProblemId = problemId
         };
 
         await _dbContext.EnsureProblemInDraftStatusAsync(request.ProblemId);
 
-        var duplicate = await _dbContext
+        var duplicateExists = await _dbContext
             .TestCases
-            .Where(x => x.ProblemId == testCase.ProblemId && x.Input == testCase.Input)
+            .Where(x => x.ProblemId == testCase.ProblemId)
+            .Where(x => x.Input == testCase.Input)
             .AnyAsync(cancellationToken);
 
-        if (duplicate)
-            throw new Exception("blablabal");
+        if (duplicateExists)
+            throw new Exception($"Для задачи с id {problemId} уже существует testcase с таким же входным значением");
 
-        // TODO: проверка что работает со всеми Implemented problems если они есть
+        // TODO: хз ставить ли проверку, что все Implemented problems должны проходить это testcase
 
         _dbContext.TestCases.Add(testCase);
         await _dbContext.SaveChangesAsync(cancellationToken);

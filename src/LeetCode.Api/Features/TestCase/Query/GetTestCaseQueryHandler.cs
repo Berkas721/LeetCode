@@ -1,22 +1,23 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.TestCase.Query;
 
-public sealed record GetTestCaseByIdCommand(long Id) : IRequest<TestCaseOutput>;
+public sealed record GetTestCaseQuery(long Id) : IRequest<TestCaseOutput>;
 
-public class GetTestCaseByIdCommandHandler
-    : IRequestHandler<GetTestCaseByIdCommand, TestCaseOutput>
+public class GetTestCaseQueryHandler
+    : IRequestHandler<GetTestCaseQuery, TestCaseOutput>
 {
     private readonly ApplicationDbContext _dbContext;
     
     private readonly IMapper _mapper;
 
-    public GetTestCaseByIdCommandHandler(
+    public GetTestCaseQueryHandler(
         ApplicationDbContext dbContext, 
         IMapper mapper)
     {
@@ -25,15 +26,12 @@ public class GetTestCaseByIdCommandHandler
     }
 
     public async Task<TestCaseOutput> Handle(
-        GetTestCaseByIdCommand request, 
+        GetTestCaseQuery request, 
         CancellationToken cancellationToken)
     {
         var testCase = await _dbContext
             .TestCases
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        ResourceNotFoundException.ThrowIfNull(testCase, "blablabla");
+            .FirstAsync(request.Id, cancellationToken);
 
         return _mapper.Map<TestCaseOutput>(testCase);
     }
