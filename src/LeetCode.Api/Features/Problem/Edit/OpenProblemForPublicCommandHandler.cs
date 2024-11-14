@@ -3,11 +3,10 @@ using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
 using LeetCode.Dto.Enums;
 using LeetCode.Dto.Problem;
-using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using LeetCode.Features.Problem.Test;
 using MapsterMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Edit;
 
@@ -37,15 +36,17 @@ public class OpenProblemForPublicCommandHandler
         OpenProblemForPublicCommand request, 
         CancellationToken cancellationToken)
     {
+        var problemId = request.ProblemId;
+        var userId = request.UserId;
+        
         var problem = await _dbContext
             .Problems
-            .Where(x => x.Id == request.ProblemId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(problemId, cancellationToken);
 
-        ResourceNotFoundException.ThrowIfNull(problem, "blablabla");
+        problem.EnsureAuthor(userId);
 
         if (problem.Status != ProblemStatus.Draft)
-            throw new Exception("нельзя перевести статус");
+            throw new Exception($"задачу с id {problemId} нельзя изменить, так как она находится не в состоянии черновика");
 
         var testResult = await _sender.Send(
             new TestProblemCommand(problem.Id), 
@@ -56,16 +57,14 @@ public class OpenProblemForPublicCommandHandler
             foreach (var runTestCaseResult in testImplementationProblemResult.RunTestCaseResults)
             {
                 if (runTestCaseResult.ResultStatus != SolutionTestResultStatus.Passed)
-                    throw new Exception("нельзя перевести статус потому что testCase или implementationProblem не проходят проверку");
+                    throw new Exception($"нельзя открыть задачу, потому что реализация с id " +
+                                        $"{testImplementationProblemResult.ImplementationProblemId} не проходит тест");
             }
         }
 
         problem.Status = ProblemStatus.Open;
-        problem.OpenInfo = new ActionInfo
-        {
-            Date = DateTime.UtcNow,
-            AgentId = request.UserId
-        };
+        problem.OpenInfo = new ActionInfo(userId);
+        problem.UpdateInfo = new ActionInfo(userId);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

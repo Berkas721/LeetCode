@@ -1,6 +1,6 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.Problem;
-using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using LeetCode.Features.ImplementedProblem.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -33,36 +33,33 @@ public class TestProblemCommandHandler
             .Problems
             .Include(x => x.ImplementedProblems)
             .Include(x => x.TestCases)
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        ResourceNotFoundException.ThrowIfNull(problem, "blablabla");
+            .FirstAsync(request.Id, cancellationToken);
 
         if(problem.ImplementedProblems.Count < 1)
-            throw new Exception("нельзя перевести статус");
+            throw new Exception("невозможно провести тест, нет ни одной реализации задачи");
 
         if(problem.TestCases.Count < 1)
-            throw new Exception("нельзя перевести статус");
+            throw new Exception("невозможно провести тест, нет ни одного тестового значения");
 
         var implementedProblemsIds = problem
             .ImplementedProblems
             .Select(x => x.Id)
             .ToList();
 
-        var testResult = new TestProblemResult
+        var testProblemResult = new TestProblemResult
         {
             ProblemId = problem.Id
         };
 
         foreach (var implementedProblemsId in implementedProblemsIds)
         {
-            var runImplementedProblemResult = await _sender.Send(
+            var testImplementedProblemResult = await _sender.Send(
                 new TestImplementedProblemSolutionWithOfficialTestCasesCommand(implementedProblemsId), 
                 cancellationToken);
 
-            testResult.TestImplementationProblemResults.Add(runImplementedProblemResult);
+            testProblemResult.TestImplementationProblemResults.Add(testImplementedProblemResult);
         }
 
-        return testResult;
+        return testProblemResult;
     }
 }

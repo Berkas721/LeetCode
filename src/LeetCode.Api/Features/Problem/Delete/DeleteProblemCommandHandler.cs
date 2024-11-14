@@ -1,13 +1,10 @@
 ﻿using LeetCode.Data.Contexts;
-using LeetCode.Data.Enums;
-using LeetCode.Data.OwnedTypes;
-using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Delete;
 
-public sealed record DeleteProblemCommand(long ProblemId) : IRequest;
+public sealed record DeleteProblemCommand(long ProblemId, Guid UserId) : IRequest;
 
 public sealed record DeleteProblemCommandHandler : IRequestHandler<DeleteProblemCommand>
 {
@@ -21,25 +18,19 @@ public sealed record DeleteProblemCommandHandler : IRequestHandler<DeleteProblem
     public async Task Handle(
         DeleteProblemCommand request, 
         CancellationToken cancellationToken)
-    { 
+    {
+        var problemId = request.ProblemId;
+        var userId = request.UserId;
+        
         var problem = await _dbContext
             .Problems
-            .Where(x => x.Id == request.ProblemId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(problemId, cancellationToken);
 
-        ResourceNotFoundException.ThrowIfNull(problem, "blablabla");
+        problem.EnsureAuthor(userId);
 
-        if (problem.DeleteInfo is not null)
-            throw new InvalidOperationException($"Задача с id: {problem.Id} уже удалена");
+        // TODO: щаменить на problem.DeleteInfo = new ActionInfo(userId);
+        _dbContext.Problems.Remove(problem);
 
-        problem.DeleteInfo = new ActionInfo
-        {
-            Date = DateTime.UtcNow,
-            // TODO: дсотать из авторизированного пользователя
-            AgentId = Guid.NewGuid()
-        };
-
-        await _dbContext
-            .SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

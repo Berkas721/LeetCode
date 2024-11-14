@@ -1,9 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.Problem;
-using LeetCode.Exceptions;
-using MapsterMapper;
+using LeetCode.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Query;
 
@@ -12,15 +10,9 @@ public sealed record GetProblemQuery(long ProblemId) : IRequest<ProblemOutput>;
 public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, ProblemOutput>
 {
     private readonly ApplicationDbContext _dbContext;
-
-    private readonly IMapper _mapper;
-
-    public GetProblemQueryHandler(
-        ApplicationDbContext dbContext, 
-        IMapper mapper)
+    public GetProblemQueryHandler(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
     }
 
     public async Task<ProblemOutput> Handle(
@@ -29,14 +21,14 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
     {
         var problem = await _dbContext
             .Problems
-            .Where(x => x.Id == request.ProblemId)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(request.ProblemId, cancellationToken);
 
-        ResourceNotFoundException
-            .ThrowIfNull(problem, $"Не найдена задача с id: {request.ProblemId}");
-
-        return _mapper.Map<ProblemOutput>(problem) with
+        return new ProblemOutput
         {
+            Name = problem.Name,
+            Description = problem.Description,
+            Difficulty = problem.Difficulty,
+            Status = (int)problem.Status,
             CreatorId = problem.CreateInfo.AgentId,
             CreatedAt = problem.CreateInfo.Date,
             UpdaterId = problem.UpdateInfo?.AgentId,
@@ -44,7 +36,7 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
             OpenerId = problem.OpenInfo?.AgentId,
             OpenedAt = problem.OpenInfo?.Date,
             DeleterId = problem.DeleteInfo?.AgentId,
-            DeletedAt = problem.DeleteInfo?.Date
+            DeletedAt = problem.DeleteInfo?.Date,
         };
     }
 }
