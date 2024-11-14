@@ -1,6 +1,7 @@
 ﻿using LeetCode.Data.Entities;
 using LeetCode.Dto.Auth;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -30,9 +31,8 @@ public sealed class GetUserInfoCommandHandler : IRequestHandler<GetUserInfoComma
     {
         var user = await _userManager
             .Users
-            .FirstOrDefaultAsync(
-                x => x.Id == request.UserId, 
-                cancellationToken: cancellationToken);
+            .Where(x => x.Id == request.UserId)
+            .FirstOrDefaultAsync(cancellationToken);
 
         ResourceNotFoundException
             .ThrowIfNull(user, $"не найден пользователь с id: {request.UserId}");

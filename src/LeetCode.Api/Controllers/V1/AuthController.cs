@@ -31,6 +31,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
     }
 
     [HttpPut("signout")]
+    [Authorize]
     public async Task<IActionResult> SignOut()
     {
         var command = new SignOutCommand();

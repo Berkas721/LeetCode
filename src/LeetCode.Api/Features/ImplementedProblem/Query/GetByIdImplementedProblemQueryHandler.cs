@@ -1,22 +1,23 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.ImplementedProblem.Query;
 
-public sealed record GetByIdImplementedProblemCommand(Guid Id) : IRequest<ImplementedProblemOutput>;
+public sealed record GetByIdImplementedProblemQuery(Guid Id) : IRequest<ImplementedProblemOutput>;
 
-public class GetByIdImplementedProblemCommandHandler 
-    : IRequestHandler<GetByIdImplementedProblemCommand, ImplementedProblemOutput>
+public class GetByIdImplementedProblemQueryHandler 
+    : IRequestHandler<GetByIdImplementedProblemQuery, ImplementedProblemOutput>
 {
     private readonly ApplicationDbContext _dbContext;
 
     private readonly IMapper _mapper;
 
-    public GetByIdImplementedProblemCommandHandler(
+    public GetByIdImplementedProblemQueryHandler(
         ApplicationDbContext dbContext, 
         IMapper mapper)
     {
@@ -25,15 +26,12 @@ public class GetByIdImplementedProblemCommandHandler
     }
 
     public async Task<ImplementedProblemOutput> Handle(
-        GetByIdImplementedProblemCommand request, 
+        GetByIdImplementedProblemQuery request, 
         CancellationToken cancellationToken)
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        ResourceNotFoundException.ThrowIfNull(implementedProblem, "blablabal");
+            .FirstAsync(request.Id, cancellationToken);
 
         return _mapper.Map<ImplementedProblemOutput>(implementedProblem);
     }

@@ -1,11 +1,14 @@
 ﻿using LeetCode.Data.Contexts;
-using LeetCode.Exceptions;
+using LeetCode.Extensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.ImplementedProblem.Delete;
 
-public sealed record DeleteImplementedProblemCommand(Guid Id) : IRequest;
+public sealed record DeleteImplementedProblemCommand : IRequest
+{
+    public required Guid ImplementedProblemId { get; init; }
+    public required Guid UserId { get; init; }
+}
 
 public class DeleteImplementedProblemCommandHandler 
     : IRequestHandler<DeleteImplementedProblemCommand>
@@ -23,10 +26,9 @@ public class DeleteImplementedProblemCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstAsync(request.ImplementedProblemId, cancellationToken);
 
-        ResourceNotFoundException.ThrowIfNull(implementedProblem, "blablabal");
+        implementedProblem.EnsureAuthor(request.UserId);
 
         _dbContext.ImplementedProblems.Remove(implementedProblem);
         await _dbContext.SaveChangesAsync(cancellationToken);

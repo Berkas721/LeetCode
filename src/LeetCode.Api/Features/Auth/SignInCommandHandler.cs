@@ -40,13 +40,11 @@ public sealed record SignInCommandHandler : IRequestHandler<SignInCommand>
         var user = await _signInManager
             .UserManager
             .Users
-            .FirstOrDefaultAsync(
-                x => x.UserName == request.UserName,
-                cancellationToken: cancellationToken);
+            .Where(x => x.UserName == request.UserName)
+            .FirstOrDefaultAsync(cancellationToken);
 
-        if (user is null)
-            throw new AuthException($"не существует пользователя с ником {request.UserName}");
-
-        throw new AuthException("неправильный пароль");
+        throw user is null
+            ? new AuthException($"не существует пользователя с ником {request.UserName}")
+            : new AuthException("неправильный пароль");
     }
 }
