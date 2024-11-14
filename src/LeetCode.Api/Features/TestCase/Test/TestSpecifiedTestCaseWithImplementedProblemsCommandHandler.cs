@@ -1,6 +1,6 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
-using LeetCode.Features.ImplementedProblem.Test;
+using LeetCode.Features.SolutionTest.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,33 +38,32 @@ public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler
         if (!problemExist)
             throw new Exception("blablabla");
 
-        var implementedProblemIds = await _dbContext
+        var implementedProblems = await _dbContext
             .ImplementedProblems
             .Where(x => x.ProblemId == request.ProblemId)
-            .Select(x => x.Id)
             .ToListAsync(cancellationToken);
 
-        if (implementedProblemIds.Count == 0)
+        if (implementedProblems.Count == 0)
             throw new Exception("blablabla");
 
         List<TestTestCaseResult> testReport = [];
 
-        // TODO: лучше наверно все это явно прописать без ISender
-        foreach (var implementedProblemId in implementedProblemIds)
+        foreach (var implementedProblem in implementedProblems)
         {
-            var testCommand = new TestImplementedProblemSolutionWithDraftTestCasesCommand
+            var testCommand = new CompileAndTestSolutionCodeByTestCasesRequest
             {
-                ImplementedProblemId = implementedProblemId,
+                ProblemCode = implementedProblem.ProblemCode,
+                SolutionCode = implementedProblem.WorkingSolutionCode,
+                LanguageId = implementedProblem.LanguageId,
                 TestCases = [testCase]
             };
 
             var testResults = await _sender.Send(testCommand, cancellationToken);
-            var testResult = testResults.RunTestCaseResults.First();
 
             testReport.Add(new TestTestCaseResult
             {
-                ImplementedProblemId = implementedProblemId,
-                RunTestCaseResult = testResult
+                ImplementedProblemId = implementedProblem.Id,
+                RunTestCaseResult = testResults.First()
             });
         }
 
