@@ -3,6 +3,7 @@ using System;
 using LeetCode.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LeetCode.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241114174401_AddedDefaultCodeInLanguageAndImplementedProblem")]
+    partial class AddedDefaultCodeInLanguageAndImplementedProblem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -703,38 +706,6 @@ namespace LeetCode.Data.Migrations
                         .WithMany("Solutions")
                         .HasForeignKey("ImplementedProblemId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("LeetCode.Data.OwnedTypes.ActionInfo", "CreateInfo", b1 =>
-                        {
-                            b1.Property<long>("ProblemSolutionId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<Guid>("AgentId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.HasKey("ProblemSolutionId");
-
-                            b1.HasIndex("AgentId");
-
-                            b1.ToTable("ProblemSolutions", "leetcode");
-
-                            b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Agent")
-                                .WithMany()
-                                .HasForeignKey("AgentId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProblemSolutionId");
-
-                            b1.Navigation("Agent");
-                        });
-
-                    b.Navigation("CreateInfo")
                         .IsRequired();
 
                     b.Navigation("ImplementedProblem");

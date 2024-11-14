@@ -1,6 +1,8 @@
-﻿namespace LeetCode.Data.Entities;
+﻿using LeetCode.Abstractions;
 
-public class ProgrammingLanguage
+namespace LeetCode.Data.Entities;
+
+public class ProgrammingLanguage : IHasId<long>
 {
     public long Id { get; set; }
 

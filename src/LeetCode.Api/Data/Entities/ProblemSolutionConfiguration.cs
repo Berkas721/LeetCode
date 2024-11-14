@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LeetCode.Data.OwnedTypes;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LeetCode.Data.Entities;
@@ -10,5 +11,10 @@ public class ProblemSolutionConfiguration : IEntityTypeConfiguration<ProblemSolu
         builder
             .Property(x => x.Code)
             .HasMaxLength(4096);
+
+        builder.OwnsOne(
+            x => x.CreateInfo, 
+            OwnedEntitiesConfigurations.ConfigureActionInfo<ProblemSolution>()
+        );
     }
 }

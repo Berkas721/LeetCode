@@ -1,8 +1,9 @@
-﻿using LeetCode.Data.OwnedTypes;
+﻿using LeetCode.Abstractions;
+using LeetCode.Data.OwnedTypes;
 
 namespace LeetCode.Data.Entities;
 
-public class ImplementedProblem
+public class ImplementedProblem : IHasCreateInfo, IHasId<Guid>
 {
     public Guid Id { get; set; }
 

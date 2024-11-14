@@ -38,7 +38,7 @@ public class EditTestCaseCommandHandler : IRequestHandler<EditTestCaseCommand, T
             .FirstOrDefaultAsync(cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(testCase, "blablbalba");
-        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(testCase.ProblemId);
+        await _dbContext.EnsureProblemInDraftStatusAsync(testCase.ProblemId);
 
         // TODO: проверка что работает со всеми Implemented problems если они есть
 

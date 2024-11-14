@@ -48,8 +48,7 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
             .Where(x => x.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
-        ResourceNotFoundException
-            .ThrowIfNull(problem, $"не найдена задача с id: {request.Id}");
+        ResourceNotFoundException.ThrowIfNull(problem, $"не найдена задача с id: {request.Id}");
 
         if (problem.Status != ProblemStatus.Draft)
             throw new InvalidStateException($"задачу с id {request.Id} нельзя изменять, так как она находится не в состоянии черновика");

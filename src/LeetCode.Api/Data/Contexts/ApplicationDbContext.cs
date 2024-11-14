@@ -34,14 +34,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public async Task ThrowExceptionIfProblemHasOpenStatus(long problemId)
+    public async Task EnsureProblemInDraftStatusAsync(long problemId)
     {
         var status = await Problems
             .Where(x => x.Id == problemId)
             .Select(x => x.Status)
             .FirstOrDefaultAsync();
 
-        if (status == ProblemStatus.Open)
+        if (status != ProblemStatus.Draft)
             throw new Exception("еппси кола");
     }
 }

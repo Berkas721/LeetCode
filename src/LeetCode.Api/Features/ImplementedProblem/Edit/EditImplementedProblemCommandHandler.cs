@@ -40,7 +40,7 @@ public class EditImplementedProblemCommandHandler
             .FirstOrDefaultAsync(cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(implementedProblem, "blablabal");
-        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(implementedProblem.ProblemId);
+        await _dbContext.EnsureProblemInDraftStatusAsync(implementedProblem.ProblemId);
 
         if (request.ProblemCode is not null)
             implementedProblem.ProblemCode = request.ProblemCode;

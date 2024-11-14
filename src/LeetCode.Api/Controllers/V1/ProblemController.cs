@@ -72,9 +72,14 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
 
     [HttpPut("{problemId}/update")]
     public async Task<IActionResult> Update(
+        [FromRoute] long problemId,
         [FromBody] UpdateProblemInput input)
     {
-        var command = Mapper.Map<EditProblemCommand>(input) with { UpdaterId = User.GetUserId() };
+        var command = Mapper.Map<EditProblemCommand>(input) with
+        {
+            Id = problemId,
+            UpdaterId = User.GetUserId()
+        };
         await Mediator.Send(command);
         return Ok();
     }

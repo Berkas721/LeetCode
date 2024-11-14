@@ -53,7 +53,7 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
         return Ok(testResults);
     }
 
-    [HttpPut("{implementedProblemId}/test-solution-with-draft-testcases")]
+    [HttpPut("{implementedProblemId}/test-solution-with-specified-testcases")]
     public async Task<IActionResult> TestDraftTestcases(
         [FromRoute] Guid implementedProblemId,
         [FromBody] IReadOnlyList<TestCase> testCases)

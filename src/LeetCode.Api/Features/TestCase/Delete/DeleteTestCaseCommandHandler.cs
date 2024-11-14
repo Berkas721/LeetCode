@@ -26,7 +26,7 @@ public class DeleteTestCaseCommandHandler : IRequestHandler<DeleteTestCaseComman
             .FirstOrDefaultAsync(cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(testCase, "blablbalba");
-        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(testCase.ProblemId);
+        await _dbContext.EnsureProblemInDraftStatusAsync(testCase.ProblemId);
 
         _dbContext.TestCases.Remove(testCase);
         await _dbContext.SaveChangesAsync(cancellationToken);

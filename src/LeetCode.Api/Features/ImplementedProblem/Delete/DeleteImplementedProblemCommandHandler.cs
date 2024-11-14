@@ -27,7 +27,6 @@ public class DeleteImplementedProblemCommandHandler
             .FirstOrDefaultAsync(cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(implementedProblem, "blablabal");
-        await _dbContext.ThrowExceptionIfProblemHasOpenStatus(implementedProblem.ProblemId);
 
         _dbContext.ImplementedProblems.Remove(implementedProblem);
         await _dbContext.SaveChangesAsync(cancellationToken);

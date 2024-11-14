@@ -1,10 +1,12 @@
-﻿using LeetCode.Data.Enums;
+﻿using LeetCode.Abstractions;
+using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
 using LeetCode.Dto.Enums;
 
 namespace LeetCode.Data.Entities;
 
-public class Problem
+public class Problem 
+    : IHasCreateInfo, IHasId<long>
 {
     public long Id { get; set; }
 
