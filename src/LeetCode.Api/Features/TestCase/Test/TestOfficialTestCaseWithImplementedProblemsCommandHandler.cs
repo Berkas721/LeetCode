@@ -1,6 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
-using LeetCode.Exceptions;
 using LeetCode.Extensions;
 using LeetCode.Features.SolutionTest.Test;
 using MediatR;
@@ -38,6 +37,7 @@ public class TestOfficialTestCaseWithImplementedProblemsCommandHandler
 
         var testcaseDto = new Dto.SolutionTest.TestCase
         {
+            Id = testCaseId,
             InputJson = testcase.Input,
             OutputJson = testcase.Output
         };

@@ -1,4 +1,5 @@
 ﻿using LeetCode.Abstractions;
+using LeetCode.Exceptions;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
@@ -25,8 +26,14 @@ public class CSharpSolutionRunner : ISolutionRunner
             ScriptOptions.Default.WithReferences("System.Text.Json"),
             globalsType: typeof(ScriptGlobalType));
 
-        // выдаст ошибку если не скомпилируется
-        _scriptRunner = script.CreateDelegate();
+        try
+        {
+            _scriptRunner = script.CreateDelegate();
+        }
+        catch (Exception ex)
+        {
+            throw new CompilationException($"не удалось скомпилировать C# файл: {ex.Message}");
+        }
     }
 
     public async Task<string> RunAsync(string inputJson) => 

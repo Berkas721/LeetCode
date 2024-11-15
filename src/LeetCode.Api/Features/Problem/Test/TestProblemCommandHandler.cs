@@ -48,7 +48,8 @@ public class TestProblemCommandHandler
 
         var testProblemResult = new TestProblemResult
         {
-            ProblemId = problem.Id
+            ProblemId = problem.Id,
+            TestImplementationProblemResults = []
         };
 
         foreach (var implementedProblemsId in implementedProblemsIds)

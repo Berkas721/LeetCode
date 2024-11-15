@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using LeetCode.Data.Entities;
 using LeetCode.Data.Enums;
+using LeetCode.Exceptions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,8 +31,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         modelBuilder.HasDefaultSchema("leetcode");
 
-        modelBuilder
-            .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
     public async Task EnsureProblemInDraftStatusAsync(long problemId)
@@ -42,6 +42,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .FirstOrDefaultAsync();
 
         if (status != ProblemStatus.Draft)
-            throw new Exception("еппси кола");
+            throw new ForbiddenException($"Невозможно выполнить операцию, так как проблема с id {problemId} не находится в состоянии черновика");
     }
 }
