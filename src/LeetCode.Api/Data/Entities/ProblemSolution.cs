@@ -1,6 +1,6 @@
 ﻿using LeetCode.Abstractions;
-using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
+using LeetCode.Dto.Enums;
 
 namespace LeetCode.Data.Entities;
 
