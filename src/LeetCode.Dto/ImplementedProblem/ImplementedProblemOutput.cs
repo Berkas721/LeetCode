@@ -15,6 +15,4 @@ public sealed record ImplementedProblemOutput
     public required string WorkingSolutionCode { get; init; }
 
     public required ActionInfo CreateInfo { get; init; }
-
-    public ActionInfo? DeleteInfo { get; init; }
 }
