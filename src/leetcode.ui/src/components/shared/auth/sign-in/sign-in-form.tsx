@@ -1,55 +1,115 @@
-﻿import Link from 'next/link';
+﻿'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import React from 'react';
+import useGet from '@/hooks/use-get';
+import { observer } from 'mobx-react-lite';
+import ServiceSymbols from '@/data/constant/ServiceSymbols';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage
+} from '@/components/ui/form';
+import { EyeIcon, EyeOffIcon, LoaderCircle } from 'lucide-react';
+import { ISignInFormVM } from '@/components/shared/auth/sign-in/sign-in-form.vm';
 
-export const SignInForm = () => {
+
+interface ISignInProps {
+}
+
+const SignInForm: React.FC<ISignInProps> = () => {
+  const vm = useGet<ISignInFormVM>(ServiceSymbols.ISignInFormVM);
+
+  const form = useForm<z.infer<typeof vm.schemaSignInForm>>({
+    resolver: zodResolver(vm.schemaSignInForm)
+  });
+
   return (
-    <Card className="mx-auto max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl">Вход</CardTitle>
-        <CardDescription>
-          Введите адрес электронной почты, чтобы войти в свою учетную запись
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="email@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Пароль</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="******"
-              required
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            Войти
-          </Button>
-        </div>
-        <div className="mt-4 text-center text-sm">
-          <Link href="/sign-up" className="underline">
-            Создать новую учетную запись
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(vm.signIn)}
+        className="grid gap-2"
+      >
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  id="username"
+                  placeholder="Имя пользователя"
+                  autoComplete="username"
+                  autoCorrect="off"
+                  disabled={vm.isLoading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={vm.isPasswordShown ? 'text' : 'password'}
+                    placeholder="Пароль"
+                    autoComplete="new-password"
+                    autoCorrect="off"
+                    disabled={vm.isLoading}
+                    {...field}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="absolute top-0 right-0 px-3 py-2 hover:bg-transparent"
+                    onClick={vm.togglePasswordShown}
+                    disabled={vm.isLoading}
+                  >
+                    {vm.isPasswordShown ? (
+                      <EyeOffIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          disabled={vm.isLoading}
+        >
+          {vm.isLoading ? (
+            <>
+              <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+              Подождите
+            </>
+          ) : (
+            'Войти'
+          )}
+        </Button>
+        <Input
+          className="hidden"
+          type={vm.isPasswordShown ? 'text' : 'password'}
+        />
+      </form>
+    </Form>
   );
 };
+
+export default observer(SignInForm);
