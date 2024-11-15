@@ -76,7 +76,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
         return Ok(testcase);
     }
 
-    [HttpPut("{testcaseId}/delete")]
+    [HttpDelete("{testcaseId}/delete")]
     [Authorize]
     public async Task<IActionResult> Delete(
         [FromRoute] long testcaseId,

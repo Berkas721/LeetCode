@@ -90,7 +90,7 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
         return Ok(testcaseOutput);
     }
 
-    [HttpPut("{implementedProblemId}/delete")]
+    [HttpDelete("{implementedProblemId}/delete")]
     [Authorize]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid implementedProblemId, 
