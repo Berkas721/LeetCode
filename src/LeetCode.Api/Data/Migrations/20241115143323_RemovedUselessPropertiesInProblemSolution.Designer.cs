@@ -3,6 +3,7 @@ using System;
 using LeetCode.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LeetCode.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115143323_RemovedUselessPropertiesInProblemSolution")]
+    partial class RemovedUselessPropertiesInProblemSolution
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -521,8 +524,39 @@ namespace LeetCode.Data.Migrations
                             b1.Navigation("Agent");
                         });
 
+                    b.OwnsOne("LeetCode.Data.OwnedTypes.ActionInfo", "DeleteInfo", b1 =>
+                        {
+                            b1.Property<Guid>("ImplementedProblemId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("AgentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<DateTime>("Date")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("ImplementedProblemId");
+
+                            b1.HasIndex("AgentId");
+
+                            b1.ToTable("ImplementedProblems", "leetcode");
+
+                            b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Agent")
+                                .WithMany()
+                                .HasForeignKey("AgentId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("ImplementedProblemId");
+
+                            b1.Navigation("Agent");
+                        });
+
                     b.Navigation("CreateInfo")
                         .IsRequired();
+
+                    b.Navigation("DeleteInfo");
 
                     b.Navigation("Language");
 
@@ -532,6 +566,35 @@ namespace LeetCode.Data.Migrations
             modelBuilder.Entity("LeetCode.Data.Entities.Problem", b =>
                 {
                     b.OwnsOne("LeetCode.Data.OwnedTypes.ActionInfo", "CreateInfo", b1 =>
+                        {
+                            b1.Property<long>("ProblemId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<Guid>("AgentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<DateTime>("Date")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("ProblemId");
+
+                            b1.HasIndex("AgentId");
+
+                            b1.ToTable("Problems", "leetcode");
+
+                            b1.HasOne("LeetCode.Data.Entities.ApplicationUser", "Agent")
+                                .WithMany()
+                                .HasForeignKey("AgentId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProblemId");
+
+                            b1.Navigation("Agent");
+                        });
+
+                    b.OwnsOne("LeetCode.Data.OwnedTypes.ActionInfo", "DeleteInfo", b1 =>
                         {
                             b1.Property<long>("ProblemId")
                                 .HasColumnType("bigint");
@@ -620,6 +683,8 @@ namespace LeetCode.Data.Migrations
 
                     b.Navigation("CreateInfo")
                         .IsRequired();
+
+                    b.Navigation("DeleteInfo");
 
                     b.Navigation("OpenInfo");
 

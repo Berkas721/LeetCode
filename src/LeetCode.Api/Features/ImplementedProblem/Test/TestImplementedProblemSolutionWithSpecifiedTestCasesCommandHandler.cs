@@ -1,11 +1,10 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
-using LeetCode.Dto.SolutionTest;
 using LeetCode.Exceptions;
 using LeetCode.Extensions;
-using LeetCode.Features.SolutionTest.Test;
+using LeetCode.Features.Solution.Edit;
+using LeetCode.Features.Solution.Test;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.ImplementedProblem.Test;
 
@@ -13,7 +12,7 @@ public sealed record TestImplementedProblemSolutionWithDraftTestCasesCommand
     : IRequest<TestImplementationProblemResult>
 {
     public required Guid ImplementedProblemId { get; init; }
-    public required IReadOnlyList<Dto.SolutionTest.TestCase> TestCases { get; init; }
+    public required IReadOnlyList<Dto.TestCase.TestCaseData> TestCases { get; init; }
 }
 
 public class TestImplementedProblemSolutionWithSpecifiedTestCasesCommandHandler
@@ -37,7 +36,7 @@ public class TestImplementedProblemSolutionWithSpecifiedTestCasesCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.ImplementedProblemId, cancellationToken);
+            .FindByIdAsync(request.ImplementedProblemId, cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(implementedProblem, "blabla");
 

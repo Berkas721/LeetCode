@@ -1,6 +1,6 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.ImplementedProblem;
-using LeetCode.Dto.SolutionTest;
+using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
 using LeetCode.Features.ImplementedProblem.Create;
 using LeetCode.Features.ImplementedProblem.Delete;
@@ -67,7 +67,7 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
     [HttpPut("{implementedProblemId}/test-working-solution-with-specified-testcases")]
     public async Task<IActionResult> TestDraftTestcases(
         [FromRoute] Guid implementedProblemId,
-        [FromBody] IReadOnlyList<TestCase> testCases, 
+        [FromBody] IReadOnlyList<TestCaseData> testCases, 
         CancellationToken cancellationToken)
     {
         var command = new TestImplementedProblemSolutionWithDraftTestCasesCommand

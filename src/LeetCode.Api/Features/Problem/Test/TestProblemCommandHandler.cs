@@ -33,7 +33,7 @@ public class TestProblemCommandHandler
             .Problems
             .Include(x => x.ImplementedProblems)
             .Include(x => x.TestCases)
-            .FirstAsync(request.Id, cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         if(problem.ImplementedProblems.Count < 1)
             throw new Exception("невозможно провести тест, нет ни одной реализации задачи");

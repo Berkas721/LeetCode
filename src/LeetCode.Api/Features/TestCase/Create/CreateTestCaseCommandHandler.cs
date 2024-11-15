@@ -1,4 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,7 @@ public class CreateTestCaseCommandHandler : IRequestHandler<CreateTestCaseComman
             ProblemId = problemId
         };
 
-        await _dbContext.EnsureProblemInDraftStatusAsync(request.ProblemId);
+        await _dbContext.EnsureProblemInStatusAsync(request.ProblemId, ProblemStatus.Draft);
 
         var duplicateExists = await _dbContext
             .TestCases

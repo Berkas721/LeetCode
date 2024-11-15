@@ -27,11 +27,6 @@ public class ProblemConfiguration : IEntityTypeConfiguration<Problem>
         );
 
         builder.OwnsOne(
-            x => x.DeleteInfo, 
-            OwnedEntitiesConfigurations.ConfigureActionInfo<Problem>()
-        );
-
-        builder.OwnsOne(
             x => x.UpdateInfo, 
             OwnedEntitiesConfigurations.ConfigureActionInfo<Problem>()
         );

@@ -27,10 +27,5 @@ public class ImplementedProblemConfiguration : IEntityTypeConfiguration<Implemen
             x => x.CreateInfo, 
             OwnedEntitiesConfigurations.ConfigureActionInfo<ImplementedProblem>()
         );
-
-        builder.OwnsOne(
-            x => x.DeleteInfo, 
-            OwnedEntitiesConfigurations.ConfigureActionInfo<ImplementedProblem>()
-        );
     }
 }

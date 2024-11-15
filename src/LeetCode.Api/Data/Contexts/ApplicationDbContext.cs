@@ -34,14 +34,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public async Task EnsureProblemInDraftStatusAsync(long problemId)
+    public async Task EnsureProblemInStatusAsync(long problemId, ProblemStatus status)
     {
-        var status = await Problems
+        ProblemStatus? currentStatus = await Problems
             .Where(x => x.Id == problemId)
             .Select(x => x.Status)
             .FirstOrDefaultAsync();
 
-        if (status != ProblemStatus.Draft)
-            throw new ForbiddenException($"Невозможно выполнить операцию, так как проблема с id {problemId} не находится в состоянии черновика");
+        ResourceNotFoundException.ThrowIfNull(currentStatus, $"не найдена задача с id {problemId}");
+
+        if (currentStatus != status)
+            throw new ForbiddenException($"Задача с id {problemId} не находится в необходимом статусе {status}");
     }
 }

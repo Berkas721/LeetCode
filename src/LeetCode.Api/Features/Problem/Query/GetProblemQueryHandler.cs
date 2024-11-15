@@ -21,7 +21,7 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
     {
         var problem = await _dbContext
             .Problems
-            .FirstAsync(request.ProblemId, cancellationToken);
+            .FindByIdAsync(request.ProblemId, cancellationToken);
 
         return new ProblemOutput
         {
@@ -35,8 +35,6 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
             UpdatedAt = problem.UpdateInfo?.Date,
             OpenerId = problem.OpenInfo?.AgentId,
             OpenedAt = problem.OpenInfo?.Date,
-            DeleterId = problem.DeleteInfo?.AgentId,
-            DeletedAt = problem.DeleteInfo?.Date,
         };
     }
 }

@@ -24,8 +24,6 @@ public class Problem
 
     public ActionInfo? OpenInfo { get; set; }
 
-    public ActionInfo? DeleteInfo { get; set; }
-
 
     public List<ProblemTopic> Topics { get; set; } = [];
 

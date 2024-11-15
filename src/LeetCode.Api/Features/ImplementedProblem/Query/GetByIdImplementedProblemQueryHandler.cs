@@ -31,7 +31,7 @@ public class GetByIdImplementedProblemQueryHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.Id, cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         return _mapper.Map<ImplementedProblemOutput>(implementedProblem);
     }

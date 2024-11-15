@@ -29,8 +29,4 @@ public sealed record ProblemOutput
     public required Guid? OpenerId { get; init; }
     
     public required DateTime? OpenedAt { get; init; }
-
-    public required Guid? DeleterId { get; init; }
-    
-    public required DateTime? DeletedAt { get; init; }
 }

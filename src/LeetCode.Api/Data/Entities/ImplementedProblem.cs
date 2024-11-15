@@ -15,8 +15,6 @@ public class ImplementedProblem : IHasCreateInfo, IHasId<Guid>
 
     public ActionInfo CreateInfo { get; set; } = default!;
 
-    public ActionInfo? DeleteInfo { get; set; }
-
 
     public long ProblemId { get; set; }
 

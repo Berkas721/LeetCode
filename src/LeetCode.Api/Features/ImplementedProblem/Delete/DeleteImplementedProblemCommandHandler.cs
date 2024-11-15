@@ -26,7 +26,7 @@ public class DeleteImplementedProblemCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.ImplementedProblemId, cancellationToken);
+            .FindByIdAsync(request.ImplementedProblemId, cancellationToken);
 
         implementedProblem.EnsureAuthor(request.UserId);
 

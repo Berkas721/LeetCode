@@ -1,6 +1,4 @@
 ﻿using LeetCode.Controllers.Abstraction;
-using LeetCode.Dto;
-using LeetCode.Dto.SolutionTest;
 using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
 using LeetCode.Features.TestCase.Create;
@@ -32,10 +30,10 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     [HttpPut("test")]
     public async Task<IActionResult> Test(
         [FromQuery] long problemId,
-        [FromBody] TestCase testCase,
+        [FromBody] TestCaseData testCaseData,
         CancellationToken cancellationToken)
     {
-        var command = new TestSpecifiedTestCaseWithImplementedProblemsCommand(problemId, testCase);
+        var command = new TestSpecifiedTestCaseWithImplementedProblemsCommand(problemId, testCaseData);
         var testResults = await Mediator.Send(command, cancellationToken);
         return Ok(testResults);
     }

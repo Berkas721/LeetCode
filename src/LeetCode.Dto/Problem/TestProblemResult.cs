@@ -7,4 +7,6 @@ public sealed record TestProblemResult
     public required long ProblemId { get; init; }
 
     public IList<TestImplementationProblemResult> TestImplementationProblemResults { get; set; }
+
+    public bool IsPassed => TestImplementationProblemResults.All(x => x.IsPassed);
 }
