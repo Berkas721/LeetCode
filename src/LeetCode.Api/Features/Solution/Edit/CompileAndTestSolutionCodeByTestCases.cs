@@ -2,6 +2,7 @@
 using LeetCode.Abstractions;
 using LeetCode.Dto.Enums;
 using LeetCode.Dto.TestCase;
+using LeetCode.Exceptions;
 using MediatR;
 
 namespace LeetCode.Features.Solution.Edit;
@@ -32,7 +33,28 @@ public class CompileAndTestSolutionCodeByTestCases
     {
         List<RunTestCaseResult> testResults = [];
 
-        var solutionRunner = _solutionRunnerFactor.CreateRunner(request.ProblemCode, request.SolutionCode, request.LanguageId);
+        ISolutionRunner solutionRunner;
+
+        try
+        {
+            solutionRunner = _solutionRunnerFactor.CreateRunner(
+                request.ProblemCode, 
+                request.SolutionCode, 
+                request.LanguageId);
+        }
+        catch (CompilationException ex)
+        {
+            return request
+                .TestCases
+                .Select(testCase => new RunTestCaseResult
+                {
+                    TestCaseData = testCase,
+                    ResultStatus = SolutionTestResultStatus.FailedWithError,
+                    Date = DateTime.UtcNow,
+                    ErrorMessage = ex.Message
+                })
+                .ToList();
+        }
 
         var timer = new Stopwatch();
 

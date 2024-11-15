@@ -1,8 +1,10 @@
 ﻿using LeetCode.Controllers.Abstraction;
-using LeetCode.Dto.Solution;
+using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
 using LeetCode.Features.Solution.Create;
 using LeetCode.Features.Solution.Edit;
+using LeetCode.Features.Solution.Query;
+using LeetCode.Features.Solution.Test;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +15,17 @@ namespace LeetCode.Controllers.V1;
 [Route("api/v1/solutions")]
 public class SolutionController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
+    [HttpGet("{solutionId:long}")]
+    public async Task<IActionResult> GetById(
+        [FromRoute] long solutionId,
+        CancellationToken cancellationToken)
+    {
+        var command = new GetSolutionQuery(solutionId);
+        var solution = await Mediator.Send(command, cancellationToken);
+        return Ok(solution);
+    }
+
+    // TODO: заменить на create-by-problem-and-language
     [HttpPost("create-by-implemented-problem/{implementedProblemId:Guid}")]
     [Authorize]
     public async Task<IActionResult> CreateByImplementedProblem(
@@ -50,5 +63,28 @@ public class SolutionController(IMediator mediator, IMapper mapper) : Applicatio
         };
         var solution = await Mediator.Send(command, cancellationToken);
         return Ok(solution);
+    }
+
+    [HttpPut("{solutionId:long}/submit")]
+    [Authorize]
+    public async Task<IActionResult> Submit(
+        [FromRoute] long solutionId,
+        CancellationToken cancellationToken)
+    {
+        var command = new SubmitSolutionCommand(solutionId, User.GetUserId());
+        var submitResult = await Mediator.Send(command, cancellationToken);
+        return Ok(submitResult);
+    }
+
+    [HttpPut("{solutionId:long}/test-with-specified-testcases")]
+    [Authorize]
+    public async Task<IActionResult> TestWithSpecifiedTestCases(
+        [FromRoute] long solutionId,
+        [FromBody] List<TestCaseData> testCases,
+        CancellationToken cancellationToken)
+    {
+        var command = new TestSolutionWithSpecifiedTestCasesCommand(solutionId, testCases);
+        var testResult = await Mediator.Send(command, cancellationToken);
+        return Ok(testResult);
     }
 }

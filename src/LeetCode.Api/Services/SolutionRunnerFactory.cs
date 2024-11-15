@@ -10,6 +10,6 @@ public class SolutionRunnerFactory : ISolutionRunnerFactory
         (ProgrammingLanguages)languageId switch
         {
             ProgrammingLanguages.CSharp => new CSharpSolutionRunner(problemCode, solutionCode),
-            _ => throw new Exception($"Для языка с id {languageId} не существует SolutionRunner")
+            _ => throw new Exception($"Приложение не умеет проверять решения, написанные на языке программирования с id {languageId}")
         };
 }

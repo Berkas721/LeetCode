@@ -1,5 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Dto.Enums;
 using LeetCode.Dto.Solution;
+using LeetCode.Exceptions;
 using LeetCode.Extensions;
 using MapsterMapper;
 using MediatR;
@@ -41,6 +43,9 @@ public class EditSolutionCommandHandler
             .FirstAsync(solutionId, cancellationToken);
 
         solution.EnsureAuthor(request.UserId);
+
+        if (solution.Status != ProblemSolutionStatus.Draft)
+            throw new ForbiddenException($"Нельзя изменить решение с id {solutionId}, так как оно не находится в состоянии черновика");
 
         if (request.Code is null)
             return _mapper.Map<SolutionOutput>(solution);

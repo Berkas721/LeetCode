@@ -28,7 +28,7 @@ public class ProblemSolution
 
     public Guid ImplementedProblemId { get; set; }
 
-    public ImplementedProblem? ImplementedProblem { get; set; }
+    public ImplementedProblem ImplementedProblem { get; set; }
 
     public List<SolutionTest>? Tests { get; set; }
 }
