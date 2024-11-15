@@ -15,15 +15,15 @@ public class ProblemSolution
 
     public ActionInfo CreateInfo { get; set; }
 
-    public DateTime? UpdatedAt { get; init; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public DateTime? SubmittedAt { get; init; }
+    public DateTime? SubmittedAt { get; set; }
 
-    public long? TotalUsedTime { get; init; }
+    public long? TotalUsedTime { get; set; }
 
-    public long? TotalUsedMemory { get; init; }
+    public long? TotalUsedMemory { get; set; }
 
-    public long[]? FailedTestIds { get; init; }
+    public long[]? FailedTestIds { get; set; }
 
 
     public Guid ImplementedProblemId { get; set; }
