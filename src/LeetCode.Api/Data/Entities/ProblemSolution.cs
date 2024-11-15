@@ -19,13 +19,6 @@ public class ProblemSolution
 
     public DateTime? SubmittedAt { get; set; }
 
-    public long? TotalUsedTime { get; set; }
-
-    public long? TotalUsedMemory { get; set; }
-
-    public long[]? FailedTestIds { get; set; }
-
-
     public Guid ImplementedProblemId { get; set; }
 
     public ImplementedProblem ImplementedProblem { get; set; }
