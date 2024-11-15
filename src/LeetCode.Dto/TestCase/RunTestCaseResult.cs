@@ -1,10 +1,10 @@
 ﻿using LeetCode.Dto.Enums;
 
-namespace LeetCode.Dto.SolutionTest;
+namespace LeetCode.Dto.TestCase;
 
 public sealed record RunTestCaseResult
 {
-    public TestCase TestCase { get; init; }
+    public TestCaseData TestCaseData { get; init; }
 
     public SolutionTestResultStatus ResultStatus { get; init; }
 

@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using LeetCode.Abstractions;
 using LeetCode.Dto.Enums;
-using LeetCode.Dto.SolutionTest;
+using LeetCode.Dto.TestCase;
 using MediatR;
 
-namespace LeetCode.Features.SolutionTest.Test;
+namespace LeetCode.Features.Solution.Edit;
 
 
 public sealed record CompileAndTestSolutionCodeByTestCasesRequest 
@@ -13,7 +13,7 @@ public sealed record CompileAndTestSolutionCodeByTestCasesRequest
     public required string ProblemCode { get; init; }
     public required string SolutionCode { get; init; }
     public required long LanguageId { get; init; }
-    public required IReadOnlyList<Dto.SolutionTest.TestCase> TestCases { get; init; }
+    public required IReadOnlyList<Dto.TestCase.TestCaseData> TestCases { get; init; }
 } 
 
 public class CompileAndTestSolutionCodeByTestCases
@@ -42,21 +42,21 @@ public class CompileAndTestSolutionCodeByTestCases
             {
                 timer.Restart();
 
-                var solutionOutput = await solutionRunner.RunAsync(testcase.InputJson);
+                var solutionOutput = await solutionRunner.RunAsync(testcase.Input);
 
                 timer.Stop();
 
-                var testResult = solutionOutput != testcase.OutputJson
+                var testResult = solutionOutput != testcase.Output
                     ? new RunTestCaseResult
                     {
-                        TestCase = testcase,
+                        TestCaseData = testcase,
                         Date = DateTime.UtcNow,
                         ResultStatus = SolutionTestResultStatus.FailedWithIncorrectAnswer,
                         IncorrectAnswer = solutionOutput
                     }
                     : new RunTestCaseResult
                     {
-                        TestCase = testcase,
+                        TestCaseData = testcase,
                         Date = DateTime.UtcNow,
                         ResultStatus = SolutionTestResultStatus.Passed,
                         UsedTime = timer.Elapsed.Milliseconds,
@@ -70,7 +70,7 @@ public class CompileAndTestSolutionCodeByTestCases
             {
                 testResults.Add(new RunTestCaseResult
                 {
-                    TestCase = testcase,
+                    TestCaseData = testcase,
                     Date = DateTime.UtcNow,
                     ResultStatus = SolutionTestResultStatus.FailedWithIncorrectAnswer,
                     ErrorMessage = ex.Message

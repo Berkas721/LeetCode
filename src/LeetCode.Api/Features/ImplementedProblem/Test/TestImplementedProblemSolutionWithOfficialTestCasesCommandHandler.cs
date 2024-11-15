@@ -1,8 +1,7 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.ImplementedProblem;
-using LeetCode.Exceptions;
 using LeetCode.Extensions;
-using LeetCode.Features.SolutionTest.Test;
+using LeetCode.Features.Solution.Edit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,11 +36,11 @@ public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
         var testcases = await _dbContext
             .TestCases
             .Where(x => x.ProblemId == implementedProblem.ProblemId)
-            .Select(x => new Dto.SolutionTest.TestCase
+            .Select(x => new Dto.TestCase.TestCaseData
             {
                 Id = x.Id,
-                InputJson = x.Input,
-                OutputJson = x.Output
+                Input = x.Input,
+                Output = x.Output
             })
             .ToListAsync(cancellationToken);
 

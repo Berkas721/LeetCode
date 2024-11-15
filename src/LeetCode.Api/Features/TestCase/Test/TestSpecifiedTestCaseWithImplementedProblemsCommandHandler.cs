@@ -1,13 +1,13 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
-using LeetCode.Features.SolutionTest.Test;
+using LeetCode.Features.Solution.Edit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.TestCase.Test;
 
-public sealed record TestSpecifiedTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.SolutionTest.TestCase TestCase) 
+public sealed record TestSpecifiedTestCaseWithImplementedProblemsCommand(long ProblemId, Dto.TestCase.TestCaseData TestCaseData) 
     : IRequest<IReadOnlyList<TestTestCaseResult>>;
 
 public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler 
@@ -29,7 +29,7 @@ public class TestSpecifiedTestCaseWithImplementedProblemsCommandHandler
         TestSpecifiedTestCaseWithImplementedProblemsCommand request, 
         CancellationToken cancellationToken)
     {
-        var testCase = request.TestCase;
+        var testCase = request.TestCaseData;
         var problemId = request.ProblemId;
 
         var problemExist = await _dbContext
