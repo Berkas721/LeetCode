@@ -31,7 +31,7 @@ public class RunImplementedProblemSolutionCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.Id, cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         var solutionRunner = _solutionRunnerFactory.CreateRunner(
             implementedProblem.ProblemCode,

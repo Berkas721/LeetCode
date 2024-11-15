@@ -21,7 +21,7 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
     {
         var problem = await _dbContext
             .Problems
-            .FirstAsync(request.ProblemId, cancellationToken);
+            .FindByIdAsync(request.ProblemId, cancellationToken);
 
         return new ProblemOutput
         {

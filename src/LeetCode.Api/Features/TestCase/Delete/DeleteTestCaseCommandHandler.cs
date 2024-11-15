@@ -1,4 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Data.Enums;
 using LeetCode.Exceptions;
 using LeetCode.Extensions;
 using MediatR;
@@ -25,10 +26,10 @@ public class DeleteTestCaseCommandHandler : IRequestHandler<DeleteTestCaseComman
         
         var testCase = await _dbContext
             .TestCases
-            .FirstAsync(testcaseId, cancellationToken);
+            .FindByIdAsync(testcaseId, cancellationToken);
 
         testCase.EnsureAuthor(request.UserId);
-        await _dbContext.EnsureProblemInDraftStatusAsync(testCase.ProblemId);
+        await _dbContext.EnsureProblemInStatusAsync(testCase.ProblemId, ProblemStatus.Draft);
 
         _dbContext.TestCases.Remove(testCase);
         await _dbContext.SaveChangesAsync(cancellationToken);

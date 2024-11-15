@@ -1,10 +1,12 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Data.Entities;
+using LeetCode.Data.Enums;
 using LeetCode.Dto.Enums;
 using LeetCode.Dto.Solution;
 using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
 using LeetCode.Extensions;
+using LeetCode.Features.Solution.Test;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -42,16 +44,19 @@ public class SubmitSolutionCommandHandler
         var solution = await _context
             .ProblemSolutions
             .Include(x => x.ImplementedProblem)
-            .FirstAsync(solutionId, cancellationToken);
+            .FindByIdAsync(solutionId, cancellationToken);
 
         solution.EnsureAuthor(request.UserId);
 
         if (solution.Status != ProblemSolutionStatus.Draft)
             throw new ForbiddenException($"Нельзя сдать задачу c {solutionId}, так как она не находится в состоянии черновика");
 
+        var problemId = solution.ImplementedProblem.ProblemId;
+        await _context.EnsureProblemInStatusAsync(problemId, ProblemStatus.Open);
+        
         var testCases = await _context
             .TestCases
-            .Where(x => x.ProblemId == solution.ImplementedProblem.ProblemId)
+            .Where(x => x.ProblemId == problemId)
             .ToListAsync(cancellationToken);
 
         var runTestCasesCommand = new CompileAndTestSolutionCodeByTestCasesRequest

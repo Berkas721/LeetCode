@@ -2,6 +2,7 @@
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Extensions;
 using LeetCode.Features.Solution.Edit;
+using LeetCode.Features.Solution.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,7 @@ public class TestImplementedProblemSolutionWithOfficialTestCasesCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.Id, cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         var testcases = await _dbContext
             .TestCases

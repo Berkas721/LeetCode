@@ -31,7 +31,7 @@ public class GetTestCaseQueryHandler
     {
         var testCase = await _dbContext
             .TestCases
-            .FirstAsync(request.Id, cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         return _mapper.Map<TestCaseOutput>(testCase);
     }

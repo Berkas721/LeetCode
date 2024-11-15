@@ -1,4 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Data.Enums;
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Extensions;
 using MapsterMapper;
@@ -32,7 +33,7 @@ public class CreateImplementedProblemCommandHandler
         var problemId = request.ProblemId;
         var languageId = request.LanguageId;
         
-        await _dbContext.EnsureProblemInDraftStatusAsync(problemId);
+        await _dbContext.EnsureProblemInStatusAsync(problemId, ProblemStatus.Draft);
 
         var duplicateExists = await _dbContext
             .ImplementedProblems
@@ -44,7 +45,7 @@ public class CreateImplementedProblemCommandHandler
 
         var language = await _dbContext
             .Languages
-            .FirstAsync(languageId, cancellationToken);
+            .FindByIdAsync(languageId, cancellationToken);
 
         var implementedProblem = new Data.Entities.ImplementedProblem
         {

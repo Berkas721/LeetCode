@@ -40,7 +40,7 @@ public class EditSolutionCommandHandler
 
         var solution = await _context
             .ProblemSolutions
-            .FirstAsync(solutionId, cancellationToken);
+            .FindByIdAsync(solutionId, cancellationToken);
 
         solution.EnsureAuthor(request.UserId);
 

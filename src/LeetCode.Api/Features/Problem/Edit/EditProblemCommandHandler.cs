@@ -43,7 +43,7 @@ public sealed record EditProblemCommandHandler : IRequestHandler<EditProblemComm
         var problem = await _dbContext
             .Problems
             .Include(x => x.Topics)
-            .FirstAsync(problemId, cancellationToken);
+            .FindByIdAsync(problemId, cancellationToken);
 
         problem.EnsureAuthor(userId);
 

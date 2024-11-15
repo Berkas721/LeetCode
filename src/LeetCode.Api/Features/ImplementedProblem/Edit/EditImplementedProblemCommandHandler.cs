@@ -1,4 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Data.Enums;
 using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Exceptions;
 using LeetCode.Extensions;
@@ -38,10 +39,10 @@ public class EditImplementedProblemCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.ImplementedProblemId, cancellationToken);
+            .FindByIdAsync(request.ImplementedProblemId, cancellationToken);
 
         implementedProblem.EnsureAuthor(request.UserId);
-        await _dbContext.EnsureProblemInDraftStatusAsync(implementedProblem.ProblemId);
+        await _dbContext.EnsureProblemInStatusAsync(implementedProblem.ProblemId, ProblemStatus.Draft);
 
         if (request.ProblemCode is not null)
             implementedProblem.ProblemCode = request.ProblemCode;

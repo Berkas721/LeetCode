@@ -10,4 +10,8 @@
       <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Solution\EditSolutionInput.cs" />
+    </ItemGroup>
+
 </Project>

@@ -15,7 +15,6 @@ public partial class Startup
         return builder;
     }
 
-    // TODO: разобрать детальнее настройку Identity
     private static WebApplicationBuilder AddIdentity(this WebApplicationBuilder builder)
     {
         var services = builder.Services;

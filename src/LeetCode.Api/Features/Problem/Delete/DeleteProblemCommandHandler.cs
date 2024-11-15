@@ -24,7 +24,7 @@ public sealed record DeleteProblemCommandHandler : IRequestHandler<DeleteProblem
         
         var problem = await _dbContext
             .Problems
-            .FirstAsync(problemId, cancellationToken);
+            .FindByIdAsync(problemId, cancellationToken);
 
         problem.EnsureAuthor(userId);
 

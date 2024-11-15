@@ -3,6 +3,7 @@ using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Exceptions;
 using LeetCode.Extensions;
 using LeetCode.Features.Solution.Edit;
+using LeetCode.Features.Solution.Test;
 using MediatR;
 
 namespace LeetCode.Features.ImplementedProblem.Test;
@@ -35,7 +36,7 @@ public class TestImplementedProblemSolutionWithSpecifiedTestCasesCommandHandler
     {
         var implementedProblem = await _dbContext
             .ImplementedProblems
-            .FirstAsync(request.ImplementedProblemId, cancellationToken);
+            .FindByIdAsync(request.ImplementedProblemId, cancellationToken);
 
         ResourceNotFoundException.ThrowIfNull(implementedProblem, "blabla");
 

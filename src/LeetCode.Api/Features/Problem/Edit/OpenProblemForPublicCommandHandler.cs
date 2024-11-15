@@ -41,7 +41,7 @@ public class OpenProblemForPublicCommandHandler
         
         var problem = await _dbContext
             .Problems
-            .FirstAsync(problemId, cancellationToken);
+            .FindByIdAsync(problemId, cancellationToken);
 
         problem.EnsureAuthor(userId);
 

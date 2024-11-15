@@ -1,9 +1,8 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Data.Enums;
 using LeetCode.Dto.Solution;
 using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
-using LeetCode.Features.Solution.Edit;
-using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,17 +16,13 @@ public class TestSolutionWithSpecifiedTestCasesCommandHandler
 {
     private readonly ApplicationDbContext _context;
 
-    private readonly IMapper _mapper;
-
     private readonly IMediator _mediator;
 
     public TestSolutionWithSpecifiedTestCasesCommandHandler(
-        ApplicationDbContext context, 
-        IMapper mapper, 
+        ApplicationDbContext context,
         IMediator mediator)
     {
         _context = context;
-        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -41,7 +36,7 @@ public class TestSolutionWithSpecifiedTestCasesCommandHandler
         var solution = await _context
             .ProblemSolutions
             .Include(x => x.ImplementedProblem)
-            .FirstAsync(solutionId, cancellationToken);
+            .FindByIdAsync(solutionId, cancellationToken);
 
         var runTestCasesCommand = new CompileAndTestSolutionCodeByTestCasesRequest
         {

@@ -1,5 +1,6 @@
 ﻿using LeetCode.Data.Contexts;
 using LeetCode.Data.Entities;
+using LeetCode.Data.Enums;
 using LeetCode.Data.OwnedTypes;
 using LeetCode.Dto.Enums;
 using LeetCode.Extensions;
@@ -29,7 +30,9 @@ public class CreateSolutionByImplementedProblemCommandHandler
 
         var implementedProblem = await _context
             .ImplementedProblems
-            .FirstAsync(implementedProblemId, cancellationToken);
+            .FindByIdAsync(implementedProblemId, cancellationToken);
+
+        await _context.EnsureProblemInStatusAsync(implementedProblem.ProblemId, ProblemStatus.Open);
 
         var solution = new ProblemSolution
         {

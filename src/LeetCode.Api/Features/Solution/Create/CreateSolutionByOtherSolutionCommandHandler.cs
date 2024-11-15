@@ -29,7 +29,7 @@ public class CreateSolutionByOtherSolutionCommandHandler
 
         var solutionBase = await _context
             .ProblemSolutions
-            .FirstAsync(solutionBaseId, cancellationToken);
+            .FindByIdAsync(solutionBaseId, cancellationToken);
 
         var solutionCopy = new ProblemSolution
         {

@@ -5,7 +5,7 @@ using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
 using MediatR;
 
-namespace LeetCode.Features.Solution.Edit;
+namespace LeetCode.Features.Solution.Test;
 
 
 public sealed record CompileAndTestSolutionCodeByTestCasesRequest 
@@ -14,7 +14,7 @@ public sealed record CompileAndTestSolutionCodeByTestCasesRequest
     public required string ProblemCode { get; init; }
     public required string SolutionCode { get; init; }
     public required long LanguageId { get; init; }
-    public required IReadOnlyList<Dto.TestCase.TestCaseData> TestCases { get; init; }
+    public required IReadOnlyList<TestCaseData> TestCases { get; init; }
 } 
 
 public class CompileAndTestSolutionCodeByTestCases

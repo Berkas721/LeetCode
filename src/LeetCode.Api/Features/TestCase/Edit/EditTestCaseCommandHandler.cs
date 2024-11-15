@@ -1,4 +1,5 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Data.Enums;
 using LeetCode.Dto.TestCase;
 using LeetCode.Exceptions;
 using LeetCode.Extensions;
@@ -41,10 +42,10 @@ public class EditTestCaseCommandHandler :
 
         var testCase = await _dbContext
             .TestCases
-            .FirstAsync(testcaseId, cancellationToken);
+            .FindByIdAsync(testcaseId, cancellationToken);
 
         testCase.EnsureAuthor(userId);
-        await _dbContext.EnsureProblemInDraftStatusAsync(testCase.ProblemId);
+        await _dbContext.EnsureProblemInStatusAsync(testCase.ProblemId, ProblemStatus.Draft);
 
         // TODO: хз ставить ли проверку, что работает со всеми Implemented problems если они есть
 

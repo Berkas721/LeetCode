@@ -30,7 +30,7 @@ public class GetSolutionQueryHandler
     {
         var problem = await _context
             .ProblemSolutions
-            .FirstAsync(request.SolutionId, cancellationToken);
+            .FindByIdAsync(request.SolutionId, cancellationToken);
 
         return _mapper.Map<SolutionOutput>(problem);
     }
