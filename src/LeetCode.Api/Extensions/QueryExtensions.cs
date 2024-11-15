@@ -20,6 +20,6 @@ public static class QueryExtensions
         if (entity is not null)
             return entity;
 
-        throw new ResourceNotFoundException($"{typeof(TSource).Name} с id {entityId} не найдено");
+        throw new ResourceNotFoundException($"Не найдена сущность {typeof(TSource).Name} с id {entityId}");
     }
 }

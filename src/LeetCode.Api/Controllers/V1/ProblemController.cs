@@ -68,8 +68,8 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     }
 
     // Проверка хватает ли всех данных для открытия задачи и проходят ли они проверки
-    [HttpGet("{problemId}/check")]
-    public async Task<IActionResult> Check(
+    [HttpGet("{problemId}/test")]
+    public async Task<IActionResult> Test(
         [FromRoute] long problemId,
         CancellationToken cancellationToken)
     {

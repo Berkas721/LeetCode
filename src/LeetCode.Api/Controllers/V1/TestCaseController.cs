@@ -29,8 +29,8 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
-    [HttpPut("check")]
-    public async Task<IActionResult> Check(
+    [HttpPut("test")]
+    public async Task<IActionResult> Test(
         [FromQuery] long problemId,
         [FromBody] TestCase testCase,
         CancellationToken cancellationToken)
@@ -41,8 +41,8 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
-    [HttpPut("{testcaseId}/check")]
-    public async Task<IActionResult> Check(
+    [HttpPut("{testcaseId}/test")]
+    public async Task<IActionResult> Test(
         [FromRoute] long testcaseId,
         CancellationToken cancellationToken)
     {

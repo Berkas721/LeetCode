@@ -28,6 +28,7 @@ public static partial class Startup
         app.MapControllers();
 
         await app.MigrateDatabaseAsync();
+        await app.SeedDatabaseAsync();
 
         return app;
     }
