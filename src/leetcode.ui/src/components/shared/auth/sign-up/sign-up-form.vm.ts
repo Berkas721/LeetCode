@@ -1,9 +1,12 @@
 ﻿import 'reflect-metadata';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { action, flow, makeObservable, observable } from 'mobx';
 import { z } from 'zod';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import type { IAuthApi } from '@/services/api/auth/authApi';
+import ServiceSymbols from '@/data/constant/ServiceSymbols';
+import { ISignUpPayload } from '@/data/abstractions/ISignUpPayload';
 
 export interface ISignUpFormVM {
   isLoading: boolean;
@@ -24,14 +27,14 @@ class SignUpFormVM implements ISignUpFormVM {
 
   private formData: z.infer<typeof this.schemaSignUpForm> | null = null;
 
-  // private readonly authApi: IAuthApi;
+  private readonly authApi: IAuthApi;
 
   private readonly router = useRouter();
 
   constructor(
-    // @inject(ServiceSymbols.AuthApi) authApi: IAuthApi
+    @inject(ServiceSymbols.AuthApi) authApi: IAuthApi
   ) {
-    // this.authApi = authApi;
+    this.authApi = authApi;
 
     makeObservable(this);
   }
@@ -56,15 +59,20 @@ class SignUpFormVM implements ISignUpFormVM {
   public sendSignUpRequest = flow(function* (this: SignUpFormVM) {
     if (this.formData === null)
       return;
-    // const payload: ISignUpPayload = {
-    //   username: this.formData.username,
-    //   password: this.formData.password
-    // }
+    
+    const payload: ISignUpPayload = {
+      username: this.formData.username,
+      password: this.formData.password,
+      firstName: this.formData.firstName,
+      lastName: this.formData.lastName,
+      birthday: '2000-01-01'
+    }
 
     try {
       this.formData = null;
       this.setIsLoading(true);
-      // yield this.authApi.signUp(payload);
+      yield this.authApi.signUp(payload);
+      
       toast({
         title: 'Вход выполнен',
         description: 'Добро пожаловать! Вы успешно вошли в свою учетную запись.'
