@@ -12,7 +12,9 @@ export const createDependencyContainer = (): Container => {
   
   container
     .bind<AxiosInstance>(ServiceSymbols.AxiosInstance)
-    .toFactory(() => axios.create({}));
+    .toFactory(() => axios.create(
+      // {baseURL: 'https://localhost:7296'}
+    ));
   container.bind<IAuthApi>(ServiceSymbols.AuthApi).to(AuthApi);
   
   container.bind<ISignInFormVM>(ServiceSymbols.ISignInFormVM).to(SignInFormVM);
