@@ -1,0 +1,41 @@
+services:
+  leetcode-postgres:
+    image: postgres
+    container_name: LeetCode.Postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    restart: always
+    profiles:
+      - api-only
+    healthcheck:
+      test: pg_isready --quiet -U leetcode -d postgres
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  leetcode-api:
+    container_name: LeetCode.Api
+    image: ${PROJECT_NAME}.api:${API_VERSION}
+    volumes:
+      - ./src/LeetCode.Api/appsettings.Development.json:/app/appsettings.Development.json
+    build:
+      dockerfile: "./src/LeetCode.Api/Dockerfile"
+      args:
+        BUILD_CONFIGURATION: Debug
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__ApplicationDbContext: ${DB}
+    ports:
+      - "20001:8080"
+    depends_on:
+      leetcode-postgres:
+        condition: service_healthy
+    restart: always
+    profiles:
+      - api-only
