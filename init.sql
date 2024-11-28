@@ -1,0 +1,1 @@
+CREATE ROLE leetcode WITH SUPERUSER LOGIN PASSWORD 'leetcode';

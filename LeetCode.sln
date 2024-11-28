@@ -6,6 +6,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB741B42-F0C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.Dto", "src\LeetCode.Dto\LeetCode.Dto.csproj", "{EE7E8F0D-E4FA-40CF-B069-798EE87C8F2C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{630AE945-EFFD-4637-992F-FA1C45ED7ACD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{A38DB30E-840C-470E-B74D-5367AEABDE6B}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		.env = .env
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{52A6A9FE-1306-43A2-B326-64F162E99599}"
+	ProjectSection(SolutionItems) = preProject
+		init.sql = init.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +37,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3FE6F8D1-EE79-413D-9DCF-CA4CB69364AC} = {EB741B42-F0CB-4ABA-AD72-2238B10F058D}
 		{EE7E8F0D-E4FA-40CF-B069-798EE87C8F2C} = {EB741B42-F0CB-4ABA-AD72-2238B10F058D}
+		{A38DB30E-840C-470E-B74D-5367AEABDE6B} = {630AE945-EFFD-4637-992F-FA1C45ED7ACD}
 	EndGlobalSection
 EndGlobal
