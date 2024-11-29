@@ -32,7 +32,7 @@ export const App = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         enableSystem
         disableTransitionOnChange
       >
-        <main>{children}</main>
+        <main className='w-full font-[family-name:var(--font-geist-sans)]'>{children}</main>
         <Toaster />
       </ThemeProvider>
       </body>

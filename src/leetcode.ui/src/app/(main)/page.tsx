@@ -1,60 +1,20 @@
-import Image from "next/image";
-import {Header} from "@/components/shared/main/header/header";
+import { Header } from '@/components/shared/main/header/header';
+import { ProblemsLib } from '@/components/shared/main/home-page/problems-lib/problems-lib';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)]">
+    <>
       <Header />
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <div className="flex w-full min-h-screen justify-center gap-8 row-start-2">
+        <div className="max-w-[1200px] px-8 mb-16 w-full mt-16">
+          <h3 className="font-semibold text-4xl mb-4">Добро пожаловать!</h3>
+          <h4 className="mb-16">
+            На нашем сайте вы найдете множество интересных и разнообразных задач по программированию. Каждая задача —
+            это возможность проверить свои навыки, улучшить знания, и освоить новые для себя алгоритмы и подходы.
+          </h4>
+          <ProblemsLib />
+        </div>
+      </div>
+    </>
   );
 }

@@ -25,7 +25,7 @@ export const Header: FC<IHeaderProps> = ({ className }) => {
 
   return (
     <div className={cn('sticky flex flex-row h-16 justify-center border-b-white/10 border-b', className)}>
-      <div className="px-8 py-2 max-w-[1100px] w-full h-full items-center flex justify-between">
+      <div className="px-8 py-2 max-w-[1200px] w-full h-full items-center flex justify-between">
         <a href={'/'} className="no-underline flex items-center hover:bg-accent transition-all">
           <Logo />
         </a>
