@@ -6,6 +6,7 @@
   ISignUpFormVM: Symbol.for('ISignUpFormVM'),
   
   IHeaderVM: Symbol.for('IHeaderVM'),
+  IProblemsLibVM: Symbol.for('IProblemsLibVM'),
 };
 
 export default ServiceSymbols;

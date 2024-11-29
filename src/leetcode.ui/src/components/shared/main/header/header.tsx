@@ -1,6 +1,5 @@
 ﻿'use client';
 
-
 import React, { FC } from 'react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/logo';
@@ -15,12 +14,13 @@ import { Button } from '@/components/ui/button';
 import useGet from '@/hooks/use-get';
 import ServiceSymbols from '@/data/constant/ServiceSymbols';
 import { IHeaderVM } from '@/components/shared/main/header/header.vm';
+import { observer } from 'mobx-react-lite';
 
 interface IHeaderProps {
   className?: string;
 }
 
-export const Header: FC<IHeaderProps> = ({ className }) => {
+const Header: FC<IHeaderProps> = ({ className }) => {
   const vm = useGet<IHeaderVM>(ServiceSymbols.IHeaderVM);
 
   return (
@@ -58,3 +58,5 @@ export const Header: FC<IHeaderProps> = ({ className }) => {
     </div>
   );
 };
+
+export default observer(Header);

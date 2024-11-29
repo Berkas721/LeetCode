@@ -1,5 +1,5 @@
-import { Header } from '@/components/shared/main/header/header';
-import { ProblemsLib } from '@/components/shared/main/home-page/problems-lib/problems-lib';
+import Header from '@/components/shared/main/header/header';
+import ProblemsLib from '@/components/shared/main/home-page/problems-lib/problems-lib';
 
 export default function Home() {
   return (
