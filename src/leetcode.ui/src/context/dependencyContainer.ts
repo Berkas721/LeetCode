@@ -7,6 +7,7 @@ import SignInFormVM, { ISignInFormVM } from '@/components/shared/auth/sign-in/si
 import SignUpFormVM, { ISignUpFormVM } from '@/components/shared/auth/sign-up/sign-up-form.vm';
 import HeaderVM, { IHeaderVM } from '@/components/shared/main/header/header.vm';
 import ProblemsLibVM, { IProblemsLibVM } from '@/components/shared/main/home-page/problems-lib/problems-lib.vm';
+import ProblemSolvingVM, { IProblemSolvingVM } from '@/components/shared/main/problem-solving/problem-solving.vm';
 
 
 export const createDependencyContainer = (): Container => {
@@ -20,8 +21,9 @@ export const createDependencyContainer = (): Container => {
   container.bind<ISignInFormVM>(ServiceSymbols.ISignInFormVM).to(SignInFormVM);
   container.bind<ISignUpFormVM>(ServiceSymbols.ISignUpFormVM).to(SignUpFormVM);
 
-  container.bind<IHeaderVM>(ServiceSymbols.IHeaderVM).to(HeaderVM);
+  container.bind<IHeaderVM>(ServiceSymbols.IHeaderVM).to(HeaderVM).inSingletonScope();
   container.bind<IProblemsLibVM>(ServiceSymbols.IProblemsLibVM).to(ProblemsLibVM);
+  container.bind<IProblemSolvingVM>(ServiceSymbols.IProblemSolvingVM).to(ProblemSolvingVM);
 
   return container;
 };

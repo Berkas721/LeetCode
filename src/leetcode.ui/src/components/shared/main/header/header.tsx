@@ -18,14 +18,23 @@ import { observer } from 'mobx-react-lite';
 
 interface IHeaderProps {
   className?: string;
+  isFullWidth?: boolean;
 }
 
-const Header: FC<IHeaderProps> = ({ className }) => {
+const Header: FC<IHeaderProps> = ({ className, isFullWidth = false }) => {
   const vm = useGet<IHeaderVM>(ServiceSymbols.IHeaderVM);
 
+  console.log('asdsa', isFullWidth);
+
   return (
-    <div className={cn('sticky flex flex-row h-16 justify-center border-b-white/10 border-b', className)}>
-      <div className="px-8 py-2 max-w-[1200px] w-full h-full items-center flex justify-between">
+    <div
+      className={cn('sticky top-0 flex flex-row h-16 justify-center border-b-white/10 border-b bg-background/40 backdrop-blur', className)}>
+      <div
+        className={cn(
+          'px-8 py-2  w-full h-full items-center flex justify-between',
+          !isFullWidth && 'max-w-[1200px]'
+        )}
+      >
         <a href={'/'} className="no-underline flex items-center hover:bg-accent transition-all">
           <Logo />
         </a>

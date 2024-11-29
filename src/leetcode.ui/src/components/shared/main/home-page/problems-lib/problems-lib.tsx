@@ -8,6 +8,7 @@ import ServiceSymbols from '@/data/constant/ServiceSymbols';
 import { IProblemsLibVM } from '@/components/shared/main/home-page/problems-lib/problems-lib.vm';
 import { Skeleton } from '@/components/ui/skeleton';
 import { observer } from 'mobx-react-lite';
+import { Badge } from '@/components/ui/badge';
 
 interface IProblemsLibProps {
   className?: string;
@@ -15,8 +16,6 @@ interface IProblemsLibProps {
 
 const ProblemsLib: FC<IProblemsLibProps> = ({ className }) => {
   const vm = useGet<IProblemsLibVM>(ServiceSymbols.IProblemsLibVM);
-
-  console.log(vm.isLoading);
 
   return (
     <div className={cn('flex w-full flex-col gap-8', className)}>

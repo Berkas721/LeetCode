@@ -7,6 +7,7 @@
   
   IHeaderVM: Symbol.for('IHeaderVM'),
   IProblemsLibVM: Symbol.for('IProblemsLibVM'),
+  IProblemSolvingVM: Symbol.for('IProblemSolvingVM'),
 };
 
 export default ServiceSymbols;
