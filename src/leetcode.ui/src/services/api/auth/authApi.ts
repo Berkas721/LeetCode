@@ -2,12 +2,13 @@
 import Endpoints from '@/services/api/endpoints';
 import { ISignInPayload } from '@/data/abstractions/ISignInPayload';
 import { ISignUpPayload } from '@/data/abstractions/ISignUpPayload';
+import { IUser } from '@/data/abstractions/IUser';
 
 export interface IAuthApi {
   signIn(payload: ISignInPayload): Promise<boolean>;
   signUp(payload: ISignUpPayload): Promise<boolean>;
   signOut(): Promise<boolean>;
-  getCurrentUser(): Promise<boolean>;
+  getCurrentUser(): Promise<IUser>;
 }
 
 export class AuthApi
@@ -40,11 +41,11 @@ export class AuthApi
     return this.isSuccessfulStatusCode(response.status);
   };
 
-  public readonly getCurrentUser = async (): Promise<boolean> => {
+  public readonly getCurrentUser = async (): Promise<IUser> => {
     const url = Endpoints.Auth.getCurrentUser();
     const response = await this.asyncRunner(
       () => this.api.get(url)
     )
-    return this.isSuccessfulStatusCode(response.status);
+    return response.data as IUser;
   };
 }

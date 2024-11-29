@@ -2,9 +2,10 @@
 import { Container } from 'inversify';
 import ServiceSymbols from '@/data/constant/ServiceSymbols';
 import axios, { AxiosInstance } from 'axios';
+import { AuthApi, IAuthApi } from '@/services/api/auth/authApi';
 import SignInFormVM, { ISignInFormVM } from '@/components/shared/auth/sign-in/sign-in-form.vm';
 import SignUpFormVM, { ISignUpFormVM } from '@/components/shared/auth/sign-up/sign-up-form.vm';
-import { AuthApi, IAuthApi } from '@/services/api/auth/authApi';
+import HeaderVM, { IHeaderVM } from '@/components/shared/main/header/header.vm';
 
 
 export const createDependencyContainer = (): Container => {
@@ -19,6 +20,8 @@ export const createDependencyContainer = (): Container => {
   
   container.bind<ISignInFormVM>(ServiceSymbols.ISignInFormVM).to(SignInFormVM);
   container.bind<ISignUpFormVM>(ServiceSymbols.ISignUpFormVM).to(SignUpFormVM);
+  
+  container.bind<IHeaderVM>(ServiceSymbols.IHeaderVM).to(HeaderVM);
 
   return container;
 };
