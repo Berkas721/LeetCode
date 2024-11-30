@@ -17,7 +17,7 @@ namespace LeetCode.Controllers.V1;
 public class ProblemController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpGet]
-    [ProducesResponseType<List<ProblemOutput>>(200)]
+    [ProducesResponseType<List<ProblemOutputFull>>(200)]
     public async Task<IActionResult> Query(
         CancellationToken cancellationToken)
     {
