@@ -16,6 +16,15 @@ namespace LeetCode.Controllers.V1;
 [Route("api/v1/problem")]
 public class ProblemController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
+    [HttpGet]
+    public async Task<IActionResult> Query(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetProblemsQuery();
+        var problems = await Mediator.Send(query, cancellationToken);
+        return Ok(problems);
+    }
+
     [HttpGet("{problemId}")]
     public async Task<IActionResult> GetById(
         [FromRoute] long problemId,
@@ -26,7 +35,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         return Ok(problem);
     }
 
-    /*// нужен graphql...
+    // нужен graphql...
     [HttpGet("{problemId}/full-info")]
     public async Task<IActionResult> GetFullInfo(
         [FromRoute] long problemId,
@@ -65,7 +74,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
-    }*/
+    }
 
     // Проверка хватает ли всех данных для открытия задачи и проходят ли они проверки
     [HttpGet("{problemId}/test")]
