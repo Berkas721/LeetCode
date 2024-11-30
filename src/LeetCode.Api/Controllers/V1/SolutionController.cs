@@ -1,4 +1,5 @@
 ﻿using LeetCode.Controllers.Abstraction;
+using LeetCode.Dto.Solution;
 using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
 using LeetCode.Features.Solution.Create;
@@ -16,6 +17,7 @@ namespace LeetCode.Controllers.V1;
 public class SolutionController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpGet("{solutionId:long}")]
+    [ProducesResponseType<SolutionOutput>(200)]
     public async Task<IActionResult> GetById(
         [FromRoute] long solutionId,
         CancellationToken cancellationToken)
@@ -27,6 +29,7 @@ public class SolutionController(IMediator mediator, IMapper mapper) : Applicatio
 
     // TODO: заменить на create-by-problem-and-language
     [HttpPost("create-by-implemented-problem/{implementedProblemId:Guid}")]
+    [ProducesResponseType<long>(200)]
     [Authorize]
     public async Task<IActionResult> CreateByImplementedProblem(
         [FromRoute] Guid implementedProblemId,
@@ -38,6 +41,7 @@ public class SolutionController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPost("{solutionBaseId:long}/create-copy")]
+    [ProducesResponseType<long>(200)]
     [Authorize]
     public async Task<IActionResult> CreateByOtherSolution(
         [FromRoute] long solutionBaseId,
@@ -49,6 +53,7 @@ public class SolutionController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPut("{solutionId:long}/update")]
+    [ProducesResponseType<SolutionOutput>(200)]
     [Authorize]
     public async Task<IActionResult> Update(
         [FromRoute] long solutionId,
@@ -66,6 +71,7 @@ public class SolutionController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPut("{solutionId:long}/submit")]
+    [ProducesResponseType<SubmitSolutionResult>(200)]
     [Authorize]
     public async Task<IActionResult> Submit(
         [FromRoute] long solutionId,
@@ -77,6 +83,7 @@ public class SolutionController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPut("{solutionId:long}/test-with-specified-testcases")]
+    [ProducesResponseType<TestSolutionResult>(200)]
     [Authorize]
     public async Task<IActionResult> TestWithSpecifiedTestCases(
         [FromRoute] long solutionId,

@@ -13,6 +13,7 @@ namespace LeetCode.Controllers.V1;
 public class AuthController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpPost("signup")]
+    [ProducesResponseType<Guid>(200)]
     public async Task<IActionResult> SignUp(
         [FromBody] SignUpInput input, 
         CancellationToken cancellationToken)
@@ -23,6 +24,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
     }
 
     [HttpPut("signin")]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> SignIn(
         [FromBody] SignInInput input, 
         CancellationToken cancellationToken)
@@ -34,6 +36,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
 
     [HttpPut("signout")]
     [Authorize]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> SignOut(
         CancellationToken cancellationToken)
     {
@@ -44,6 +47,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : ApplicationCon
 
     [HttpGet("current-user")]
     [Authorize]
+    [ProducesResponseType<User>(200)]
     public async Task<IActionResult> GetCurrentUserInfo( 
         CancellationToken cancellationToken)
     {

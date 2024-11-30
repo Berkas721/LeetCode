@@ -1,5 +1,6 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.ImplementedProblem;
+using LeetCode.Dto.Solution;
 using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
 using LeetCode.Features.ImplementedProblem.Create;
@@ -19,39 +20,43 @@ namespace LeetCode.Controllers.V1;
 public class ImplementedProblemController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpGet("{implementedProblemId}")]
+    [ProducesResponseType<ImplementedProblemOutput>(200)]
     public async Task<IActionResult> GetById(
         [FromRoute] Guid implementedProblemId, 
         CancellationToken cancellationToken)
     {
         var query = new GetByIdImplementedProblemQuery(implementedProblemId);
-        var testcase = await Mediator.Send(query, cancellationToken);
-        return Ok(testcase);
+        var problem = await Mediator.Send(query, cancellationToken);
+        return Ok(problem);
     }
 
     [HttpGet("{implementedProblemId}/solutions")]
     [Authorize]
+    [ProducesResponseType<List<SolutionOutput>>(200)]
     public async Task<IActionResult> GetSolutions(
         [FromRoute] Guid implementedProblemId, 
         CancellationToken cancellationToken)
     {
         var query = new GetSolutionsByImplementedProblemIdQuery(implementedProblemId, User.GetUserId());
-        var solutions = await Mediator.Send(query, cancellationToken);
-        return Ok(solutions);
+        var problems = await Mediator.Send(query, cancellationToken);
+        return Ok(problems);
     }
 
     [HttpPost]
     [Authorize]
+    [ProducesResponseType<Guid>(200)]
     public async Task<IActionResult> Create(
         [FromBody] CreateImplementedProblemInput input, 
         CancellationToken cancellationToken)
     {
         var command = Mapper.Map<CreateImplementedProblemCommand>(input) with { UserId = User.GetUserId() };
-        var testcase = await Mediator.Send(command, cancellationToken);
-        return Ok(testcase);
+        var problem = await Mediator.Send(command, cancellationToken);
+        return Ok(problem);
     }
 
     [HttpPut("{implementedProblemId}/update")]
     [Authorize]
+    [ProducesResponseType<ImplementedProblemOutput>(200)]
     public async Task<IActionResult> Update(
         [FromRoute] Guid implementedProblemId,
         [FromBody] UpdateImplementedProblemInput input, 
@@ -62,11 +67,12 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
             ImplementedProblemId = implementedProblemId,
             UserId = User.GetUserId()
         };
-        var testcase = await Mediator.Send(command, cancellationToken);
-        return Ok(testcase);
+        var problem = await Mediator.Send(command, cancellationToken);
+        return Ok(problem);
     }
 
     [HttpPut("{implementedProblemId}/test-working-solution-with-official-testcases")]
+    [ProducesResponseType<TestImplementationProblemResult>(200)]
     public async Task<IActionResult> TestOfficialTestcases(
         [FromRoute] Guid implementedProblemId, 
         CancellationToken cancellationToken)
@@ -77,6 +83,7 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
     }
 
     [HttpPut("{implementedProblemId}/test-working-solution-with-specified-testcases")]
+    [ProducesResponseType<TestImplementationProblemResult>(200)]
     public async Task<IActionResult> TestDraftTestcases(
         [FromRoute] Guid implementedProblemId,
         [FromBody] IReadOnlyList<TestCaseData> testCases, 
@@ -92,6 +99,7 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
     }
 
     [HttpPut("{implementedProblemId}/run-working-solution")]
+    [ProducesResponseType<string>(200)]
     public async Task<IActionResult> RunWorkingSolution(
         [FromRoute] Guid implementedProblemId,
         [FromBody] string testCaseInput, 
@@ -104,6 +112,7 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
 
     [HttpDelete("{implementedProblemId}/delete")]
     [Authorize]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid implementedProblemId, 
         CancellationToken cancellationToken)

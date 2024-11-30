@@ -17,6 +17,7 @@ namespace LeetCode.Controllers.V1;
 public class TestCaseController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpGet("{testcaseId}")]
+    [ProducesResponseType<TestCaseOutput>(200)]
     public async Task<IActionResult> GetById(
         [FromRoute] long testcaseId,
         CancellationToken cancellationToken)
@@ -28,6 +29,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
 
     // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
     [HttpPut("test")]
+    [ProducesResponseType<List<TestTestCaseResult>>(200)]
     public async Task<IActionResult> Test(
         [FromQuery] long problemId,
         [FromBody] TestCaseData testCaseData,
@@ -40,6 +42,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
 
     // Проверка для существующих Implemented problems если они есть, возвращает результат тестов с ними
     [HttpPut("{testcaseId}/test")]
+    [ProducesResponseType<List<TestTestCaseResult>>(200)]
     public async Task<IActionResult> Test(
         [FromRoute] long testcaseId,
         CancellationToken cancellationToken)
@@ -50,6 +53,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPost]
+    [ProducesResponseType<long>(200)]
     [Authorize]
     public async Task<IActionResult> Create(
         [FromBody] CreateTestCaseInput input,
@@ -61,6 +65,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpPut("{testcaseId}/update")]
+    [ProducesResponseType<TestCaseOutput>(200)]
     [Authorize]
     public async Task<IActionResult> Update(
         [FromRoute] long testcaseId,
@@ -77,6 +82,7 @@ public class TestCaseController(IMediator mediator, IMapper mapper) : Applicatio
     }
 
     [HttpDelete("{testcaseId}/delete")]
+    [ProducesResponseType(200)]
     [Authorize]
     public async Task<IActionResult> Delete(
         [FromRoute] long testcaseId,
