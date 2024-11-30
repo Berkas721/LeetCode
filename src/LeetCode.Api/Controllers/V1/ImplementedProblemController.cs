@@ -7,6 +7,7 @@ using LeetCode.Features.ImplementedProblem.Delete;
 using LeetCode.Features.ImplementedProblem.Edit;
 using LeetCode.Features.ImplementedProblem.Query;
 using LeetCode.Features.ImplementedProblem.Test;
+using LeetCode.Features.Solution.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,17 @@ public class ImplementedProblemController(IMediator mediator, IMapper mapper) : 
         var query = new GetByIdImplementedProblemQuery(implementedProblemId);
         var testcase = await Mediator.Send(query, cancellationToken);
         return Ok(testcase);
+    }
+
+    [HttpGet("{implementedProblemId}/solutions")]
+    [Authorize]
+    public async Task<IActionResult> GetSolutions(
+        [FromRoute] Guid implementedProblemId, 
+        CancellationToken cancellationToken)
+    {
+        var query = new GetSolutionsByImplementedProblemIdQuery(implementedProblemId, User.GetUserId());
+        var solutions = await Mediator.Send(query, cancellationToken);
+        return Ok(solutions);
     }
 
     [HttpPost]
