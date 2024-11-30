@@ -34,7 +34,7 @@ public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<Pr
         var problemsDto = problems
             .Select(problem => new ProblemOutputFull
             {
-                Id = 0,
+                Id = problem.Id,
                 Name = problem.Name,
                 Description = problem.Description,
                 Difficulty = problem.Difficulty,
