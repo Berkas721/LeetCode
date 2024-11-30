@@ -28,10 +28,10 @@ public class GetSolutionQueryHandler
         GetSolutionQuery request,
         CancellationToken cancellationToken)
     {
-        var problem = await _context
+        var solution = await _context
             .ProblemSolutions
             .FindByIdAsync(request.SolutionId, cancellationToken);
 
-        return _mapper.Map<SolutionOutput>(problem);
+        return _mapper.Map<SolutionOutput>(solution);
     }
 }

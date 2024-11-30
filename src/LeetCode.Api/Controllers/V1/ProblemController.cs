@@ -16,7 +16,18 @@ namespace LeetCode.Controllers.V1;
 [Route("api/v1/problem")]
 public class ProblemController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
+    [HttpGet]
+    [ProducesResponseType<List<ProblemOutput>>(200)]
+    public async Task<IActionResult> Query(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetProblemsQuery();
+        var problems = await Mediator.Send(query, cancellationToken);
+        return Ok(problems);
+    }
+
     [HttpGet("{problemId}")]
+    [ProducesResponseType<ProblemOutput>(200)]
     public async Task<IActionResult> GetById(
         [FromRoute] long problemId,
         CancellationToken cancellationToken)
@@ -26,49 +37,9 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         return Ok(problem);
     }
 
-    /*// нужен graphql...
-    [HttpGet("{problemId}/full-info")]
-    public async Task<IActionResult> GetFullInfo(
-        [FromRoute] long problemId,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpGet("{problemId}/topics")]
-    public async Task<IActionResult> GetTopics(
-        [FromRoute] long problemId,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpGet("{problemId}/testcases")]
-    public async Task<IActionResult> GetTestcases(
-        [FromRoute] long problemId,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpGet("{problemId}/implemented-problems")]
-    public async Task<IActionResult> GetImplementedProblems(
-        [FromRoute] long problemId,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpGet("{problemId}/solutions")]
-    public async Task<IActionResult> GetSolutions(
-        [FromRoute] long problemId,
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }*/
-
     // Проверка хватает ли всех данных для открытия задачи и проходят ли они проверки
     [HttpGet("{problemId}/test")]
+    [ProducesResponseType<TestProblemResult>(200)]
     public async Task<IActionResult> Test(
         [FromRoute] long problemId,
         CancellationToken cancellationToken)
@@ -79,6 +50,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     }
 
     [HttpPost]
+    [ProducesResponseType<long>(200)]
     public async Task<IActionResult> Create(
         [FromBody] CreateProblemInput input,
         CancellationToken cancellationToken)
@@ -89,6 +61,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     }
 
     [HttpPut("{problemId}/update")]
+    [ProducesResponseType(200)]
     [Authorize]
     public async Task<IActionResult> Update(
         [FromRoute] long problemId,
@@ -105,6 +78,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     }
 
     [HttpPut("{problemId}/open")]
+    [ProducesResponseType<ProblemOutput>(200)]
     [Authorize]
     public async Task<IActionResult> Open(
         [FromRoute] long problemId,
@@ -117,6 +91,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
 
     [HttpDelete("{problemId}/delete")]
     [Authorize]
+    [ProducesResponseType(200)]
     public async Task<IActionResult> Delete(
         [FromRoute] long problemId,
         CancellationToken cancellationToken)
