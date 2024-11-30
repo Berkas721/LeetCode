@@ -1,15 +1,17 @@
 ﻿using LeetCode.Data.Contexts;
+using LeetCode.Dto;
 using LeetCode.Dto.Enums;
+using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Dto.Problem;
+using LeetCode.Dto.TestCase;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Query;
 
-public sealed record GetProblemsQuery : IRequest<List<ProblemOutput>>;
+public sealed record GetProblemsQuery : IRequest<List<ProblemOutputFull>>;
 
-
-public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<ProblemOutput>>
+public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<ProblemOutputFull>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -18,7 +20,7 @@ public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<Pr
         _dbContext = dbContext;
     }
 
-    public async Task<List<ProblemOutput>> Handle(
+    public async Task<List<ProblemOutputFull>> Handle(
         GetProblemsQuery request, 
         CancellationToken cancellationToken)
     {
@@ -30,18 +32,43 @@ public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<Pr
             .ToListAsync(cancellationToken);
 
         var problemsDto = problems
-            .Select(x => new ProblemOutput
+            .Select(problem => new ProblemOutputFull
             {
-                Name = x.Name,
-                Description = x.Description,
-                Difficulty = x.Difficulty,
-                Status = (int)x.Status,
-                CreatorId = x.CreateInfo.AgentId,
-                CreatedAt = x.CreateInfo.Date,
-                UpdaterId = x.UpdateInfo?.AgentId,
-                UpdatedAt = x.UpdateInfo?.Date,
-                OpenerId = x.OpenInfo?.AgentId,
-                OpenedAt = x.OpenInfo?.Date,
+                Id = 0,
+                Name = problem.Name,
+                Description = problem.Description,
+                Difficulty = problem.Difficulty,
+                Status = (int)problem.Status,
+                CreatorId = problem.CreateInfo.AgentId,
+                CreatedAt = problem.CreateInfo.Date,
+                UpdaterId = problem.UpdateInfo?.AgentId,
+                UpdatedAt = problem.UpdateInfo?.Date,
+                OpenerId = problem.OpenInfo?.AgentId,
+                OpenedAt = problem.OpenInfo?.Date,
+                TestCases = problem.
+                    TestCases
+                    .Select(x => new TestCaseOutput
+                    {
+                        Id = x.Id,
+                        Input = x.Input,
+                        Output = x.Output,
+                        CreateInfo = null,
+                        ProblemId = x.ProblemId
+                    })
+                    .ToList(),
+                ImplementedProblems = problem
+                    .ImplementedProblems
+                    .Select(x => new ImplementedProblemOutput
+                    {
+                        Id = x.Id,
+                        ProblemId = x.ProblemId,
+                        LanguageId = x.LanguageId,
+                        ProblemCode = null,
+                        DefaultSolutionCode = null,
+                        WorkingSolutionCode = null,
+                        CreateInfo = null
+                    })
+                    .ToList()
             })
             .ToList();
 
