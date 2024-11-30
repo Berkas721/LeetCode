@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{52A6A9FE-130
 		init.sql = init.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeetCode.ReverseProxy", "src\LeetCode.ReverseProxy\LeetCode.ReverseProxy.csproj", "{D770BE3E-C20B-4A83-BCF7-0EF5D1E19BDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,10 +35,15 @@ Global
 		{EE7E8F0D-E4FA-40CF-B069-798EE87C8F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE7E8F0D-E4FA-40CF-B069-798EE87C8F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE7E8F0D-E4FA-40CF-B069-798EE87C8F2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D770BE3E-C20B-4A83-BCF7-0EF5D1E19BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D770BE3E-C20B-4A83-BCF7-0EF5D1E19BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D770BE3E-C20B-4A83-BCF7-0EF5D1E19BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D770BE3E-C20B-4A83-BCF7-0EF5D1E19BDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3FE6F8D1-EE79-413D-9DCF-CA4CB69364AC} = {EB741B42-F0CB-4ABA-AD72-2238B10F058D}
 		{EE7E8F0D-E4FA-40CF-B069-798EE87C8F2C} = {EB741B42-F0CB-4ABA-AD72-2238B10F058D}
 		{A38DB30E-840C-470E-B74D-5367AEABDE6B} = {630AE945-EFFD-4637-992F-FA1C45ED7ACD}
+		{D770BE3E-C20B-4A83-BCF7-0EF5D1E19BDD} = {EB741B42-F0CB-4ABA-AD72-2238B10F058D}
 	EndGlobalSection
 EndGlobal
