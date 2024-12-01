@@ -7,11 +7,13 @@ import type { IProblem } from '@/data/abstractions/IProblem';
 import type { IProblemApi } from '@/services/api/problem/problemApi';
 import { IImplementedProblemBaseFields } from '@/data/abstractions/IImplementedProblem';
 import { ISolution } from '@/data/abstractions/ISolution';
+import { ITestCase } from '@/data/abstractions/ITestCase';
 
 export interface IProblemSolvingVM {
   code: string;
   problem: IProblem | undefined;
   setCode: (code: string | undefined) => void;
+  testcases: ITestCase[];
   setProblemId: (problemId: number) => void;
 }
 
@@ -35,6 +37,9 @@ class ProblemSolvingVM implements IProblemSolvingVM {
 
   @observable
   public solution: ISolution | undefined = undefined
+
+  @observable
+  public testcases: ITestCase[] = []
 
   @observable
   private lastUpdateTime: number | null = null;
@@ -87,10 +92,8 @@ class ProblemSolvingVM implements IProblemSolvingVM {
   public getProblemAndSolution = flow(function* (this: ProblemSolvingVM) {
     try {
       this.problem = yield this.problemApi.getProblemById(this.problemId)
-      console.log('prob', this.problem?.id);
       
       this.implementedProblems = yield this.problemApi.getImplementedProblemsByProblemId(this.problemId);
-      console.log('im pro', this.implementedProblems);
       
       const solutions = yield this.problemApi.getSolutionsByImplementedProblemId(this.implementedProblems[0].id)
       if (!solutions || solutions.length <= 0) {
@@ -102,6 +105,7 @@ class ProblemSolvingVM implements IProblemSolvingVM {
       
       this.code = this.solution!.code
       
+      this.testcases = yield this.problemApi.getTestCasesByProblemId(this.problemId)
     } catch (e) {
       this.problem = undefined;
     }

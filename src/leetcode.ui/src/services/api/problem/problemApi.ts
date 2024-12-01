@@ -4,7 +4,6 @@ import { ITestCase } from '@/data/abstractions/ITestCase';
 import { IProblem } from '@/data/abstractions/IProblem';
 import { IImplementedProblem, IImplementedProblemBaseFields } from '@/data/abstractions/IImplementedProblem';
 import { ISolution } from '@/data/abstractions/ISolution';
-import { IProblemFull } from '@/data/abstractions/IProblemFull';
 
 export interface IProblemApi {
   getProblems(): Promise<IProblem[]>;
@@ -16,7 +15,7 @@ export interface IProblemApi {
   submitSolution: (solutionId: number) => void;
   updateSolution(solutionId: number, payload: string): Promise<void>;
   getImplementedProblemsByProblemId(problemId: number): Promise<IImplementedProblemBaseFields[]>;
-  getTestCasesByProblemId: (problemId: number) => void;
+  getTestCasesByProblemId(problemId: number): Promise<ITestCase[]>;
   getSolutionsByImplementedProblemId(implementedProblemId: string): Promise<ISolution[]>;
 }
 
@@ -42,7 +41,7 @@ export class ProblemApi
     return response.data as IProblem;
   };
 
-  public readonly getTestCasesByProblemId = async (problemId: number) => {
+  public readonly getTestCasesByProblemId = async (problemId: number): Promise<ITestCase[]> => {
     const url = Endpoints.Problem.getTestCases(problemId);
     const response = await this.asyncRunner(
       () => this.api.get(url)
