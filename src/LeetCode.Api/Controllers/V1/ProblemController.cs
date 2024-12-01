@@ -1,11 +1,13 @@
 ﻿using LeetCode.Controllers.Abstraction;
 using LeetCode.Dto.Problem;
 using LeetCode.Extensions;
+using LeetCode.Features.ImplementedProblem.Query;
 using LeetCode.Features.Problem.Create;
 using LeetCode.Features.Problem.Delete;
 using LeetCode.Features.Problem.Edit;
 using LeetCode.Features.Problem.Query;
 using LeetCode.Features.Problem.Test;
+using LeetCode.Features.TestCase.Query;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +19,7 @@ namespace LeetCode.Controllers.V1;
 public class ProblemController(IMediator mediator, IMapper mapper) : ApplicationController(mediator, mapper)
 {
     [HttpGet]
-    [ProducesResponseType<List<ProblemOutputFull>>(200)]
+    [ProducesResponseType<List<ProblemOutput>>(200)]
     public async Task<IActionResult> Query(
         CancellationToken cancellationToken)
     {
@@ -35,6 +37,28 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         var query = new GetProblemQuery(problemId);
         var problem = await Mediator.Send(query, cancellationToken);
         return Ok(problem);
+    }
+    
+    [HttpGet("{problemId}/testcases")]
+    [ProducesResponseType<ProblemOutput>(200)]
+    public async Task<IActionResult> GetTestCases(
+        [FromRoute] long problemId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetTestCasesByProblemIdQuery(problemId);
+        var testCases = await Mediator.Send(query, cancellationToken);
+        return Ok(testCases);
+    }
+    
+    [HttpGet("{problemId}/implemented-problems")]
+    [ProducesResponseType<ProblemOutput>(200)]
+    public async Task<IActionResult> GetImplementedProblems(
+        [FromRoute] long problemId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetImplementedProblemsByProblemIdQuery(problemId);
+        var implementedProblems = await Mediator.Send(query, cancellationToken);
+        return Ok(implementedProblems);
     }
 
     // Проверка хватает ли всех данных для открытия задачи и проходят ли они проверки

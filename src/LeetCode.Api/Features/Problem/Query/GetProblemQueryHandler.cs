@@ -25,6 +25,7 @@ public sealed record GetProblemQueryHandler : IRequestHandler<GetProblemQuery, P
 
         return new ProblemOutput
         {
+            Id = problem.Id,
             Name = problem.Name,
             Description = problem.Description,
             Difficulty = problem.Difficulty,
