@@ -1,5 +1,7 @@
 ﻿using LeetCode.Controllers.Abstraction;
+using LeetCode.Dto.ImplementedProblem;
 using LeetCode.Dto.Problem;
+using LeetCode.Dto.TestCase;
 using LeetCode.Extensions;
 using LeetCode.Features.ImplementedProblem.Query;
 using LeetCode.Features.Problem.Create;
@@ -40,7 +42,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     }
     
     [HttpGet("{problemId}/testcases")]
-    [ProducesResponseType<ProblemOutput>(200)]
+    [ProducesResponseType<List<TestCaseOutput>>(200)]
     public async Task<IActionResult> GetTestCases(
         [FromRoute] long problemId,
         CancellationToken cancellationToken)
@@ -51,7 +53,7 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
     }
     
     [HttpGet("{problemId}/implemented-problems")]
-    [ProducesResponseType<ProblemOutput>(200)]
+    [ProducesResponseType<List<ImplementedProblemSecretOutput>>(200)]
     public async Task<IActionResult> GetImplementedProblems(
         [FromRoute] long problemId,
         CancellationToken cancellationToken)
