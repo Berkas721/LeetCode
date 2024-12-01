@@ -5,10 +5,12 @@ import type { IAuthApi } from '@/services/api/auth/authApi';
 import ServiceSymbols from '@/data/constant/ServiceSymbols';
 import { IUser } from '@/data/abstractions/IUser';
 import type { IProblem } from '@/data/abstractions/IProblem';
+import type { IProblemApi } from '@/services/api/problem/problemApi';
+import { IProblemFull } from '@/data/abstractions/IProblemFull';
 
 export interface IProblemSolvingVM {
   code: string;
-  problem: IProblem;
+  problemFull: IProblemFull | undefined;
   setCode: (code: string | undefined) => void;
   setProblemId: (problemId: number) => void;
 }
@@ -16,37 +18,25 @@ export interface IProblemSolvingVM {
 @injectable()
 class ProblemSolvingVM implements IProblemSolvingVM {
   private readonly authApi: IAuthApi;
+  private readonly problemApi: IProblemApi;
+
 
   @observable
-  public user: IUser | null = null;
-
-  @observable
-  public code: string = `public class Solution\r\n{\r\n    public static int GetSumma(int a, int b)\r\n    {\r\n        throw NotImplementedException();\r\n    }\r\n}`;
+  public code: string = 'Loading...';
 
   @observable
   public problemId: number = -1;
 
   @observable
-  public problem: IProblem = {
-    'id': 2,
-    'name': 'Определение простого числа',
-    'description': 'Напишите функцию, которая проверяет, является ли число простым.',
-    'difficulty': 1,
-    'status': 1,
-    'creatorId': 'a4c8f690-b7e1-412f-9f76-e2fbb582f89e',
-    'createdAt': '2024-11-15T10:15:00.000000Z',
-    'updaterId': 'a4c8f690-b7e1-412f-9f76-e2fbb582f89e',
-    'updatedAt': '2024-11-16T14:30:00.000000Z',
-    'openerId': 'a4c8f690-b7e1-412f-9f76-e2fbb582f89e',
-    'openedAt': '2024-11-16T14:45:00.000000Z'
-  };
+  public problemFull: IProblemFull | undefined = undefined
 
   constructor(
+    @inject(ServiceSymbols.ProblemApi) problemApi: IProblemApi,
     @inject(ServiceSymbols.AuthApi) authApi: IAuthApi
   ) {
     this.authApi = authApi;
-    this.getCurrentUser();
-
+    this.problemApi = problemApi;
+    
     makeObservable(this);
   }
 
@@ -62,14 +52,28 @@ class ProblemSolvingVM implements IProblemSolvingVM {
   @action
   public setProblemId = (problemId: number) => {
     this.problemId = problemId;
+    this.getFullProblem()
   };
 
+  // @action.bound
+  // public createSolution = flow(function* (this: ProblemSolvingVM) {
+  //   try {
+  //     this.problem = yield this.problemApi.getProblemById(this.problemId)
+  //   } catch (e) {
+  //     this.problem = null;
+  //   }
+  // });
+
   @action.bound
-  public getCurrentUser = flow(function* (this: ProblemSolvingVM) {
+  public getFullProblem = flow(function* (this: ProblemSolvingVM) {
     try {
-      this.user = yield this.authApi.getCurrentUser();
+      const problems: IProblemFull[] = yield this.problemApi.getProblems();
+      this.problemFull = problems.find(x => String(x.id) === String(this.problemId))
+      
+      
+      
     } catch (e) {
-      this.user = null;
+      this.problemFull = undefined;
     }
   });
 }

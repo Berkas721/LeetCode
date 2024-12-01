@@ -4,9 +4,10 @@ import { ITestCase } from '@/data/abstractions/ITestCase';
 import { IProblem } from '@/data/abstractions/IProblem';
 import { IImplementedProblem } from '@/data/abstractions/IImplementedProblem';
 import { ISolution } from '@/data/abstractions/ISolution';
+import { IProblemFull } from '@/data/abstractions/IProblemFull';
 
 export interface IProblemApi {
-  getProblems: () => void;
+  getProblems(): Promise<IProblemFull[]>;
   getProblemById: (problemId: number) => void;
   getImplementedProblemById: (implementedProblemId: number) => void;
   getSolutionById: (solutionId: number) => void;
@@ -20,13 +21,13 @@ export class ProblemApi
   extends ApiClientBase
   implements IProblemApi {
 
-  public readonly getProblems = async () => {
+  public readonly getProblems = async (): Promise<IProblemFull[]> => {
     const url = Endpoints.Problem.getProblems();
     const response = await this.asyncRunner(
       () => this.api.get(url)
     );
 
-    return response.data as IProblem[];
+    return response.data as IProblemFull[];
   };
 
   public readonly getProblemById = async (problemId: number) => {
@@ -35,6 +36,7 @@ export class ProblemApi
       () => this.api.get(url)
     );
 
+    console.log(response.data)
     return response.data as IProblem;
   };
 
