@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="flex w-full min-h-screen justify-center gap-8 row-start-2">
+      <div className="flex w-full  justify-center gap-8 row-start-2">
         <div className="max-w-[1200px] px-8 mb-16 w-full mt-16">
           <h3 className="font-semibold text-4xl mb-4">Добро пожаловать!</h3>
           <h4 className="mb-16">

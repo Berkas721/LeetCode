@@ -1,5 +1,4 @@
-﻿
-import 'reflect-metadata';
+﻿import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { action, flow, makeObservable, observable } from 'mobx';
 import { z } from 'zod';
@@ -28,7 +27,7 @@ class SignUpFormVM implements ISignUpFormVM {
   private formData: z.infer<typeof this.schemaSignUpForm> | null = null;
 
   private readonly authApi: IAuthApi;
-  
+
   constructor(
     @inject(ServiceSymbols.AuthApi) authApi: IAuthApi
   ) {
@@ -57,20 +56,20 @@ class SignUpFormVM implements ISignUpFormVM {
   public sendSignUpRequest = flow(function* (this: SignUpFormVM) {
     if (this.formData === null)
       return;
-    
+
     const payload: ISignUpPayload = {
       username: this.formData.username,
       password: this.formData.password,
       firstName: this.formData.firstName,
       lastName: this.formData.lastName,
       birthday: '2000-01-01'
-    }
+    };
 
     try {
       this.formData = null;
       this.setIsLoading(true);
       yield this.authApi.signUp(payload);
-      
+
       toast({
         title: 'Вход выполнен',
         description: 'Добро пожаловать! Вы успешно вошли в свою учетную запись.'
@@ -95,12 +94,12 @@ class SignUpFormVM implements ISignUpFormVM {
       password: z
         .string({ required_error: 'Поле должно быть заполнено' })
         .min(6, 'Пароль должен содержать не менее 6 символов'),
-      firstname: z
+      firstName: z
         .string({ required_error: 'Поле должно быть заполнено' })
         .min(2, 'Имя должно содержать не менее 2 символов'),
-      lastname: z
+      lastName: z
         .string({ required_error: 'Поле должно быть заполнено' })
-        .min(2, 'Имя должно содержать не менее 2 символов')
+        .min(2, 'Фамилия должна содержать не менее 2 символов')
     });
 }
 

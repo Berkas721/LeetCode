@@ -30,9 +30,9 @@ export const ProblemCard: FC<IProblemCardProps> = ({ problem, className }) => {
   const getDifficultyBadge = (difficulty: number) => {
     switch (difficulty) {
       case 0:
-        return <Badge className="bg-green-600 text-foreground">Легко</Badge>;
+        return <Badge className="bg-green-600 dark:text-foreground text-background">Легко</Badge>;
       case 1:
-        return <Badge className="bg-orange-600 text-foreground">Средне</Badge>;
+        return <Badge className="bg-orange-600 dark:text-foreground text-background">Средне</Badge>;
       case 2:
         return <Badge variant="destructive">Сложно</Badge>;
       default:
