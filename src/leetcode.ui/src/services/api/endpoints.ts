@@ -32,11 +32,11 @@
 
     // @method get
     public static readonly getProblems = (): string =>
-      `${Endpoints.Auth.base()}`;
+      `${Endpoints.Problem.base()}`;
 
     // @method get
     public static readonly getProblemById = (id: number): string =>
-      `${Endpoints.Auth.base()}/${id}`;
+      `${Endpoints.Problem.base()}/${id}`;
   }
 
   public static readonly ImplementedProblem = class {
@@ -45,7 +45,7 @@
 
     // @method get
     public static readonly getImplementedProblemById = (id: number): string =>
-      `${Endpoints.Auth.base()}/${id}`;
+      `${Endpoints.ImplementedProblem.base()}/${id}`;
   }
 
   public static readonly Solution = class {
@@ -54,22 +54,22 @@
 
     // @method post
     public static readonly createByImplementedProblem = (implementedProblemId: number): string =>
-      `${Endpoints.Auth.base()}/create-by-implemented-problem/${implementedProblemId}`;
+      `${Endpoints.Solution.base()}/create-by-implemented-problem/${implementedProblemId}`;
 
     // @method get
     public static readonly getSolutionById = (solutionId: number): string =>
-      `${Endpoints.Auth.base()}/${solutionId}`;
+      `${Endpoints.Solution.base()}/${solutionId}`;
 
     // @method put
     public static readonly testSolutionWithSpecifiedTestcases = (solutionId: number): string =>
-      `${Endpoints.Auth.base()}/${solutionId}/test-with-specified-testcases`;
+      `${Endpoints.Solution.base()}/${solutionId}/test-with-specified-testcases`;
 
     // @method put
     public static readonly submitSolution = (solutionId: number): string =>
-      `${Endpoints.Auth.base()}/${solutionId}/submit`;
+      `${Endpoints.Solution.base()}/${solutionId}/submit`;
 
     // @method put
     public static readonly updateSolution = (solutionId: number): string =>
-      `${Endpoints.Auth.base()}/${solutionId}/update`;
+      `${Endpoints.Solution.base()}/${solutionId}/update`;
   }
 }
