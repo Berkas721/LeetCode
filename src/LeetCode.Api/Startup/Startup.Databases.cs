@@ -74,10 +74,10 @@ public partial class Startup
             await dbContext.Languages.AddAsync(SeedingData.Language);
 
         if (!dbContext.Problems.Any())
-            await dbContext.Problems.AddAsync(SeedingData.Problem);
+            await dbContext.Problems.AddRangeAsync(SeedingData.Problems);
 
         if (!dbContext.ImplementedProblems.Any())
-            await dbContext.ImplementedProblems.AddAsync(SeedingData.ImplementedProblem);
+            await dbContext.ImplementedProblems.AddRangeAsync(SeedingData.ImplementedProblems);
 
         if (!dbContext.TestCases.Any())
             await dbContext.TestCases.AddRangeAsync(SeedingData.TestCases);

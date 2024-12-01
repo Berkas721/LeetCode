@@ -24,6 +24,7 @@ public static partial class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseEndpoints(_ => { });
         app.UseDevelopmentConfiguration();
         app.MapControllers();
 
