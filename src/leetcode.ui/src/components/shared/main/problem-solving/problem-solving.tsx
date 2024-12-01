@@ -9,6 +9,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import moment from 'moment/moment';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 
 interface IProblemSolvingProps {
   problemId: number;
@@ -26,9 +37,9 @@ const ProblemSolving: FC<IProblemSolvingProps> = ({ problemId }) => {
   const getDifficultyBadge = (difficulty: number) => {
     switch (difficulty) {
       case 0:
-        return <Badge className="bg-green-600 text-foreground">Легко</Badge>;
+        return <Badge className="bg-green-600 dark:text-foreground text-background">Легко</Badge>;
       case 1:
-        return <Badge className="bg-orange-600 text-foreground">Средне</Badge>;
+        return <Badge className="bg-orange-600 dark:text-foreground text-background">Средне</Badge>;
       case 2:
         return <Badge variant="destructive">Сложно</Badge>;
       default:
@@ -39,10 +50,9 @@ const ProblemSolving: FC<IProblemSolvingProps> = ({ problemId }) => {
   const formatJsonString = (json: string): string => {
     try {
       const parsedObject = JSON.parse(json);
-      const formattedString = Object.entries(parsedObject)
+      return Object.entries(parsedObject)
         .map(([key, value]) => `${key} = ${value}`)
         .join(', ');
-      return formattedString;
     } catch (error) {
       return 'Invalid JSON string';
     }
@@ -68,7 +78,7 @@ const ProblemSolving: FC<IProblemSolvingProps> = ({ problemId }) => {
                     <div className="flex flex-col gap-2 mt-8">
                       {
                         vm.testcases && (vm.testcases.length > 0) && vm.testcases.map((t, index) => (
-                          <div className="mb-4">
+                          <div className="mb-4" key={index}>
                             <p className="font-bold">Пример {index + 1}:</p>
                             <p className="ml-4">Input: {formatJsonString(t.input)}.</p>
                             <p className="ml-4">Output: {formatJsonString(t.output)}.</p>
@@ -92,7 +102,23 @@ const ProblemSolving: FC<IProblemSolvingProps> = ({ problemId }) => {
             <ResizablePanel minSize={40} defaultSize={80} className="flex flex-col gap-4 p-8">
               <div className="flex justify-between flex-row">
                 <Button>Запустить с тестовыми данными</Button>
-                <Button variant="secondary">Отправить на проверку</Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="secondary">Отправить решение на проверку</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        После отправки решения на проверку изменить его будет невозможно.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отмена</AlertDialogCancel>
+                      <AlertDialogAction>Продолжить</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
               <Editor
                 className="h-full"

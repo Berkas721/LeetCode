@@ -44,7 +44,7 @@ const Header: FC<IHeaderProps> = ({ className, isFullWidth = false }) => {
                 <DropdownMenuTrigger>
                   <Avatar className="hover:outline-1 outline-white outline-2">
                     <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>:P</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>

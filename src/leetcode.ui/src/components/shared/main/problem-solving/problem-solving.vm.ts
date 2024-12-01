@@ -53,6 +53,8 @@ class ProblemSolvingVM implements IProblemSolvingVM {
     this.authApi = authApi;
     this.problemApi = problemApi;
     
+    this.checkAuth()
+    
     makeObservable(this);
   }
 
@@ -108,6 +110,18 @@ class ProblemSolvingVM implements IProblemSolvingVM {
       this.testcases = yield this.problemApi.getTestCasesByProblemId(this.problemId)
     } catch (e) {
       this.problem = undefined;
+    }
+  });
+
+  @action.bound
+  public checkAuth = flow(function* (this: ProblemSolvingVM) {
+    try {
+      const user = yield this.authApi.getCurrentUser();
+      if (!user) {
+        window.location.href = '/sign-in';
+      }
+    } catch (e) {
+      window.location.href = '/sign-in';
     }
   });
 }
