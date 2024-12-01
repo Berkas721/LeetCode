@@ -4,7 +4,6 @@ import { inject, injectable } from 'inversify';
 import { action, flow, makeObservable, observable } from 'mobx';
 import { z } from 'zod';
 import { toast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 import type { IAuthApi } from '@/services/api/auth/authApi';
 import ServiceSymbols from '@/data/constant/ServiceSymbols';
 import { ISignUpPayload } from '@/data/abstractions/ISignUpPayload';
@@ -29,9 +28,7 @@ class SignUpFormVM implements ISignUpFormVM {
   private formData: z.infer<typeof this.schemaSignUpForm> | null = null;
 
   private readonly authApi: IAuthApi;
-
-  private readonly router = useRouter();
-
+  
   constructor(
     @inject(ServiceSymbols.AuthApi) authApi: IAuthApi
   ) {
@@ -78,7 +75,7 @@ class SignUpFormVM implements ISignUpFormVM {
         title: 'Вход выполнен',
         description: 'Добро пожаловать! Вы успешно вошли в свою учетную запись.'
       });
-      this.router.push('/');
+      window.location.href = '/';
     } catch (e) {
       toast({
         variant: 'destructive',

@@ -11,8 +11,8 @@ import bg3 from './images/bg3.jpg';
 import bg4 from './images/bg4.jpg';
 import bg5 from './images/bg5.jpg';
 import moment from 'moment';
-import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
+import { useRouter } from 'next/navigation';
 
 interface IProblemCardProps {
   className?: string;

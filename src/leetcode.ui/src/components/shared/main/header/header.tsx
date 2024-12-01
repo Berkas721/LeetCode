@@ -23,9 +23,7 @@ interface IHeaderProps {
 
 const Header: FC<IHeaderProps> = ({ className, isFullWidth = false }) => {
   const vm = useGet<IHeaderVM>(ServiceSymbols.IHeaderVM);
-
-  console.log('asdsa', isFullWidth);
-
+  
   return (
     <div
       className={cn('sticky top-0 flex flex-row h-16 justify-center border-b-white/10 border-b bg-background/40 backdrop-blur', className)}>

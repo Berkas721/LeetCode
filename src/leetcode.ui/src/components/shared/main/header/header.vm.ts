@@ -19,7 +19,7 @@ class HeaderVM implements IHeaderVM {
   public user: IUser | null = null;
 
   constructor(
-    @inject(ServiceSymbols.AuthApi) authApi: IAuthApi
+    @inject(ServiceSymbols.AuthApi) authApi: IAuthApi,
   ) {
     this.authApi = authApi;
     this.getCurrentUser();
@@ -38,9 +38,12 @@ class HeaderVM implements IHeaderVM {
 
   @action.bound
   public signOut = flow(function* (this: HeaderVM) {
+    console.log('asdsad');
     try {
-      yield this.authApi.signOut;
+      yield this.authApi.signOut();
+      window.location.href = '/sign-in';
     } catch (e) {
+    } finally {
     }
   });
 }
