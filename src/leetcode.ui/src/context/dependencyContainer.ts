@@ -8,6 +8,7 @@ import SignUpFormVM, { ISignUpFormVM } from '@/components/shared/auth/sign-up/si
 import HeaderVM, { IHeaderVM } from '@/components/shared/main/header/header.vm';
 import ProblemsLibVM, { IProblemsLibVM } from '@/components/shared/main/home-page/problems-lib/problems-lib.vm';
 import ProblemSolvingVM, { IProblemSolvingVM } from '@/components/shared/main/problem-solving/problem-solving.vm';
+import { IProblemApi, ProblemApi } from '@/services/api/problem/problemApi';
 
 
 export const createDependencyContainer = (): Container => {
@@ -17,6 +18,7 @@ export const createDependencyContainer = (): Container => {
     .bind<AxiosInstance>(ServiceSymbols.AxiosInstance)
     .toFactory(() => axios.create());
   container.bind<IAuthApi>(ServiceSymbols.AuthApi).to(AuthApi);
+  container.bind<IProblemApi>(ServiceSymbols.ProblemApi).to(ProblemApi);
 
   container.bind<ISignInFormVM>(ServiceSymbols.ISignInFormVM).to(SignInFormVM);
   container.bind<ISignUpFormVM>(ServiceSymbols.ISignUpFormVM).to(SignUpFormVM);
