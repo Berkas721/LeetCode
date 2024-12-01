@@ -51,7 +51,7 @@ export const ProblemCard: FC<IProblemCardProps> = ({ problem, className }) => {
         <div className="flex items-center justify-between mb-2">
           {getDifficultyBadge(problem.difficulty)}
           <p className="text-right text-muted-foreground mt-2 text-sm">
-            {moment(problem.openedAt).format('DD.MM.YYYY')}
+            {moment(problem.createdAt).format('DD.MM.YYYY')}
           </p>
         </div>
         <Image src={getRandomBg()} width={150} height={150} alt={''} className="w-full rounded-md" />
