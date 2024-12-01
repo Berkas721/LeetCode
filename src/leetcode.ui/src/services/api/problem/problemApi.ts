@@ -7,15 +7,24 @@ import { ISolution } from '@/data/abstractions/ISolution';
 
 export interface IProblemApi {
   getProblems(): Promise<IProblem[]>;
+
   getProblemById(problemId: number): Promise<IProblem>;
+
   getImplementedProblemById: (implementedProblemId: number) => void;
+
   getSolutionById(solutionId: number): Promise<ISolution>;
+
   createByImplementedProblem(implementedProblemId: string): Promise<number>;
+
   testSolutionWithSpecifiedTestcases: (solutionId: number, payload: ITestCase[]) => void;
   submitSolution: (solutionId: number) => void;
+
   updateSolution(solutionId: number, payload: string): Promise<void>;
+
   getImplementedProblemsByProblemId(problemId: number): Promise<IImplementedProblemBaseFields[]>;
+
   getTestCasesByProblemId(problemId: number): Promise<ITestCase[]>;
+
   getSolutionsByImplementedProblemId(implementedProblemId: string): Promise<ISolution[]>;
 }
 
@@ -46,7 +55,7 @@ export class ProblemApi
     const response = await this.asyncRunner(
       () => this.api.get(url)
     );
-    
+
     return response.data as ITestCase[];
   };
 
@@ -114,11 +123,11 @@ export class ProblemApi
       () => this.api.put(url, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'text/plain',
-        },
+          'Accept': 'text/plain'
+        }
       })
     );
-    
+
     return;
   };
 }
