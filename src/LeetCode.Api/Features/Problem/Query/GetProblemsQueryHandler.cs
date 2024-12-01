@@ -1,17 +1,14 @@
 ﻿using LeetCode.Data.Contexts;
-using LeetCode.Dto;
-using LeetCode.Dto.Enums;
-using LeetCode.Dto.ImplementedProblem;
+using LeetCode.Data.Enums;
 using LeetCode.Dto.Problem;
-using LeetCode.Dto.TestCase;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.Problem.Query;
 
-public sealed record GetProblemsQuery : IRequest<List<ProblemOutputFull>>;
+public sealed record GetProblemsQuery : IRequest<List<ProblemOutput>>;
 
-public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<ProblemOutputFull>>
+public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<ProblemOutput>>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -20,19 +17,18 @@ public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<Pr
         _dbContext = dbContext;
     }
 
-    public async Task<List<ProblemOutputFull>> Handle(
+    public async Task<List<ProblemOutput>> Handle(
         GetProblemsQuery request, 
         CancellationToken cancellationToken)
     {
         var problems = await _dbContext
             .Problems
-            .Include(x => x.ImplementedProblems)
-            .Include(x => x.TestCases)
+            .Where(x => x.Status == ProblemStatus.Open)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         var problemsDto = problems
-            .Select(problem => new ProblemOutputFull
+            .Select(problem => new ProblemOutput
             {
                 Id = problem.Id,
                 Name = problem.Name,
@@ -45,30 +41,6 @@ public class GetProblemsQueryHandler : IRequestHandler<GetProblemsQuery, List<Pr
                 UpdatedAt = problem.UpdateInfo?.Date,
                 OpenerId = problem.OpenInfo?.AgentId,
                 OpenedAt = problem.OpenInfo?.Date,
-                TestCases = problem.
-                    TestCases
-                    .Select(x => new TestCaseOutput
-                    {
-                        Id = x.Id,
-                        Input = x.Input,
-                        Output = x.Output,
-                        CreateInfo = null,
-                        ProblemId = x.ProblemId
-                    })
-                    .ToList(),
-                ImplementedProblems = problem
-                    .ImplementedProblems
-                    .Select(x => new ImplementedProblemOutput
-                    {
-                        Id = x.Id,
-                        ProblemId = x.ProblemId,
-                        LanguageId = x.LanguageId,
-                        ProblemCode = null,
-                        DefaultSolutionCode = null,
-                        WorkingSolutionCode = null,
-                        CreateInfo = null
-                    })
-                    .ToList()
             })
             .ToList();
 
