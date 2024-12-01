@@ -40,14 +40,15 @@ public class ProblemController(IMediator mediator, IMapper mapper) : Application
         var problem = await Mediator.Send(query, cancellationToken);
         return Ok(problem);
     }
-    
-    [HttpGet("{problemId}/testcases")]
+
+    [HttpGet("{problemId}/testcases/{count}")]
     [ProducesResponseType<List<TestCaseOutput>>(200)]
     public async Task<IActionResult> GetTestCases(
         [FromRoute] long problemId,
+        [FromRoute] int count,
         CancellationToken cancellationToken)
     {
-        var query = new GetTestCasesByProblemIdQuery(problemId);
+        var query = new GetTestCasesByProblemIdQuery(problemId, count);
         var testCases = await Mediator.Send(query, cancellationToken);
         return Ok(testCases);
     }

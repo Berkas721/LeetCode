@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeetCode.Features.TestCase.Query;
 
-public sealed record GetTestCasesByProblemIdQuery(long ProblemId) : IRequest<List<TestCaseOutput>>;
+public sealed record GetTestCasesByProblemIdQuery(long ProblemId, int Count) : IRequest<List<TestCaseOutput>>;
 
 public class GetTestCasesByProblemIdQueryHandler : IRequestHandler<GetTestCasesByProblemIdQuery, List<TestCaseOutput>>
 {
@@ -29,6 +29,7 @@ public class GetTestCasesByProblemIdQueryHandler : IRequestHandler<GetTestCasesB
         var testCases = await _dbContext
             .TestCases
             .Where(x => x.ProblemId == request.ProblemId)
+            .Take(request.Count)
             .AsTracking()
             .ToListAsync(cancellationToken);
 
