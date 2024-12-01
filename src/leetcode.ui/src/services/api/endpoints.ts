@@ -35,8 +35,16 @@
       `${Endpoints.Problem.base()}`;
 
     // @method get
-    public static readonly getProblemById = (id: number): string =>
-      `${Endpoints.Problem.base()}/${id}`;
+    public static readonly getProblemById = (problemId: number): string =>
+      `${Endpoints.Problem.base()}/${problemId}`;
+
+    // @method get
+    public static readonly getTestCases = (problemId: number, count: number = 2): string =>
+      `${Endpoints.Problem.base()}/${problemId}/testcases/${count}`;
+
+    // @method get
+    public static readonly getImplementedProblems = (problemId: number): string =>
+      `${Endpoints.Problem.base()}/${problemId}/implemented-problems`;
   }
 
   public static readonly ImplementedProblem = class {
@@ -46,6 +54,10 @@
     // @method get
     public static readonly getImplementedProblemById = (id: number): string =>
       `${Endpoints.ImplementedProblem.base()}/${id}`;
+
+    // @method get
+    public static readonly getSolutionsByImplementedProblemId = (implementedProblemId: string): string =>
+      `${Endpoints.ImplementedProblem.base()}/${implementedProblemId}/solutions`;
   }
 
   public static readonly Solution = class {
@@ -53,7 +65,7 @@
       `${Endpoints.suffix}/${Endpoints.v1}/solutions`;
 
     // @method post
-    public static readonly createByImplementedProblem = (implementedProblemId: number): string =>
+    public static readonly createByImplementedProblem = (implementedProblemId: string): string =>
       `${Endpoints.Solution.base()}/create-by-implemented-problem/${implementedProblemId}`;
 
     // @method get

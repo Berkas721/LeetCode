@@ -3,14 +3,14 @@ import { inject, injectable } from 'inversify';
 import { action, flow, makeObservable, observable } from 'mobx';
 import type { IAuthApi } from '@/services/api/auth/authApi';
 import ServiceSymbols from '@/data/constant/ServiceSymbols';
-import { IUser } from '@/data/abstractions/IUser';
 import type { IProblem } from '@/data/abstractions/IProblem';
 import type { IProblemApi } from '@/services/api/problem/problemApi';
-import { IProblemFull } from '@/data/abstractions/IProblemFull';
+import { IImplementedProblemBaseFields } from '@/data/abstractions/IImplementedProblem';
+import { ISolution } from '@/data/abstractions/ISolution';
 
 export interface IProblemSolvingVM {
   code: string;
-  problemFull: IProblemFull | undefined;
+  problem: IProblem | undefined;
   setCode: (code: string | undefined) => void;
   setProblemId: (problemId: number) => void;
 }
@@ -28,7 +28,18 @@ class ProblemSolvingVM implements IProblemSolvingVM {
   public problemId: number = -1;
 
   @observable
-  public problemFull: IProblemFull | undefined = undefined
+  public problem: IProblem | undefined = undefined
+
+  @observable
+  public implementedProblems: IImplementedProblemBaseFields[] = []
+
+  @observable
+  public solution: ISolution | undefined = undefined
+
+  @observable
+  private lastUpdateTime: number | null = null;
+  
+  private readonly updateInterval = 5000;
 
   constructor(
     @inject(ServiceSymbols.ProblemApi) problemApi: IProblemApi,
@@ -47,33 +58,52 @@ class ProblemSolvingVM implements IProblemSolvingVM {
     }
 
     this.code = code;
+
+    const now = Date.now();
+    if (!this.lastUpdateTime || now - this.lastUpdateTime >= this.updateInterval) {
+      this.lastUpdateTime = now;
+      this.updateSolutionCode();
+    }
   };
 
+  @action.bound
+  public updateSolutionCode = flow(function* (this: ProblemSolvingVM) {
+    try {
+      if (this.solution) {
+        yield this.problemApi.updateSolution(this.solution.id, this.code);
+      }
+    } catch (e) {
+      console.error("Failed to update solution code:", e);
+    }
+  });
+  
   @action
   public setProblemId = (problemId: number) => {
     this.problemId = problemId;
-    this.getFullProblem()
+    this.getProblemAndSolution()
   };
 
-  // @action.bound
-  // public createSolution = flow(function* (this: ProblemSolvingVM) {
-  //   try {
-  //     this.problem = yield this.problemApi.getProblemById(this.problemId)
-  //   } catch (e) {
-  //     this.problem = null;
-  //   }
-  // });
-
   @action.bound
-  public getFullProblem = flow(function* (this: ProblemSolvingVM) {
+  public getProblemAndSolution = flow(function* (this: ProblemSolvingVM) {
     try {
-      const problems: IProblemFull[] = yield this.problemApi.getProblems();
-      this.problemFull = problems.find(x => String(x.id) === String(this.problemId))
+      this.problem = yield this.problemApi.getProblemById(this.problemId)
+      console.log('prob', this.problem?.id);
       
+      this.implementedProblems = yield this.problemApi.getImplementedProblemsByProblemId(this.problemId);
+      console.log('im pro', this.implementedProblems);
       
+      const solutions = yield this.problemApi.getSolutionsByImplementedProblemId(this.implementedProblems[0].id)
+      if (!solutions || solutions.length <= 0) {
+        const solutionId = yield this.problemApi.createByImplementedProblem(this.implementedProblems[0].id)
+        this.solution = yield this.problemApi.getSolutionById(solutionId)
+      } else {
+        this.solution = solutions[0]
+      }
+      
+      this.code = this.solution!.code
       
     } catch (e) {
-      this.problemFull = undefined;
+      this.problem = undefined;
     }
   });
 }

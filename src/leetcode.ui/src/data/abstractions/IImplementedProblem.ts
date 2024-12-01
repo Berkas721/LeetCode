@@ -10,3 +10,9 @@
     agentId: string;
   };
 }
+
+export interface IImplementedProblemBaseFields {
+  id: string;
+  problemId: number;
+  languageId: number;
+}

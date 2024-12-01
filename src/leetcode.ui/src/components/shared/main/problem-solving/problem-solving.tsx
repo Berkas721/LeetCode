@@ -41,16 +41,16 @@ const ProblemSolving: FC<IProblemSolvingProps> = ({ problemId }) => {
       <ResizablePanelGroup direction="horizontal" className="h-full border rounded-lg">
         <ResizablePanel minSize={30} defaultSize={40} className="flex flex-col gap-4 p-4">
           {
-            vm.problemFull
+            vm.problem
               ? <>
                 <div className="inline-flex w-full justify-between">
-                  {getDifficultyBadge(vm.problemFull.difficulty)}
+                  {getDifficultyBadge(vm.problem.difficulty)}
                   <p className="text-muted-foreground">
-                    {moment(vm.problemFull.createdAt).format('DD.MM.YYYY')}
+                    {moment(vm.problem.createdAt).format('DD.MM.YYYY')}
                   </p>
                 </div>
-                <h1 className="text-3xl font-semibold">{vm.problemFull.name}</h1>
-                <p>{vm.problemFull.description}</p>
+                <h1 className="text-3xl font-semibold">{vm.problem.name}</h1>
+                <p>{vm.problem.description}</p>
               </>
               : <Skeleton className="w-full h-full"></Skeleton>
           }
