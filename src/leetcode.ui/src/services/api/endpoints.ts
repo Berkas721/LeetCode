@@ -67,5 +67,9 @@
     // @method put
     public static readonly submitSolution = (solutionId: number): string =>
       `${Endpoints.Auth.base()}/${solutionId}/submit`;
+
+    // @method put
+    public static readonly updateSolution = (solutionId: number): string =>
+      `${Endpoints.Auth.base()}/${solutionId}/update`;
   }
 }
