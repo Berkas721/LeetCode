@@ -125,7 +125,6 @@ const ProblemSolving: FC<IProblemSolvingProps> = ({ problemId }) => {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        После отправки решения на проверку изменить его будет невозможно.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

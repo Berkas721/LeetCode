@@ -15,6 +15,7 @@ export interface IProblemApi {
   getSolutionById(solutionId: number): Promise<ISolution>;
 
   createByImplementedProblem(implementedProblemId: string): Promise<number>;
+  createSolutionCopy(solutionId: number): Promise<number>;
 
   testSolutionWithSpecifiedTestcases: (solutionId: number, payload: ITestCase[]) => void;
   submitSolution: (solutionId: number) => void;
@@ -99,6 +100,14 @@ export class ProblemApi
       () => this.api.post(url)
     );
     return response.data as number;
+  };
+
+  public readonly createSolutionCopy = async (solutionId: number) => {
+    const url = Endpoints.Solution.createSolutionCopy(solutionId);
+    const response = await this.asyncRunner(
+      () => this.api.post(url)
+    );
+    return response.data;
   };
 
   public readonly testSolutionWithSpecifiedTestcases = async (solutionId: number, payload: ITestCase[]) => {

@@ -68,6 +68,11 @@
     public static readonly createByImplementedProblem = (implementedProblemId: string): string =>
       `${Endpoints.Solution.base()}/create-by-implemented-problem/${implementedProblemId}`;
 
+    // @method post
+    public static readonly createSolutionCopy = (solutionId: number): string =>
+      `${Endpoints.Solution.base()}/${solutionId}/create-copy`;
+
+
     // @method get
     public static readonly getSolutionById = (solutionId: number): string =>
       `${Endpoints.Solution.base()}/${solutionId}`;

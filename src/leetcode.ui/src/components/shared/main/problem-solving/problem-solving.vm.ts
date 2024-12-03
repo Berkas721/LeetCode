@@ -91,7 +91,7 @@ class ProblemSolvingVM implements IProblemSolvingVM {
         yield this.problemApi.updateSolution(this.solution.id, this.code);
       }
     } catch (e) {
-      console.error('Failed to update solution code:', e);
+      console.error(e);
     }
   });
 
@@ -108,12 +108,12 @@ class ProblemSolvingVM implements IProblemSolvingVM {
 
       this.implementedProblems = yield this.problemApi.getImplementedProblemsByProblemId(this.problemId);
 
-      const solutions = yield this.problemApi.getSolutionsByImplementedProblemId(this.implementedProblems[0].id);
+      const solutions: ISolution[] = yield this.problemApi.getSolutionsByImplementedProblemId(this.implementedProblems[0].id);
       if (!solutions || solutions.length <= 0) {
         const solutionId = yield this.problemApi.createByImplementedProblem(this.implementedProblems[0].id);
         this.solution = yield this.problemApi.getSolutionById(solutionId);
       } else {
-        this.solution = solutions[0];
+        this.solution = solutions.sort((a,b) => a.id - b.id)[solutions.length-1];
       }
 
       this.code = this.solution!.code;
@@ -177,10 +177,10 @@ class ProblemSolvingVM implements IProblemSolvingVM {
       totalUsedTime,
       totalUsedMemory,
       testCaseResultWithError,
-      testCaseResultWithWrongAnswer,
+      testCaseResultWithWrongAnswer
     } = summary;
 
-    let result = `Test ${isPassed ? "passed" : "failed"}.\n`;
+    let result = `Test ${isPassed ? 'passed' : 'failed'}.\n`;
     result += `Total Used Time: ${totalUsedTime} ms\n`;
     result += `Total Used Memory: ${totalUsedMemory} KB\n\n`;
 
@@ -218,7 +218,7 @@ class ProblemSolvingVM implements IProblemSolvingVM {
       this.isOutputLoading = true;
       this.output = 'Loading...';
       
-      yield this.updateSolutionCode()
+      yield this.updateSolutionCode();
 
       const response = yield this.problemApi.testSolutionWithSpecifiedTestcases(this.solution.id, this.testcases);
 
@@ -231,20 +231,25 @@ class ProblemSolvingVM implements IProblemSolvingVM {
 
   @action.bound
   public submitSolution = flow(function* (this: ProblemSolvingVM) {
+    
     try {
-      if (!this.solution)
+      if (!this.solution) {
         return;
-
+      }
+      
       this.isOutputLoading = true;
       this.output = 'Loading...';
-
-      yield this.updateSolutionCode()
       
-      const response = yield this.problemApi.submitSolution(this.solution.id);
+      yield this.updateSolutionCode();
 
+      const response = yield this.problemApi.submitSolution(this.solution.id);
+      
       this.output = this.generateDetailedSummary(response);
+
+      const newSolutionId = yield this.problemApi.createSolutionCopy(this.solution.id);
+      this.solution = yield this.problemApi.getSolutionById(newSolutionId);
     } catch (e) {
-      this.output = 'Кажется задача ранее уже была отправлена на проверку.\nК сожалению, отправить ее снова нельзя'
+      this.output = 'Ошибка отправки решения на проверку, попробуйте снова';
     } finally {
       this.isOutputLoading = false;
     }

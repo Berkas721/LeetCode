@@ -17,8 +17,8 @@ export const createDependencyContainer = (): Container => {
   container
     .bind<AxiosInstance>(ServiceSymbols.AxiosInstance)
     .toFactory(() => axios.create());
-  container.bind<IAuthApi>(ServiceSymbols.AuthApi).to(AuthApi);
-  container.bind<IProblemApi>(ServiceSymbols.ProblemApi).to(ProblemApi);
+  container.bind<IAuthApi>(ServiceSymbols.AuthApi).to(AuthApi).inSingletonScope();
+  container.bind<IProblemApi>(ServiceSymbols.ProblemApi).to(ProblemApi).inSingletonScope();
 
   container.bind<ISignInFormVM>(ServiceSymbols.ISignInFormVM).to(SignInFormVM);
   container.bind<ISignUpFormVM>(ServiceSymbols.ISignUpFormVM).to(SignUpFormVM);
