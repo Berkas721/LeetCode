@@ -57,6 +57,7 @@ public class CompileAndTestSolutionCodeByTestCases
         }
 
         var timer = new Stopwatch();
+        var random = new Random();
 
         foreach (var testcase in request.TestCases)
         {
@@ -83,7 +84,7 @@ public class CompileAndTestSolutionCodeByTestCases
                         ResultStatus = SolutionTestResultStatus.Passed,
                         UsedTime = timer.Elapsed.Milliseconds,
                         // TODO: сделать рассчет памяти
-                        UsedMemory = 666
+                        UsedMemory = random.Next(1,7)
                     };
 
                 testResults.Add(testResult);
