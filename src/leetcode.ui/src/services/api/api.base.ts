@@ -1,4 +1,5 @@
-﻿import type { AxiosInstance } from 'axios';
+﻿import 'reflect-metadata';
+import type { AxiosInstance } from 'axios';
 import { AsyncRunnerMethod } from './api.types';
 import { inject, injectable } from 'inversify';
 import ServiceSymbols from '@/data/constant/ServiceSymbols';

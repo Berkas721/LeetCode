@@ -24,7 +24,7 @@ export const App = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <DependencyContainer.Provider value={dependencyContainer}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-screen box-border p-0 m-0`}
       >
       <ThemeProvider
         attribute="class"
@@ -32,7 +32,7 @@ export const App = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         enableSystem
         disableTransitionOnChange
       >
-        <main>{children}</main>
+        <main className='h-full font-[family-name:var(--font-geist-sans)]'>{children}</main>
         <Toaster />
       </ThemeProvider>
       </body>

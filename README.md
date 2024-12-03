@@ -1,3 +1,15 @@
+ReverseProxy
+```bash
+cd .\src\LeetCode.ReverseProxy
+dotnet run
+```
+
+Frontend
+```bash
+cd .\src\leetcode.ui\
+npm run dev
+```
+
 TODO:
 1) сделать везде using Dto = ...
 2) сделать обработчик ошибок

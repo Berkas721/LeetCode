@@ -92,14 +92,14 @@ const SignUpForm: React.FC<ISignUpProps> = () => {
         />
         <FormField
           control={form.control}
-          name="firstname"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <Input
-                  id="firstname"
+                  id="firstName"
                   placeholder="Имя"
-                  autoComplete="firstname"
+                  autoComplete="firstName"
                   autoCorrect="off"
                   disabled={vm.isLoading}
                   {...field}
@@ -111,14 +111,14 @@ const SignUpForm: React.FC<ISignUpProps> = () => {
         />
         <FormField
           control={form.control}
-          name="lastname"
+          name="lastName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <Input
-                  id="lastname"
+                  id="lastName"
                   placeholder="Фамилия"
-                  autoComplete="lastname"
+                  autoComplete="lastName"
                   autoCorrect="off"
                   disabled={vm.isLoading}
                   {...field}
