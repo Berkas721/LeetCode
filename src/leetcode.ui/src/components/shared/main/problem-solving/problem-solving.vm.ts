@@ -231,23 +231,27 @@ class ProblemSolvingVM implements IProblemSolvingVM {
 
   @action.bound
   public submitSolution = flow(function* (this: ProblemSolvingVM) {
-    
+
     try {
       if (!this.solution) {
         return;
       }
-      
+
       this.isOutputLoading = true;
       this.output = 'Loading...';
-      
-      yield this.updateSolutionCode();
-
-      const response = yield this.problemApi.submitSolution(this.solution.id);
-      
-      this.output = this.generateDetailedSummary(response);
 
       const newSolutionId = yield this.problemApi.createSolutionCopy(this.solution.id);
       this.solution = yield this.problemApi.getSolutionById(newSolutionId);
+
+      yield this.updateSolutionCode();
+
+      if (!this.solution) {
+        throw new Error()
+      }
+
+      const response = yield this.problemApi.submitSolution(this.solution.id);
+
+      this.output = this.generateDetailedSummary(response);
     } catch (e) {
       this.output = 'Ошибка отправки решения на проверку, попробуйте снова';
     } finally {
